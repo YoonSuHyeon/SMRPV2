@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SMRPV2</string>
+    <string name="login_kor">로그인</string>
+    <string name="signUp_kor">회원가입</string>
+</resources>
