@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/home_navigationbar_menu1"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:title="홈"
+            />
+        <item
+            android:id="@+id/nav_medicine"
+            android:icon="@drawable/home_navigationbar_menu2"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:title="약 등록하기"
+            />
+        <item
+            android:id="@+id/nav_alarm"
+            android:icon="@drawable/home_navigationbar_menu3"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:title="알람 등록하기"
+            />
+        <item
+            android:id="@+id/nav_report_notice"
+            android:icon="@drawable/home_navigationbar_menu4"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:title="자가 문진"
+            />
+        <item
+            android:id="@+id/nav_hospital"
+            android:icon="@drawable/home_navigationbar_menu5"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:title="병원 찾기"
+            />
+        <item
+            android:id="@+id/nav_pharmacy"
+            android:icon="@drawable/home_navigationbar_menu6"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:title="약국 찾기"
+            />
+        <item
+            android:id="@+id/nav_inquiry"
+            android:icon="@drawable/home_navigationbar_menu7"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:title="문의 하기"
+            />
+        <item
+            android:id="@+id/nav_logout"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:icon="@drawable/home_navigationbar_shutdown_icon"
+            android:title="로그아웃" />
+    </group>
+</menu>

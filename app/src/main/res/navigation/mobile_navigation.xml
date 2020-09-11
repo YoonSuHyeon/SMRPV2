@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.smrpv2.ui.home.HomeFragment"
+        tools:layout="@layout/home_fragment" >
+
+        <action
+            android:id="@+id/action_nav_home_to_nav_medicine"
+            app:destination="@id/nav_medicine" />
+       <!-- <action
+            android:id="@+id/action_nav_home_to_nav_report"
+            app:destination="@id/nav_report" />-->
+        <action
+            android:id="@+id/action_nav_home_to_nav_hospital"
+            app:destination="@id/nav_hospital" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_alarm"
+            app:destination="@id/nav_alarm" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_pharmacy"
+            app:destination="@id/nav_pharmacy" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_report_notice"
+            app:destination="@id/nav_report_notice" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_inquiry"
+            app:destination="@id/nav_inquiry" />
+    </fragment>
+    <!--<fragment
+        android:id="@+id/nav_alarm"
+        android:name="com.example.smrp.alarm.AlarmFragment"
+        tools:layout="@layout/alarm_fragment" />
+    <fragment
+        android:id="@+id/nav_hospital"
+        android:name="com.example.smrp.hospital.HospitalFragment"
+        tools:layout="@layout/hospital_fragment" />
+    <fragment
+        android:id="@+id/nav_inquiry"
+        android:name="com.example.smrp.inquiry.InquiryFragment"
+        tools:layout="@layout/inquiry_fragment" />
+    <fragment
+        android:id="@+id/nav_logout"
+        android:name="com.example.smrp.logout.LogoutFragment"
+        tools:layout="@layout/logout_fragment" />
+    <fragment
+        android:id="@+id/nav_medicine"
+        android:name="com.example.smrp.medicine.MedicineFragment"
+        tools:layout="@layout/medicine_fragment" >
+        <action
+            android:id="@+id/action_nav_medicine_to_nav_home"
+            app:destination="@id/nav_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_pharmacy"
+        android:name="com.example.smrp.pharmacy.PharmacyFragment"
+        tools:layout="@layout/pharmacy_fragment" />
+    <fragment
+        android:id="@+id/nav_report"
+        android:name="com.example.smrp.report.ReportFragment"
+        tools:layout="@layout/report_fragment" />
+    <fragment
+        android:id="@+id/nav_report_notice"
+        android:name="com.example.smrp.report.ReportNoticeFragment"
+        tools:layout="@layout/activity_report_notice" >
+        <action
+            android:id="@+id/action_nav_report_notice_to_nav_report"
+            app:destination="@id/nav_report" />
+    </fragment>-->
+</navigation>
