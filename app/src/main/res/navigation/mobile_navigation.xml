@@ -30,44 +30,44 @@
             android:id="@+id/action_nav_home_to_nav_inquiry"
             app:destination="@id/nav_inquiry" />
     </fragment>
-    <!--<fragment
+    <fragment
         android:id="@+id/nav_alarm"
-        android:name="com.example.smrp.alarm.AlarmFragment"
+        android:name="com.example.smrpv2.ui.alarm.AlarmFragment"
         tools:layout="@layout/alarm_fragment" />
     <fragment
         android:id="@+id/nav_hospital"
-        android:name="com.example.smrp.hospital.HospitalFragment"
-        tools:layout="@layout/hospital_fragment" />
+        android:name="com.example.smrpv2.ui.hospital.HospitalFragment"
+        tools:layout="@layout/fragment_hospital" />
     <fragment
         android:id="@+id/nav_inquiry"
-        android:name="com.example.smrp.inquiry.InquiryFragment"
-        tools:layout="@layout/inquiry_fragment" />
+        android:name="com.example.smrpv2.ui.inquiry.InquiryFragment"
+        tools:layout="@layout/fragment_inquiry" />
     <fragment
         android:id="@+id/nav_logout"
-        android:name="com.example.smrp.logout.LogoutFragment"
-        tools:layout="@layout/logout_fragment" />
+        android:name="com.example.smrpv2.ui.logout.LogoutFragment"
+        tools:layout="@layout/fragment_logout" />
     <fragment
         android:id="@+id/nav_medicine"
-        android:name="com.example.smrp.medicine.MedicineFragment"
-        tools:layout="@layout/medicine_fragment" >
+        android:name="com.example.smrpv2.ui.medicine.MedicineFragment"
+        tools:layout="@layout/fragment_medicine" >
         <action
             android:id="@+id/action_nav_medicine_to_nav_home"
             app:destination="@id/nav_home" />
     </fragment>
     <fragment
         android:id="@+id/nav_pharmacy"
-        android:name="com.example.smrp.pharmacy.PharmacyFragment"
-        tools:layout="@layout/pharmacy_fragment" />
+        android:name="com.example.smrpv2.ui.pharmacy.PharmacyFragment"
+        tools:layout="@layout/fragment_pharmacy" />
     <fragment
         android:id="@+id/nav_report"
-        android:name="com.example.smrp.report.ReportFragment"
-        tools:layout="@layout/report_fragment" />
+        android:name="com.example.smrpv2.ui.report.ReportFragment"
+        tools:layout="@layout/fragment_report" />
     <fragment
         android:id="@+id/nav_report_notice"
-        android:name="com.example.smrp.report.ReportNoticeFragment"
-        tools:layout="@layout/activity_report_notice" >
+        android:name="com.example.smrpv2.ui.report.ReportNoticeFragment"
+        tools:layout="@layout/fragment_report_notice" >
         <action
             android:id="@+id/action_nav_report_notice_to_nav_report"
             app:destination="@id/nav_report" />
-    </fragment>-->
+    </fragment>
 </navigation>

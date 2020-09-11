@@ -9,15 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        
-        <meta-data
-            android:name="com.kakao.sdk.kakaonavi.useWebView"
-            android:value="false" />
-        <meta-data
-            android:name="com.kakao.sdk.AppKey"
-            android:value="adc15b958c5d03495cd889d997401566" />
+        <activity android:name=".ui.alarm.AlarmFragment"></activity>
 
-        <activity android:name=".ui.tos.ToSActivity"></activity>
+        <activity android:name=".ui.tos.ToSActivity" />
         <activity
             android:name=".ui.splash.SplashActivity"
             android:theme="@style/SplashTheme">
@@ -27,11 +21,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ui.signup.SignUpActivity" />
         <activity android:name=".ui.login.LoginActivity" />
         <activity android:name=".ui.findid.FindIdActivity" />
-        <activity android:name=".ui.start.StartActivity"></activity>
+        <activity android:name=".ui.start.StartActivity" />
         <activity android:name=".ui.main.MainActivity" />
+        <meta-data
+            android:name="com.kakao.sdk.kakaonavi.useWebView"
+            android:value="false" />
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="adc15b958c5d03495cd889d997401566" />
     </application>
 
 </manifest>
