@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F3F7FF"
+    android:orientation="vertical"
+    tools:context=".ui.login.LoginActivity">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_x" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/Lay_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <EditText
+                android:id="@+id/Txt_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:drawableLeft="@drawable/ic_login"
+                android:drawablePadding="8dp"
+                android:hint=" 아이디"
+                android:paddingLeft="5dp"
+                android:privateImeOptions="defaultInputmode=english"
+                android:textColor="#898989"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+            <EditText
+
+                android:id="@+id/Txt_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="32dp"
+                android:drawableLeft="@drawable/ic_lock"
+                android:drawablePadding="8dp"
+                android:hint=" 비밀번호"
+                android:inputType="textPassword"
+                android:paddingLeft="5dp"
+                android:textColor="#898989"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+
+            <Button
+                android:id="@+id/Btn_Innerlogin"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="36dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="36dp"
+
+                android:background="@drawable/login_btn_login"
+                android:text="로그인"
+                android:textColor="#ffffffff"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginStart="27dp"
+                android:orientation="horizontal">
+
+
+                <CheckBox
+                    android:id="@+id/store_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="아이디 저장"
+                    android:textColor="#949494" />
+
+                <CheckBox
+                    android:id="@+id/auto_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="자동 로그인"
+                    android:textColor="#949494" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_findId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+
+                android:gravity="center"
+                android:text="아이디 찾기    |    비밀번호 찾기"
+                android:textColor="#9B9B9B"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/Txt_welcome"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/Txt_logo"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="환영합니다"
+            android:textColor="#555555"
+            android:textSize="16dp"
+
+            android:textStyle="normal" />
+
+
+        <TextView
+            android:id="@+id/Txt_logo"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/Lay_login"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="60dp"
+            android:gravity="center"
+            android:text="스마트한 약 알리미"
+            android:textColor="#555555"
+            android:textSize="18dp"
+
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+
+</LinearLayout>

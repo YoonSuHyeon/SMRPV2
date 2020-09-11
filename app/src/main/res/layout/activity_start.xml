@@ -37,7 +37,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_shape"
+                    android:background="@drawable/start_btn_login"
                     android:text="@string/login_kor"
                     android:textColor="@color/colorWhite" />
 
@@ -48,7 +48,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_shape2"
+                    android:background="@drawable/start_btn_signup"
                     android:text="@string/signUp_kor"
                     android:textColor="@color/appBaseColor" />
 
