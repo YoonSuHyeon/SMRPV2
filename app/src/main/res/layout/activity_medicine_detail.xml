@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.medicine.MedicineDetailActivity">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:orientation="horizontal"
+        android:background="@color/appBaseColor"
+        android:layout_alignParentTop="true"
+        android:id="@+id/top"
+
+        >
+        <ImageView
+
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_back_black_40dp"
+            android:layout_gravity="center"/>
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginRight="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="상세 정보"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:textSize="23dp" />
+
+            <ImageView
+                android:layout_alignParentEnd="true"
+                android:id="@+id/ic_dot"
+                android:layout_width="30dp"
+                android:layout_height="50dp"
+                android:src="@drawable/dot"
+                android:layout_marginEnd="12dp"
+                />
+
+        </RelativeLayout>
+
+
+
+
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/iv_medicine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        >
+        <LinearLayout
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_marginTop="22dp"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:id="@+id/tv_medicine_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:text="알레기살정 10밀리그람"/>
+            <TextView
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="제조사"
+                android:textColor="@color/appBaseColor"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/tv_entpName"
+                android:textColor="#000000"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+            <View
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#989898"
+                />
+            <TextView
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="성상"
+                android:textColor="@color/appBaseColor"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/tv_chart"
+                android:textColor="#000000"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+            <View
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#989898"
+                />
+            <TextView
+                android:layout_marginTop="8dp"
+                android:textColor="@color/appBaseColor"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="분류"/>
+            <TextView
+                android:id="@+id/tv_className"
+                android:textColor="#000000"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+            <View
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#989898"
+                />
+
+            <TextView
+                android:layout_marginTop="8dp"
+                android:textColor="@color/appBaseColor"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="구분"/>
+            <TextView
+                android:id="@+id/tv_etcOtcName"
+                android:textColor="#000000"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+            <View
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#989898"
+                />
+            <TextView
+                android:layout_marginTop="8dp"
+                android:textColor="@color/appBaseColor"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="효능효과"/>
+            <TextView
+                android:id="@+id/tv_effect"
+                android:textColor="#000000"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+            <View
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#989898"
+                />
+            <TextView
+                android:layout_marginTop="8dp"
+                android:textColor="@color/appBaseColor"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="용법용량"/>
+            <TextView
+                android:id="@+id/tv_usage"
+                android:textColor="#000000"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+            <Button
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:id="@+id/btn_set"
+                android:visibility="invisible"
+                android:text="알람설정"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/appBaseColor"/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:focusableInTouchMode="true">
+
+
+
+    <LinearLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/appBaseColor"
+        android:orientation="horizontal"
+        >
+
+        <ImageView
+
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_arrow_back_black_40dp" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginRight="40dp"
+                android:gravity="center"
+                android:text="알람 수정"
+                android:textColor="@color/colorWhite"
+                android:textSize="23dp"
+                android:textStyle="bold" />
+
+
+            <ImageView
+                android:id="@+id/ic_dot"
+                android:layout_width="30dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="12dp"
+                android:src="@drawable/dot" />
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:background="@drawable/set_shadow"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_weight="0.05"
+        android:weightSum="1"
+        >
+
+        <LinearLayout
+            android:id="@+id/line_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:weightSum="1"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_alarmName"
+                android:layout_width="0dp"
+                android:layout_weight="0.3"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="알람명"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                />
+            <EditText
+                android:background="@drawable/setbtn"
+                android:id="@+id/et_alramName"
+                android:layout_width="0dp"
+                android:layout_weight="0.7"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/line_type"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:weightSum="1"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            >
+            <TextView
+                android:id="@+id/tv_doseType"
+                android:layout_width="0dp"
+                android:layout_weight="0.3"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="복용 타입"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <Button
+                android:background="@drawable/setbtn"
+                android:id="@+id/btn_before"
+                android:layout_width="0dp"
+                android:layout_weight="0.31"
+                android:layout_height="match_parent"
+                android:text="식전" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_weight="0.08"
+                android:layout_height="match_parent">
+
+            </View>
+            <Button
+
+                android:background="@drawable/setbtn"
+                android:id="@+id/btn_after"
+                android:layout_width="0dp"
+                android:layout_weight="0.31"
+                android:layout_height="match_parent"
+                android:text="식후" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/line_dose"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:weightSum="1"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp">
+
+            <TextView
+                android:id="@+id/tv_dose"
+                android:layout_width="0dp"
+                android:layout_weight="0.3"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="1일 복용 횟수"
+                android:textSize="15sp"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+            <View
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent">
+
+            </View>
+            <EditText
+                android:inputType="number"
+
+                android:background="@drawable/setbtn"
+                android:id="@+id/et_oneTimeDose"
+                android:layout_width="0dp"
+                android:layout_weight="0.1"
+                android:layout_height="match_parent"
+                android:gravity="center"
+
+                android:maxLength="1"
+                android:digits="123"
+
+                />
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="0dp"
+                android:layout_weight="0.1"
+                android:layout_height="match_parent"
+                android:gravity="center"
+
+                android:text="회" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/line_period"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:weightSum="1"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp">
+
+            <TextView
+                android:id="@+id/tv_period_"
+                android:layout_width="0dp"
+                android:layout_weight="0.3"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="복용기간"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <View
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent">
+
+            </View>
+            <EditText
+                android:inputType="number"
+                android:digits="0123456789"
+                android:background="@drawable/setbtn"
+                android:id="@+id/et_dosingPeriod"
+                android:layout_width="0dp"
+                android:layout_weight="0.1  "
+                android:gravity="center"
+                android:layout_height="match_parent"
+                />
+            <TextView
+                android:id="@+id/day"
+                android:layout_width="0dp"
+                android:layout_weight="0.1"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="일" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+
+    <View
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="16dp"
+        android:background="#989898"
+        />
+    <Button
+        android:id="@+id/Btn_add"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="+ 약 추가하기"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/setaddbtn"
+        >
+    </Button>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1">
+
+        <ListView
+            android:id="@+id/Lst_medicine2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp" />
+    </LinearLayout>
+    <Button
+        android:id="@+id/Btn_edit"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="알람 수정"
+        android:textColor="#FFFFFF"
+        android:background="@color/appBaseColor"
+        >
+
+    </Button>
+
+
+</LinearLayout>

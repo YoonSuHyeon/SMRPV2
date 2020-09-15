@@ -7,11 +7,25 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/banner"
+
+>
+        <LinearLayout
+            android:id="@+id/vP"
             android:layout_width="match_parent"
-            android:layout_height="81dp" />
+            android:layout_height="wrap_content">
+
+            <!--<ImageView
+               android:layout_width="match_parent"
+               android:scaleType="centerCrop"
+               android:layout_height="82dp"
+               android:src="@drawable/mb2" />-->
+           <androidx.viewpager.widget.ViewPager
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="82dp" />
+
+        </LinearLayout>
+
         <me.relex.circleindicator.CircleIndicator
             android:id="@+id/indicator"
             android:layout_width="match_parent"
@@ -28,23 +42,20 @@
             android:id="@+id/Txt_current_med"
             android:layout_width="match_parent"
             android:layout_height="39dp"
-            android:layout_below="@+id/banner"
-            android:text="알람 목록"
+            android:layout_below="@+id/vP"
+            android:text="최근 등록된 약"
             android:textColor="#000000"
             android:background="#E2E2E2"
             android:textSize="16sp"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/Txt_empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="최근에 등록된 알람이 없습니다."
+            android:text="최근에 등록된 약이 없습니다."
             android:gravity="center_horizontal"
             android:layout_below="@+id/Txt_current_med"
             android:textSize="15sp"
@@ -52,15 +63,18 @@
 
             />
         <ListView
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="2dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
+            android:layout_marginBottom="2dp"
             android:id="@+id/Lst_medicine"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/Txt_current_med"
-            android:dividerHeight="6dp"
+            android:background="#FFFFFF"
+
             android:divider="#00000000"
+
             />
 
         <ImageView
@@ -72,6 +86,7 @@
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="22dp"
             android:contentDescription="플러스아이콘"
+
             android:src="@drawable/ic_plus" />
 
 

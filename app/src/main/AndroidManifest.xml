@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.alarm.AlarmFragment"></activity>
+        <activity android:name=".ui.medicine.MedicineDetailActivity"></activity>
+        <activity android:name=".ui.alarm.AlarmSetActivity"></activity>
+        <activity android:name=".ui.alarm.AlarmEditActivity"></activity>
 
         <activity android:name=".ui.tos.ToSActivity" />
         <activity

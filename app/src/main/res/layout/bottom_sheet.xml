@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    >
+
+    <LinearLayout
+        android:id="@+id/Lay_notice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="원하시는 항목을 선택해주세요"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:textSize="16sp"
+            />
+
+
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+    android:layout_marginTop="36dp"
+        android:id="@+id/Lay_delete"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#DD4545"
+            android:text="삭제하기"
+            android:textSize="16sp"
+            android:gravity="center"
+            />
+        <View
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_height="1dp"
+            android:background="@color/searchFont"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            />
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/Lay_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:layout_gravity="center|top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#154CFF"
+            android:text="취소하기"
+            android:textSize="16sp"
+            android:gravity="center"
+            />
+
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

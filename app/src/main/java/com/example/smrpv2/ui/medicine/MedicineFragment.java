@@ -1,66 +1,96 @@
 package com.example.smrpv2.ui.medicine;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 
 import com.example.smrpv2.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MedicineFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.smrpv2.model.MedListViewItem;
+import com.example.smrpv2.ui.start.AutoSlide;
+import com.example.smrpv2.ui.start.ViewPagerAdapter;
+
+import java.util.ArrayList;
+
+import me.relex.circleindicator.CircleIndicator;
+
 public class MedicineFragment extends Fragment {
+    private ViewPager viewPager;
+    private ViewPagerAdapter adapter;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private ListView Lst_medicine; // 등록한 약 목록(아직 구현x)
+    private ListViewAdapter listViewAdapter;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private TextView Txt_empty; // 등록한 약이 없을 시 text메세지로 알려줌
+    private ImageView Img_ic_plus; // +아이콘
 
-    public MedicineFragment() {
-        // Required empty public constructor
+    private AutoSlide autoSlide;
+    private final int MEDICINE_FRAGMENT = 1;
+    private final long DELAY_MS = 1000; // 자동 슬라이드를 위한 변수
+    private final long PERIOD_MS = 3000; // 자동 슬라이드를 위한 변수
+    ArrayList<MedListViewItem> items = new ArrayList<MedListViewItem>();
+    private int[] images= {R.drawable.ad_banner1, R.drawable.ad_banner2,R.drawable.ad_banner3}; // ViewPagerAdapter에  보낼 이미지. 이걸로 이미지 슬라이드 띄어줌
+
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+
+
+
+
+        View v = inflater.inflate(R.layout.medicine_fragment, container, false);
+
+        //초기화..
+        viewPager =  v.findViewById(R.id.banner);
+        adapter = new ViewPagerAdapter(getActivity(),images);
+        CircleIndicator indicator = v.findViewById(R.id.indicator); // 인디케이터
+        Lst_medicine = v.findViewById(R.id.Lst_medicine);
+        Txt_empty = v.findViewById(R.id.Txt_empty);
+        Img_ic_plus = v.findViewById(R.id.Img_ic_plus);
+        listViewAdapter=new ListViewAdapter(items,getActivity(),MEDICINE_FRAGMENT);
+
+        // view 설정..
+        Lst_medicine.setEmptyView(Txt_empty);
+        indicator.setViewPager(viewPager); // 인디케이터 뷰에 추가
+        viewPager.setAdapter(adapter);
+        Lst_medicine.setAdapter(listViewAdapter);
+
+        autoSlide = new AutoSlide(viewPager,DELAY_MS,PERIOD_MS);
+
+        Img_ic_plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //PopupFragment p = new PopupFragment(); // DialogFragment(약촬영, 약봉투, 처방전 팝업창을 위한 프레그먼트)
+               // p.show(getActivity().getSupportFragmentManager(),"popup"); //팝업 창 띄우기
+
+            }
+        });
+
+        /*SharedPreferences loginInfromation = getActivity().getSharedPreferences("setting",0);
+        user_id = loginInfromation.getString("id","");*/
+
+        return v;
+    }
+    public void onStart() {
+        super.onStart();
+        /**
+         *
+         *
+         * 서버서버
+         *
+         *
+         */
+
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MedicineFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MedicineFragment newInstance(String param1, String param2) {
-        MedicineFragment fragment = new MedicineFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_medicine, container, false);
-    }
 }
