@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/shadow2"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+       >
+
+        <TextView
+            android:layout_margin="8dp"
+            android:id="@+id/Txt_disease"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:padding="4dp"
+            android:background="#FFD220"
+            android:textSize="18sp"
+            android:textColor="#333333"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:text="Disease"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="증    상 : "
+                android:textColor="@color/appBaseColor"
+                android:textSize="16dp"
+                android:layout_marginStart="12dp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/Txt_Symptom"
+                android:layout_marginStart="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Symptom"
+                android:textColor="#333333"
+                android:maxLines="2"
+                android:ellipsize="end"/>
+
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="진료과 : "
+                android:textColor="@color/appBaseColor"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:layout_marginStart="12dp"
+
+                />
+            <TextView
+                android:id="@+id/Txt_department"
+                android:layout_marginStart="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#333333"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="Depart"/>
+
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="확    률 : "
+                android:textColor="@color/appBaseColor"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:layout_marginStart="12dp"
+                />
+            <TextView
+                android:id="@+id/Txt_probability"
+                android:textColor="#333333"
+                android:layout_marginStart="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="prob"/>
+
+
+
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

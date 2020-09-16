@@ -1,0 +1,37 @@
+<resources>
+
+    <string-array name="symptom_array">
+        <item>가슴 통증</item> <item>심계항징</item> <item>요통</item> <item>공포</item> <item>구취</item> <item>기침</item> <item>두통</item>
+        <item>만성 기침</item> <item>발열</item> <item>불안</item> <item>삼킴곤란</item> <item>시력 감소</item> <item>식욕 부진</item> <item>어지럼증</item>
+        <item>인두통 및 인후통</item> <item>콧물</item> <item>트림</item> <item>호흡장애</item> <item>복통</item> <item>설사</item> <item>소화불량</item>
+        <item>배뇨통</item> <item>생리불순</item> <item>요실금</item> <item>변비</item> <item>혈변</item> <item>구역</item> <item>구토</item>
+        <item>근육통</item> <item>실신</item> <item>저혈압</item> <item>피로</item> <item>혼수</item> <item>발진</item> <item>소양감</item>
+
+    </string-array>
+    <string-array name="symptom_content_array">
+        <item>가슴이 아프거나 결리는 질환</item>   <item>심장 박동을 불편하게 느끼는 증상</item>   <item>허리에 발생하는 통증</item>   <item>두렵고 무서움</item>
+        <item>구강에서 나는 악취</item>   <item>기침</item>   <item>머리 부분에 생기는 통증</item>   <item>3주 이상 지속되는 기침을 만성 기침</item>
+        <item>37 ℃가 넘을 때</item>   <item>마음이 편하지 아니하고 조마조마함</item>   <item>음식물을 삼키기 어려운 증상</item>
+        <item>사물을 인지하는 능력이 떨어지는 상태</item>   <item>음식을 먹는 욕구가 떨어진 상태</item>   <item>아찔함, 현기증, 평형 이상, 불안정</item>
+        <item>침이나 음식을 삼킬때 목에 통증</item>   <item>비점막으로부터 흘러나오는 것</item>   <item>위에서 가스가 구강으로 역류</item>
+        <item>호흡 운동에 장애가 발생하는 상태</item>   <item>복부에 발생한 통증</item>   <item>변이 무르고 물기가 많은 상태</item>
+        <item>속쓰림, 식후 포만감, 조기 만복감</item>   <item>소변을 볼 때 아픔</item>   <item>불규칙한 생리</item>   <item>자신도 모르게 소변이 유출</item>
+        <item>정상적으로 배변이 이루어지지 않음</item>   <item>혈액이 섞인 분변</item>   <item>구토가 급박한 느낌</item>
+        <item>입에서 오물이나 먹은 음식이 나옴</item>   <item>근육의 통증</item>   <item>병이나 충격 따위로 정신을 잃음</item>   <item>혈압이 100/60 mmHg 이하</item>   <item>과로로 정신이나 몸이 지쳐 힘듦</item>   <item>정신없이 잠이 듦</item>
+        <item>피부나 점막에 돋아난 작은 종기</item>   <item>피부가 가려운 증상</item>
+    </string-array>
+    <string-array name="disease_array">
+
+        <item>간혈관종</item> <item>간흡충증</item> <item>감기</item> <item>갑상선 기능 저하증</item> <item>갑상선염</item> <item>건선</item> <item>결핵</item>
+        <item>고소공포증</item> <item>공포증</item> <item>급성 대장염</item> <item>급성 인두염</item> <item>급성 편도염</item> <item>기흉</item>
+        <item>긴장성 두통</item> <item>냉방병</item> <item>노안</item> <item>당뇨병</item>
+        <item>두드러기</item> <item>만성 피로 증후군</item> <item>만성 후두염</item> <item>복압성 요실금</item> <item>부정맥</item>
+        <item>분리불안장애</item> <item>빈맥</item> <item>사면발이</item>
+        <item>산후 우울증</item> <item>소아청소년 빈혈</item> <item>쇼그렌 증후군</item> <item>수두</item> <item>시신경염</item>
+        <item>식도염</item> <item>심근경색증</item> <item>심부전</item>
+        <item>역류성 식도염</item> <item>요도염</item> <item>원시</item> <item>음식물 알레르기</item> <item>의존성 인격장애</item> <item>인후염</item>
+        <item>일사병</item> <item>저혈당증</item> <item>적응장애</item> <item>적혈구 과다증</item> <item>조류인플루엔자</item>
+        <item>천식</item> <item>크론병</item> <item>편도 비대</item> <item>편두통</item> <item>폐렴</item> <item>항문소양증</item> <item>혈관병</item>
+    </string-array>
+
+</resources>

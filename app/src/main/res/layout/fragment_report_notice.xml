@@ -1,14 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.report.ReportNoticeFragment">
+    android:background="#F7F7F7">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <!--<LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_back"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/ic_x" />
+
+            </RelativeLayout>
+
+        </LinearLayout>-->
+        <LinearLayout
+            android:layout_marginTop="40dp"
+            android:id="@+id/Lay_title"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="50dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="왜 아픈지 알고싶다면?"
+                android:textColor="#303030"
+                android:textSize="18dp"
+                />
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#303030"
+                android:text="자가진단 해보기"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/Lay_start"
+            android:layout_below="@+id/Lay_title"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#F2F2F2"
+            android:orientation="vertical"
+
+            >
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#989898"
+                />
+            <LinearLayout
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="36dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:textColor="#303030"
+                    android:textSize="18dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="지금 나타나는 증상이"
+                    />
+                <TextView
+                    android:textColor="#303030"
+                    android:textSize="18dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="어떤 병"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:textColor="#303030"
+                    android:textSize="18dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="일까?"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textColor="#303030"
+                    android:textSize="18dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="어디 "
+                    />
+                <TextView
+                    android:textColor="#303030"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="진료 과"
+                    />
+                <TextView
+                    android:textColor="#303030"
+                    android:textSize="18dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="에 가야하는 걸까?"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="23dp"
+                android:textSize="14dp"
+                android:textColor="#4A75FF"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="겪고 있는 증상을 선택하여 자신의 상태를 알아보세요."
+                />
+            <TextView
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:textSize="14dp"
+                android:textColor="#4A75FF"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="확률 값으로 어떤 병을 겪고 있는지 알려줍니다. "
+                />
+            <TextView
+
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:textSize="14dp"
+                android:textColor="#4A75FF"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="병원 방문 전, 진료과를 정확히 알아보세요."
+                />
+            <Button
+                android:id="@+id/Btn_start"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="36dp"
+                android:layout_width="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_height="wrap_content"
+                android:text="자가진단 시작하기"
+                android:background="@color/appBaseColor"
+                android:layout_gravity="center"
+                android:textColor="#E6EBFF"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                />
+
+            <View
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#989898"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

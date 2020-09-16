@@ -12,6 +12,8 @@
         <activity android:name=".ui.medicine.MedicineDetailActivity"></activity>
         <activity android:name=".ui.alarm.AlarmSetActivity"></activity>
         <activity android:name=".ui.alarm.AlarmEditActivity"></activity>
+        <activity android:name=".ui.report.ReportResultActivity"/>
+
 
         <activity android:name=".ui.tos.ToSActivity" />
         <activity
