@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 
 import com.example.smrpv2.R;
-import com.example.smrpv2.model.MedListViewItem;
+import com.example.smrpv2.model.MedicineItem;
 import com.example.smrpv2.ui.medicine.ListViewAdapter;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class AlarmEditActivity extends AppCompatActivity {
     final int BEFORE_MEAL=1;
     final int AFTER_MEAL=0;
     private static int dosingType=1;
-    ArrayList<MedListViewItem> alarmMedicineList=new ArrayList<>(); // 약추가한 리스트
+    ArrayList<MedicineItem> alarmMedicineList=new ArrayList<>(); // 약추가한 리스트
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -59,7 +59,7 @@ public class AlarmEditActivity extends AppCompatActivity {
 
                 alarmMedicineList.clear(); // 전에 있던 약 리스트 정보를 삭제
                 //반환값과 함께 전달받은 리스트뷰로 갱신하기
-                alarmMedicineList.addAll((ArrayList<MedListViewItem>) data.getSerializableExtra("listViewItemArrayList"));
+                alarmMedicineList.addAll((ArrayList<MedicineItem>) data.getSerializableExtra("listViewItemArrayList"));
                 alarmListViewAdapter.notifyDataSetChanged();
 
             }
@@ -141,7 +141,7 @@ public class AlarmEditActivity extends AppCompatActivity {
                     Toast.makeText(context, "모두 입력해 주세요 .", Toast.LENGTH_SHORT).show();
                 }else{
                     ArrayList<String> temp = new ArrayList<String>(); //일련번호 리스트를 만드는과정
-                    for(MedListViewItem i :alarmMedicineList){
+                    for(MedicineItem i :alarmMedicineList){
                         temp.add(i.getItemSeq());
                     }
                     if (temp.size() == 0) {
@@ -175,7 +175,7 @@ public class AlarmEditActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.alarm_med_dialog, null);
         builder.setView(view);
-        final ArrayList<MedListViewItem> items = new ArrayList<>();
+        final ArrayList<MedicineItem> items = new ArrayList<>();
         final AlertDialog dialog = builder.create();
 
         final Button Btn_ok = view.findViewById(R.id.Btn_ok);

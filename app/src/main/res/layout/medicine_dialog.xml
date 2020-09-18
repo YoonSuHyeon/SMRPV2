@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="234dp"
+        android:layout_height="128.7dp"
+        android:background="#F2EEEE"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/Img_med_shoot"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="15.5dp"
+                android:src="@drawable/ic_med_shoot"
+                android:contentDescription="약촬영"
+                />
+            <ImageView
+                android:id="@+id/Img_envelope"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+
+                android:layout_marginTop="15.5dp"
+                android:src="@drawable/ic_envelope"
+                android:contentDescription="약봉투"
+                />
+            <ImageView
+                android:id="@+id/Img_prescription"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="15.5dp"
+                android:src="@drawable/ic_prescription"
+                android:contentDescription="처방전"
+                />
+            <ImageView
+                android:id="@+id/Img_search"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="15.5dp"
+                android:src="@drawable/ic_search"
+                android:contentDescription="약검색"
+                />
+
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="원하시는 기능을 선택해주세요"
+            android:textSize="13sp"
+            android:layout_gravity="center"
+            android:layout_marginTop="7dp"
+            android:textColor="#000000">
+        </TextView>
+
+        <Button
+            android:id="@+id/Btn_cancel"
+            android:layout_width="36dp"
+            android:layout_height="19dp"
+            android:text="취소"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_cancel_shape"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:textSize="10sp"
+            android:textStyle="bold"
+
+            />
+
+
+
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

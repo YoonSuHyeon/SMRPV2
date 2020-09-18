@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:orientation="horizontal"
+                android:background="@color/appBaseColor"
+                android:layout_alignParentTop="true"
+                android:id="@+id/top"
+
+                >
+                <ImageView
+                    android:id="@+id/iv_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_back_black_40dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_gravity="center"
+                    android:layout_marginRight="40dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="약명 검색"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="23dp" />
+
+            </LinearLayout>
+                <LinearLayout
+                    android:layout_below="@+id/top"
+                    android:id="@+id/Layout_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:orientation="horizontal"
+                    android:weightSum="10"
+                    >
+
+                    <EditText
+                        android:id="@+id/et_findMedicine"
+                        android:layout_width="0dp"
+                        android:layout_height="53dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="17dp"
+                        android:layout_weight="8.3"
+                        android:background="@drawable/shadow2"
+                        android:hint="약 이름을 입력해 주세요"
+                        android:inputType="text"
+                        android:paddingLeft="17dp"
+
+                        />
+
+                    <Button
+                        android:id="@+id/Btn_search"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1.7"
+                        android:background="@drawable/btn_shape"
+                        android:text="검색"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="16dp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:id="@+id/row1"
+                        android:layout_below="@id/Layout_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/colorWhite"
+                        android:elevation="8dp"
+                        >
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/Lst_shape"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/shadow2"
+
+                            />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/row2"
+                        android:layout_below="@+id/row1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/colorWhite"
+                        android:elevation="8dp">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/Lst_color"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/shadow2"
+                            />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/row3"
+                        android:layout_below="@+id/row2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/colorWhite"
+                        android:elevation="8dp"
+                        >
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/Lst_dosageForm"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/shadow2"
+
+
+                            />
+
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/row4"
+                        android:layout_below="@id/row3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/colorWhite"
+                        android:elevation="8dp">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/Lst_line"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/shadow2"
+
+
+                            />
+
+
+                    </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+                <LinearLayout
+                    android:id="@+id/Layout_table"
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@+id/row4"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:orientation="vertical"
+
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:elevation="8dp"
+                    android:background="@drawable/shadow2"
+                    android:layout_marginBottom="20dp"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="검색 결과"
+                        android:layout_marginTop="7dp"
+                        android:textColor="@color/appBaseColor"
+                        android:textSize="13dp"
+                        />
+
+
+
+
+                    <LinearLayout
+                        android:id="@+id/table"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+
+                        android:weightSum="6.5">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="식별/포장"
+                            android:layout_weight="1.5"
+                            android:background="#989898"
+                            android:gravity="center"
+                            />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="제품명"
+                            android:layout_weight="1.5"
+                            android:background="#989898"
+                            android:gravity="center"
+                            />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="회사명"
+                            android:layout_weight="1.5"
+                            android:background="#989898"
+                            android:gravity="center"
+                            />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="제형"
+                            android:layout_weight="1"
+                            android:background="#989898"
+                            android:gravity="center"
+                            />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="구분"
+                            android:layout_weight="1"
+                            android:background="#989898"
+                            android:gravity="center"
+                            />
+
+                    </LinearLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scrollbars="vertical"
+
+                        android:id="@+id/recycler_medicine">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+
+
+
+
+
+
+
+                </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+
+
+</LinearLayout>

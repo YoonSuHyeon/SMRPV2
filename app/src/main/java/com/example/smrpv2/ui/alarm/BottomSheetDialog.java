@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.example.smrpv2.R;
-import com.example.smrpv2.model.MedListViewItem;
+import com.example.smrpv2.model.MedicineItem;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.util.ArrayList;
 
@@ -44,7 +44,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     private String userId;
     private String itemSeq;
     private   long groupId;
-    private ArrayList<MedListViewItem> listViewItemArrayList;
+    private ArrayList<MedicineItem> listViewItemArrayList;
     int delete_case;
     final int MEDICINE = 0;
     final int ALARM = 1;
@@ -84,7 +84,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
      * @param list 알람을 설정하기 위해 추가한 약 리스트들
      * @param delete_case TEMP_ALARM
      */
-    public void init(String userId, String itemSeq, ArrayList<MedListViewItem> list,  int delete_case){
+    public void init(String userId, String itemSeq, ArrayList<MedicineItem> list, int delete_case){
         this.userId=userId;
         this.itemSeq=itemSeq;
         listViewItemArrayList = list;

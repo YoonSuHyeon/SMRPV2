@@ -33,7 +33,7 @@ import com.example.smrpv2.R;
 //import com.example.smrp.RetrofitService;
 //import com.example.smrp.medicine.ListViewItem;
 //import com.example.smrp.reponse_medicine3;
-import com.example.smrpv2.model.MedListViewItem;
+import com.example.smrpv2.model.MedicineItem;
 import com.example.smrpv2.ui.medicine.ListViewAdapter;
 
 import java.util.ArrayList;
@@ -69,8 +69,8 @@ public class AlarmSetActivity extends AppCompatActivity {
     private static int dosingType=1;
     final int BEFORE_MEAL=1;
     final int AFTER_MEAL=0;
-    ArrayList<MedListViewItem> alarmMedicineList = new ArrayList<>(); // 약추가한 리스트
-    ArrayList<MedListViewItem> list = new ArrayList<>();
+    ArrayList<MedicineItem> alarmMedicineList = new ArrayList<>(); // 약추가한 리스트
+    ArrayList<MedicineItem> list = new ArrayList<>();
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -79,7 +79,7 @@ public class AlarmSetActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 alarmMedicineList.clear(); // 전에 있던 약 리스트 정보를 삭제
                 //반환값과 함께 전달받은 리스트뷰로 갱신하기
-                alarmMedicineList.addAll((ArrayList<MedListViewItem>) data.getSerializableExtra("listViewItemArrayList"));
+                alarmMedicineList.addAll((ArrayList<MedicineItem>) data.getSerializableExtra("listViewItemArrayList"));
                 alarmListViewAdapter.notifyDataSetChanged();
             }
         }
@@ -102,7 +102,7 @@ public class AlarmSetActivity extends AppCompatActivity {
         Intent intent = getIntent();
         SharedPreferences loginInfromation = getSharedPreferences("setting", 0);
         user_id = loginInfromation.getString("id", "");
-        list = (ArrayList<MedListViewItem>) intent.getSerializableExtra("list");
+        list = (ArrayList<MedicineItem>) intent.getSerializableExtra("list");
         back = intent.getStringExtra("back");
 
         iv_back = findViewById(R.id.iv_back);
@@ -120,7 +120,7 @@ public class AlarmSetActivity extends AppCompatActivity {
         Lst_medicine.setAdapter(alarmListViewAdapter);  //Lst_medicine: listView
 
         if (back != null) {
-            alarmMedicineList = (ArrayList<MedListViewItem>) intent.getSerializableExtra("listViewItemArrayList");
+            alarmMedicineList = (ArrayList<MedicineItem>) intent.getSerializableExtra("listViewItemArrayList");
             alarmListViewAdapter.notifyDataSetChanged();
         } else {
             if (list != null && list.size() > 0) {
@@ -186,7 +186,7 @@ public class AlarmSetActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.alarm_med_dialog, null);
         builder.setView(view);
-        final ArrayList<MedListViewItem> items = new ArrayList<>();
+        final ArrayList<MedicineItem> items = new ArrayList<>();
         final AlertDialog dialog = builder.create();
 
         ListView Lst_medicine = view.findViewById(R.id.Lst_medicine); //약 추가하기 팝업 창 내가 등록한 약
@@ -202,7 +202,7 @@ public class AlarmSetActivity extends AppCompatActivity {
                 int num = 0;
                 Toast.makeText(getApplicationContext(), "추가 되었습니다.", Toast.LENGTH_SHORT).show();
 
-                ArrayList<MedListViewItem> list = adapter.res();
+                ArrayList<MedicineItem> list = adapter.res();
                 if (alarmMedicineList.size() == 1) {//등록된 약 기능에서 알람추가시 중복제거
 
                     for (int i = 0; i < list.size(); i++) {

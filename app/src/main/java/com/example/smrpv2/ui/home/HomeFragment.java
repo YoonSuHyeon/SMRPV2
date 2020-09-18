@@ -27,6 +27,7 @@ import com.example.smrpv2.model.HomeMedItem;
 import com.example.smrpv2.retrofit.Response;
 import com.example.smrpv2.retrofit.RetrofitFactory_home;
 import com.example.smrpv2.retrofit.RetrofitService_home;
+import com.example.smrpv2.ui.search.SearchActivity;
 import com.example.smrpv2.ui.start.AutoSlide;
 import com.example.smrpv2.ui.start.ViewPagerAdapter;
 import java.io.IOException;
@@ -86,7 +87,7 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         if(container.getChildCount() > 0)
             container.removeViewAt(0);
-        final View root = inflater.inflate(R.layout.home_fragment, container, false);
+        final View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         /* 초기화 작업.... */
         //weather 영역
@@ -153,8 +154,8 @@ public class HomeFragment extends Fragment {
         ic_med_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(getContext(), SearchActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(getContext(), SearchActivity.class);
+                startActivity(intent);
             }
         });
         ic_prescription_register.setOnClickListener(new View.OnClickListener() {

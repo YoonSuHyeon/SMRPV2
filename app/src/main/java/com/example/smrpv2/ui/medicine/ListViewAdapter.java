@@ -16,7 +16,7 @@ import androidx.fragment.app.FragmentActivity;
 //import com.bumptech.glide.Glide;
 import com.example.smrpv2.R;
 
-import com.example.smrpv2.model.MedListViewItem;
+import com.example.smrpv2.model.MedicineItem;
 
 import java.util.ArrayList;
 
@@ -32,15 +32,15 @@ public class ListViewAdapter extends BaseAdapter {
     private int REQUEST_TEST=1;
     int call_case;
     private ArrayList<Integer> tempViewItemArrayList=new ArrayList<>();
-    private ArrayList<MedListViewItem> listViewItemArrayList ;
+    private ArrayList<MedicineItem> listViewItemArrayList ;
 
-    public ListViewAdapter(ArrayList<MedListViewItem> listViewItemArrayList, FragmentActivity activity, int call_case){
+    public ListViewAdapter(ArrayList<MedicineItem> listViewItemArrayList, FragmentActivity activity, int call_case){
         this.listViewItemArrayList=listViewItemArrayList;
         this.activity=activity;
         this.call_case = call_case;
     }
-    public ArrayList<MedListViewItem> res(){
-        ArrayList<MedListViewItem> arrayList=new ArrayList<>() ;
+    public ArrayList<MedicineItem> res(){
+        ArrayList<MedicineItem> arrayList=new ArrayList<>() ;
         for(int i : tempViewItemArrayList){
             arrayList.add(listViewItemArrayList.get(i));
         }
@@ -79,7 +79,7 @@ public class ListViewAdapter extends BaseAdapter {
         TextView descTextView = (TextView) convertView.findViewById(R.id.med_name_1) ;
         TextView entpTextView = (TextView) convertView.findViewById(R.id.textView3) ;
 
-        final MedListViewItem listViewItem = listViewItemArrayList.get(position);
+        final MedicineItem listViewItem = listViewItemArrayList.get(position);
 
         // 연결이 안되어 임시로 막아놓음
         /*iconImageView.setImageDrawable(listViewItem.getUrl());//500,100

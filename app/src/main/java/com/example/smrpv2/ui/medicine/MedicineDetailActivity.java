@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smrpv2.R;
-import com.example.smrpv2.model.MedListViewItem;
+import com.example.smrpv2.model.MedicineItem;
 import com.example.smrpv2.ui.alarm.AlarmSetActivity;
 import com.example.smrpv2.ui.alarm.BottomSheetDialog;
 
@@ -42,7 +42,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
     String user_id;
     final int MEDICINE =0;
     final int TEMP_ALARM=2;
-    private ArrayList<MedListViewItem> listViewItemArrayList ;
+    private ArrayList<MedicineItem> listViewItemArrayList ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +74,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
         Intent intent =getIntent();
         itemSeq =intent.getStringExtra("itemSeq");
         time = intent.getStringExtra("time");
-        listViewItemArrayList = (ArrayList<MedListViewItem>) intent.getSerializableExtra("listViewItemArrayList");
+        listViewItemArrayList = (ArrayList<MedicineItem>) intent.getSerializableExtra("listViewItemArrayList");
 
         if(time != null){ // time이 null이 아닌 경우는 MedicineFragment에서 약 클릭한 경우
 
@@ -93,8 +93,8 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
         Btn_set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<MedListViewItem> list = new ArrayList<>();
-                list.add(new MedListViewItem(str_image,str_name,str_seq,time,str_eq)); //ListViewItem 클래스의 성질을 가지고 있는 ArrayList 객체에 정보(약 이미지url, 약 이름, 약 식별번호
+                ArrayList<MedicineItem> list = new ArrayList<>();
+                list.add(new MedicineItem(str_image,str_name,str_seq,time,str_eq)); //ListViewItem 클래스의 성질을 가지고 있는 ArrayList 객체에 정보(약 이미지url, 약 이름, 약 식별번호
 
                 Intent intent= new Intent(getApplicationContext(), AlarmSetActivity.class);
                 intent.putExtra("list",list);
