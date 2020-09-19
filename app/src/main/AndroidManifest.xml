@@ -9,13 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.medicine.MedicineDetailActivity"></activity>
-        <activity android:name=".ui.alarm.AlarmSetActivity"></activity>
-        <activity android:name=".ui.alarm.AlarmEditActivity"></activity>
-        <activity android:name=".ui.report.ReportResultActivity"/>
-        <activity android:name=".ui.search.SearchActivity"/>
-
-
+        <activity android:name=".ui.medicine.medshot.GoogleOCRActivity"></activity>
+        <activity android:name=".ui.medicine.medshot.CameraBackActivity" />
+        <activity android:name=".ui.medicine.medshot.CameraFrontActivity" />
+        <activity android:name=".ui.medicine.MedicineDetailActivity" />
+        <activity android:name=".ui.alarm.AlarmSetActivity" />
+        <activity android:name=".ui.alarm.AlarmEditActivity" />
+        <activity android:name=".ui.report.ReportResultActivity" />
+        <activity android:name=".ui.search.SearchActivity" />
         <activity android:name=".ui.tos.ToSActivity" />
         <activity
             android:name=".ui.splash.SplashActivity"
@@ -26,12 +27,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".ui.signup.SignUpActivity" />
         <activity android:name=".ui.login.LoginActivity" />
         <activity android:name=".ui.findid.FindIdActivity" />
         <activity android:name=".ui.start.StartActivity" />
         <activity android:name=".ui.main.MainActivity" />
+
         <meta-data
             android:name="com.kakao.sdk.kakaonavi.useWebView"
             android:value="false" />
@@ -39,5 +40,10 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="adc15b958c5d03495cd889d997401566" />
     </application>
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>

@@ -11,7 +11,10 @@ import android.widget.Toast;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.smrpv2.R;
+import com.example.smrpv2.ui.medicine.medshot.CameraFrontActivity;
 import com.example.smrpv2.ui.search.SearchActivity;
+
+import java.net.Inet4Address;
 
 /**
  * PoupFragment : MedicineFragment, 즉 약 등록하기 화면에서 +버튼 클릭 시 띄어주는 팝업창이다.
@@ -40,7 +43,8 @@ public class PopupFragment extends DialogFragment {
         Img_med_shoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                    Intent intent = new Intent(getActivity(), CameraFrontActivity.class);
+                    startActivity(intent);
             }
         });
         Img_envelope.setOnClickListener(new View.OnClickListener() {
