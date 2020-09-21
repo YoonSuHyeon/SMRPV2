@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import com.example.smrpv2.R;
 import com.example.smrpv2.common.location.LocationValue;
 
+import com.example.smrpv2.model.pharmcy_model.PharmacyItem;
 import com.example.smrpv2.model.pharmcy_model.PharmacyItems;
 
 import com.example.smrpv2.retrofit.RetrofitHelper;
@@ -27,6 +30,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import com.example.smrpv2.model.pharmcy_model.Response_phy;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link PharmacyFragment#newInstance} factory method to
@@ -50,15 +57,21 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     // TODO: Rename and change types of parameters
     private Double latitude = 0.0;
     private Double longitude = 0.0;
+
+    // TODO: Rename and change types of parameters
+    private List<PharmacyItem> list;
+    private ArrayList<PharmacyItem> list_inform;
     // TODO: Rename and change types of parameters
     private MapViewSingleton mapViewSingleton = null;
     private ViewGroup mapViewContainer = null;
     private View root = null;
     private MapView mapView;
     private MapCircle mapCircle;
-
-    private RetrofitService_pharmacy parsing = RetrofitHelper.getPharmacy().create(RetrofitService_pharmacy.class);
-
+    private PharmacyAdapter adapter; // 약국리스트에 대한 adapter
+    private RetrofitService_pharmacy parsing;
+    private MapPOIItem marker; //마커 표시를 위한 객체 선언
+    private RecyclerView recyclerView;
+    private LinearLayoutManager mlinearLayoutManager;
     public PharmacyFragment() {
         // Required empty public constructor
     }
@@ -95,8 +108,18 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_pharmacy, container, false);
+        recyclerView = root.findViewById(R.id.recycle_view);
+        mlinearLayoutManager = new LinearLayoutManager(root.getContext()); // layout 매니저 객체 선언
+        recyclerView.setLayoutManager(mlinearLayoutManager);
+        recyclerView.setHasFixedSize(true); //리싸이클 뷰 안 아이템들의 크기를 가변적으로 바꿀건지(false) , 일정한 크기를 사용할 것인지(true)
 
 
+
+        parsing = RetrofitHelper.getPharmacy().create(RetrofitService_pharmacy.class);
+
+        /// item간에 거리
+        RecyclerDecoration spaceDecoration = new RecyclerDecoration(0);
+        recyclerView.addItemDecoration(spaceDecoration);
 
         createMapView();
 
@@ -117,6 +140,22 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
             allocateLocation(locationValue);
         }
 
+        adapter.setOnItemClickListener(new OnPharmacyItemClickListener() {
+            @Override
+            public void onItemClick(PharmacyAdapter.ViewHolder holder, View view, int position) {
+
+            }
+
+            @Override
+            public void onCallClick(int position) {
+
+            }
+
+            @Override
+            public void onPath(int position) {
+
+            }
+        });
         return root;
     }
 
@@ -185,14 +224,23 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     }
 
     private void parsingData(double latitude,double longitude,int radiuse){
-        Call<Response_phy> call = parsing.getList(latitude,longitude,radiuse);
+        Log.d(TAG, "latitude: "+latitude);
+        Log.d(TAG, "longitude: "+longitude);
+
+
+        Call<Response_phy> call = parsing.getList(longitude,latitude,radiuse);
+
         call.enqueue(new Callback<Response_phy>() {
             @Override
             public void onResponse(Call<Response_phy> call, Response<Response_phy> response) {
                 Log.d(TAG, "onResponse: "+response.body().getHeader().getResultMsg());
                 if(response.isSuccessful()){
+
                     int size = response.body().getBody().getItems().getItemsList().size();
-                    Log.d(TAG, "list.size(): "+size);
+
+                    List<PharmacyItem> list = response.body().getBody().getItems().getItemsList();
+                    Log.d(TAG, "list.size(): "+list.size());
+
                     for(int i = 0 ; i < size; i++){
                         String addr = response.body().getBody().getItems().getItemsList().get(i).getAddr();
                         String distance = response.body().getBody().getItems().getItemsList().get(i).getDistance();
@@ -204,6 +252,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
 
                         Log.d(TAG, "addr: "+addr +" distance: "+distance+" postNo: "+postNo+" telno: "+telno+" yadmNm: "+yadmNm+" latittude: "+latittude+" longitude: "+longitude );
                     }
+                    addMarker(list);
                 }
             }
 
@@ -213,7 +262,30 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
             }
         });
     }
+    private void addMarker(List<PharmacyItem> totalList){
+        this.list = totalList;
+        list_inform = new ArrayList<>();
+        adapter = new PharmacyAdapter(list_inform);
+        recyclerView.setAdapter(adapter);
+        for(int i = 0 ; i < list.size(); i++){
+            marker= new MapPOIItem(); // 약국들을 mapview 에 표시하기 전에 marker를 생성함.
+            marker.setItemName(list.get(i).getYadmNm()); //marker의 타이틀(제목)값을 부여
+            marker.setTag(1);//MapView 객체에 등록된 POI Item들 중 특정 POI Item을 찾기 위한 식별자로 사용할 수 있음.
 
+            marker.setMapPoint(MapPoint.mapPointWithGeoCoord(list.get(i).getLongitude(), list.get(i).getLatitude())); //mapview의 초점을 marker를 중심으로 함 latitude:127.0 longitude 37.0
+            marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+            marker.setCustomImageResourceId(R.drawable.location_icon); //커스텀 icon 을 설정하기 위함
+            //marker2.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
+            //marker2.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+
+            marker.setCustomImageAutoscale(false);// hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌
+            //marker2.setAlpha(0.2f);// marker 투명도
+            mapView.addPOIItem(marker);//mapview위에 marker 띄우기
+            list_inform.add(list.get(i));
+        }
+        Log.d(TAG, "list.size: "+adapter.getItemCount());
+        adapter.notifyDataSetChanged();
+    }
 
     //////////////////      MapView 객체 이벤트 처리  ////////////////////////////
     @Override
