@@ -43,6 +43,7 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
     RecyclerView Lst_color= null ;
     RecyclerView Lst_dosageForm= null ;
     RecyclerView Lst_line= null ;
+    RecyclerView Lst_result = null;
     ImageView iv_back;
 
     SearchRecyclerAdapter adapter_row1 = null ;
@@ -87,6 +88,7 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
         Lst_color = findViewById(R.id.Lst_color);
         Lst_dosageForm = findViewById(R.id.Lst_dosageForm);
         Lst_line = findViewById(R.id.Lst_line);
+        Lst_result = findViewById(R.id.recycler_medicine);
         Btn_search = findViewById(R.id.Btn_search);
         iv_back = findViewById(R.id.iv_back);
 
@@ -242,6 +244,7 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
         searchResultItem = new ArrayList<MedicineItem>();
 
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+
         Btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -250,6 +253,8 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
                  * 서버
                  *
                  */
+
+
             }
         });
 

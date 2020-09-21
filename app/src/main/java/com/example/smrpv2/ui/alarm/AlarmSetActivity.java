@@ -130,6 +130,7 @@ public class AlarmSetActivity extends AppCompatActivity {
 
         }
 
+
         btn_before.setOnClickListener(new View.OnClickListener() {//식전버튼을 눌렀을 때
             @Override
             public void onClick(View view) {

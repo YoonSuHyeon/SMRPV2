@@ -114,11 +114,11 @@ public class ReportResultActivity extends AppCompatActivity implements ReportRec
         depart = list.get(position).getDepartment(); // 클릭한 질병의 진료 과
 
         // 각 정보들을 상세정보 페이지에 전달해준다.
-      /*  Intent intent = new Intent(this, DetailActivity.class);
+        Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra("selected_sym",sym);
         intent.putExtra("selected_dis",disease);
         intent.putExtra("selected_depart",depart);
-        startActivity(intent);*/
+        startActivity(intent);
 
 
     }

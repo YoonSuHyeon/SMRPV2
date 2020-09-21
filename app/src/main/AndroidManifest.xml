@@ -47,6 +47,7 @@
         <activity android:name=".ui.findid.FindIdActivity" />
         <activity android:name=".ui.start.StartActivity" />
         <activity android:name=".ui.main.MainActivity" />
+        <activity android:name=".ui.report.DetailActivity"/>
 
         <meta-data
             android:name="com.kakao.sdk.kakaonavi.useWebView"

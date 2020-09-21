@@ -90,6 +90,18 @@ public class AlarmFragment extends Fragment {
 
             }
         });
+
+        items.add(new AlarmItem("hghg",
+                "2020-11-11",
+                "2020-11-12",
+                "3",
+                (long)123,
+                "식전",
+                "4"
+        ));
+        listViewAdapter.notifyDataSetChanged();
+
+
         return v;
 
     }

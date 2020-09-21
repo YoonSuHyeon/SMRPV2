@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="379dp"
+        android:layout_height="wrap_content"
+        android:background="#F2EEEE"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn1"
+                android:layout_width="115dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="가정의학과" />
+
+            <Button
+                android:id="@+id/btn2"
+                android:layout_width="97dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="성형외과" />
+
+            <Button
+                android:id="@+id/btn3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="소아과" />
+
+            <Button
+                android:id="@+id/btn4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="내과" />
+
+            <Button
+                android:id="@+id/btn5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="외과" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn6"
+                android:layout_width="115dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="이비인후과" />
+
+            <Button
+                android:id="@+id/btn7"
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="정형외과" />
+
+            <Button
+                android:id="@+id/btn8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="피부과" />
+
+            <Button
+                android:id="@+id/btn9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="안과" />
+
+            <Button
+                android:id="@+id/btn10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="치과" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_weight="1"
+                android:text="정신건강의학과" />
+
+            <Button
+                android:id="@+id/btn12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="응급실" />
+
+            <Button
+                android:id="@+id/btn13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="한의원" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="7dp"
+            android:text="원하시는 진료과목을 선택해주세요"
+            android:textColor="#000000"
+            android:textSize="13sp"></TextView>
+
+        <Button
+            android:id="@+id/Btn_cancel"
+            android:layout_width="36dp"
+            android:layout_height="19dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/btn_cancel_shape"
+            android:text="취소"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:textStyle="bold"
+
+            />
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

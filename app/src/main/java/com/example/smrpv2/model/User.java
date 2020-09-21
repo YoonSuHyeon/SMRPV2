@@ -10,6 +10,15 @@ public class User {
     String gender;
     String birth;
 
+    public User(String id, String email, String password, String name, String gender, String birth) {
+        this.userId = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.gender = gender;
+        this.birth = birth;
+    }
+
     public String getUserId() {
         return userId;
     }

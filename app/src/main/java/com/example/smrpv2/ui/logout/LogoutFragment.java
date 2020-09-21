@@ -1,66 +1,139 @@
 package com.example.smrpv2.ui.logout;
 
+import android.app.AlarmManager;
+import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
+
+import com.example.smrpv2.model.User;
+import com.example.smrpv2.ui.alarm.Alarm_Reciver;
+import com.example.smrpv2.ui.login.LoginActivity;
 import com.example.smrpv2.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link LogoutFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class LogoutFragment extends Fragment {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public LogoutFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment BlankFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static LogoutFragment newInstance(String param1, String param2) {
-        LogoutFragment fragment = new LogoutFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+public class LogoutFragment extends DialogFragment implements View.OnClickListener {
+    private SharedPreferences loginInfromation;
+    private SharedPreferences.Editor editor;
+    private FragmentManager fragmentManager;
+    private Boolean bool_logout = false;
+    public static AlarmManager alarmManager=null;
+    public static PendingIntent pendingIntent=null;
+    Intent intent;
+    private Dialog enddialog;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        AlertDialog.Builder alertdialog = new AlertDialog.Builder(getContext());
+
+        alertdialog.setCancelable(false);//외부영역 터치시 dismiss되는것을 방지
+        alertdialog.setMessage("현재 계정을 종료하시겠습니까?");
+        loginInfromation = getActivity().getSharedPreferences("setting",0);
+        enddialog = new Dialog();
+
+        alertdialog.setPositiveButton("네", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                String user_id = loginInfromation.getString("id","");
+                String user_pass = loginInfromation.getString("password","");
+                String name = loginInfromation.getString("name","");
+                String getAutoLogin = loginInfromation.getString("auto_login","");
+
+
+
+                User user = new User(user_id,"",user_pass,"","",""); //서버에서 USER 클래스를 받기에 불필요한 매개변수가 들어가도 이해할것
+                /**
+                 * 서버
+                 * 알람에 관한것
+                 */
+                editor = loginInfromation.edit();
+                editor.clear();
+                editor.commit();
+            }
+        });
+
+        alertdialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.addToBackStack(null);
+                ft.commit();
+                fragmentManager.popBackStack();
+
+            }
+        });
+
+        AlertDialog alert = alertdialog.create();
+        alert.show();
+    }
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+
+        final View root = inflater.inflate(R.layout.fragment_logout, container, false);
+        root.setVisibility(View.GONE);
+
+        return root;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_logout, container, false);
+    public void onClick(View v) {
+
     }
+
+
+    private class Dialog extends AsyncTask<Void,Void,Void>{
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("로그아웃 중입니다.");
+            progressDialog.show();
+
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Thread.sleep(2500); // 2초 지속
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            progressDialog.dismiss();
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+            super.onPostExecute(result);
+        }
+    }
+
 }

@@ -2,7 +2,9 @@ package com.example.smrpv2.model;
 
 import android.graphics.drawable.Drawable;
 
-public class MedicineItem {
+import java.io.Serializable;
+
+public class MedicineItem implements Serializable {
 
     // Medicine 정보 - SearchActivity에서 쓰임 - 약 모양, 약 색깔 등등에 관한 것
     private Drawable Dra_icon ;
@@ -20,6 +22,11 @@ public class MedicineItem {
     private String Str_type;
 
     public MedicineItem(){}
+
+    /**
+     * SearchActivity에서 검색하기 버튼 눌렀을 때 밑에 RecyclerView 출력되게 하는 아이템
+     *
+     */
     public MedicineItem(String itemSeq, String url, String name, String entpName, String Str_form, String Str_type) {
         this.itemSeq = itemSeq;
         this.url = url;

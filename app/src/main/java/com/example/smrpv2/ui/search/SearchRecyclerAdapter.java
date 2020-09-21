@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.MedicineItem;
+import com.example.smrpv2.ui.medicine.MedicineDetailActivity;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     int size;
     private int[] row_images;
     int t1=0, t2=0;
+    Context context;
     public interface OnItemClickListener {
         void onItemClick(View v, int position, RecyclerView rList) ;
     }
@@ -51,11 +53,14 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             mSelectedItems.put(i,false);}
     }
+    SearchRecyclerAdapter(ArrayList<MedicineItem> list){
+        mData = list;
+    }
 
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext() ;
+        context = parent.getContext() ;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) ;
 
         View view;
@@ -220,9 +225,10 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
                     if(pos != RecyclerView.NO_POSITION){
-                      //  Intent intent = new Intent(context.getApplicationContext(), MedicineDetailActivity.class);
-                        //intent.putExtra("itemSeq",mData.get(pos).getItemSeq().toString());
-                        //context.startActivity(intent);
+                        Intent intent = new Intent(context.getApplicationContext(), MedicineDetailActivity.class);
+                        intent.putExtra("itemSeq",mData.get(pos).getItemSeq().toString());
+                        intent.putExtra("Search","Search");
+                        context.startActivity(intent);
                     }
                 }
             });
