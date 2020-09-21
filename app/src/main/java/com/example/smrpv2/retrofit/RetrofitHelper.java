@@ -11,4 +11,8 @@ public class RetrofitHelper {
         return new Retrofit.Builder().baseUrl("http://222.113.57.91:8080/").
                 addConverterFactory(GsonConverterFactory.create()).build();
     }
+    static public Retrofit getPharmacy(){
+        return new Retrofit.Builder().baseUrl("http://apis.data.go.kr").
+                addConverterFactory(GsonConverterFactory.create()).build();
+    }
 }
