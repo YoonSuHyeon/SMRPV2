@@ -13,7 +13,8 @@
         <activity android:name=".ui.medicine.medshot.CameraBackActivity" />
         <activity android:name=".ui.medicine.medshot.CameraFrontActivity" />
         <activity android:name=".ui.medicine.MedicineDetailActivity" />
-        <activity android:name=".ui.alarm.AlarmSetActivity" />
+        <activity android:name=".ui.alarm.AlarmSetActivity"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".ui.alarm.AlarmEditActivity" />
         <activity android:name=".ui.report.ReportResultActivity" />
         <activity android:name=".ui.search.SearchActivity" />

@@ -494,9 +494,7 @@ public class CameraFrontFragment extends Fragment
                     height = size.y;
 
 
-                    Log.d("mTextureView",  mTextureView.getWidth()+"ggg"+ mTextureView.getHeight());
 
-                    Log.d("canvas", canvas.getWidth()+"can"+ canvas.getHeight());
 
 
 
@@ -615,7 +613,7 @@ public class CameraFrontFragment extends Fragment
                 Size largest = Collections.max(
                         Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
                         new CompareSizesByArea());
-                Log.d("largest",""+largest.getWidth()+ "    " +largest.getHeight());
+
                 mImageReader = ImageReader.newInstance(width, height,
                         ImageFormat.JPEG, /*maxImages*/2);
                 mImageReader.setOnImageAvailableListener(
@@ -667,21 +665,15 @@ public class CameraFrontFragment extends Fragment
                 }
 
 
-                Log.d(TAG, "rotatedPreviewWidth: "+rotatedPreviewWidth);
-                Log.d(TAG, "rotatedPreviewHeight: "+rotatedPreviewHeight);
-                Log.d(TAG, "maxPreviewWidth: "+maxPreviewWidth);
-                Log.d(TAG, "maxPreviewHeight: "+maxPreviewHeight);
-                Log.d(TAG, "largest.getHeight(): "+largest.getHeight());
-                Log.d(TAG, "largest.getWidth(): "+largest.getWidth());
+
                 // Danger, W.R.! Attempting to use too large a preview size could  exceed the camera
                 // bus' bandwidth limitation, resulting in gorgeous previews but the storage of
                 // garbage capture data.
-                // Log.d("함수전 mPreviewSize",mPreviewSize.getWidth()+"ggg"+mPreviewSize.getHeight());
+
                 mPreviewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class),
                         rotatedPreviewWidth, rotatedPreviewHeight, maxPreviewWidth,
                         maxPreviewHeight, largest);
 
-                Log.d("함수후 전 mPreviewSize",mPreviewSize.getWidth()+"ggg"+mPreviewSize.getHeight());
 
                 // We fit the aspect ratio of TextureView to the size of preview we picked.
                 int orientation = getResources().getConfiguration().orientation;
@@ -951,7 +943,7 @@ public class CameraFrontFragment extends Fragment
                                                @NonNull TotalCaptureResult result) {
 
                     showToast("Saved: " + mFile);
-                    Log.d(TAG, mFile.toString());
+
 
                     //Intent intent = new Intent(getActivity(),MainActivity.class);
                     Intent intent = new Intent(getActivity(),CameraBackActivity.class);
