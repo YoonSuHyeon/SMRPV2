@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,6 +19,10 @@ import com.example.smrpv2.ui.alarm.BottomSheetDialog;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * MedicineDetailActivity : 약 리스트 클릭 시 상세 정보 보여줌
@@ -35,9 +40,10 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
     ImageView iv_back; //뒤로가기 이미지뷰
     ImageView ic_dot;
     Button Btn_set;
+    Button Btn_add;
     TextView medicineName,medicineEntpName,medicineChart,medicineClassName,medicineEtcOtcName,medicineEffect,medicineUsage;
 
-    String itemSeq ,time;// intent용 변수
+    String itemSeq ,time, search;// intent용 변수
     private String str_image, str_name, str_seq,str_eq;
     String user_id;
     final int MEDICINE =0;
@@ -55,6 +61,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
 
         //초기화..
         Btn_set = findViewById(R.id.btn_set);
+        Btn_add = findViewById(R.id.btn_add);
         medicineImage=findViewById(R.id.iv_medicine);
         iv_back=findViewById(R.id.iv_back);
         ic_dot = findViewById(R.id.ic_dot);
@@ -74,11 +81,15 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
         Intent intent =getIntent();
         itemSeq =intent.getStringExtra("itemSeq");
         time = intent.getStringExtra("time");
+        search = intent.getStringExtra("Search");
         listViewItemArrayList = (ArrayList<MedicineItem>) intent.getSerializableExtra("listViewItemArrayList");
 
         if(time != null){ // time이 null이 아닌 경우는 MedicineFragment에서 약 클릭한 경우
 
             Btn_set.setVisibility(View.VISIBLE);
+        }else if(search != null){ // search가 null이 아닌 경우 SearchActivity에서 검색된 약 클릭한 경우
+            Btn_add.setVisibility(View.VISIBLE);
+            ic_dot.setVisibility(View.INVISIBLE);
         }
         display_medicineDetailInform();
 
@@ -102,6 +113,19 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
 
             }
         });
+        Btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /**
+                 * 서버 : searchMed에서 알약 검색 후 밑에 테이블에 약 띄어주는데
+                 * 그것을 클릭 시 MedicineDetailActivity가 호출되어 추가하기 버튼이 활성화 돼 약을 추가할 수 있다.
+                 * 즉, MedicineFragment에 추가할 수 있다.
+                 * 이 부분은 그 추가하는 서버 코드
+                 */
+            }
+        });
+
+
         ic_dot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,8 +137,8 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
                     bottomSheetDialog.init(user_id,itemSeq, listViewItemArrayList, TEMP_ALARM);
                 }
                 bottomSheetDialog.show(getSupportFragmentManager(),"bottomSheet");
-    }
-});
+            }
+        });
 
     }
 

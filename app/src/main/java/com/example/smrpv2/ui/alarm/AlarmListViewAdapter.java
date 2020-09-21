@@ -91,7 +91,7 @@ public class AlarmListViewAdapter extends BaseAdapter {
         });
 
 
-        read_date();
+//        read_date();
         return convertView;
     }
     void read_date(){

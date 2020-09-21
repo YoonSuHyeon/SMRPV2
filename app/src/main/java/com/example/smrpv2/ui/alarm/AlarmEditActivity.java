@@ -22,6 +22,7 @@ import com.example.smrpv2.R;
 import com.example.smrpv2.model.MedicineItem;
 import com.example.smrpv2.ui.medicine.ListViewAdapter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ import retrofit2.Response;
  * 기능 1. 클릭한 알람 수정
  * 기능 2. 클릭한 알람 삭제
  */
-public class AlarmEditActivity extends AppCompatActivity {
+public class AlarmEditActivity extends AppCompatActivity  {
     Context context;
 
     ListView Lst_medicine;
@@ -90,6 +91,8 @@ public class AlarmEditActivity extends AppCompatActivity {
         Lst_medicine.setAdapter(alarmListViewAdapter);
 
         read_alarm(); // 서버로부터 설정한 알람 정보 읽음
+
+
 
         btn_before.setOnClickListener(new View.OnClickListener() {//식전버튼을 눌렀을 때
             @Override
@@ -159,11 +162,6 @@ public class AlarmEditActivity extends AppCompatActivity {
                         onBackPressed();
                     }
                 }
-
-
-
-
-
 
             }
         });

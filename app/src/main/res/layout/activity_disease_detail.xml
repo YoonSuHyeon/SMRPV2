@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:orientation="horizontal"
+        android:background="@color/appBaseColor"
+        android:layout_alignParentTop="true"
+        android:id="@+id/top"
+
+        >
+        <ImageView
+
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_back_black_40dp"
+            android:layout_gravity="center"/>
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginRight="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="상세 정보"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:textSize="23dp" />
+
+
+
+        </RelativeLayout>
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/Txt_disease"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="병 명"
+                android:textColor="@color/appBaseColor"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                />
+            <View
+                android:id="@+id/line1"
+                android:layout_below="@+id/Txt_disease"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_width="100dp"
+                android:layout_height="1dp"
+                android:background="@color/appBaseColor"
+                />
+            <TextView
+                android:id="@+id/Txt_disease_content"
+                android:layout_below="@+id/line1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:textSize="16sp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                />
+            <View
+                android:id="@+id/line2"
+                android:layout_below="@+id/Txt_disease_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#989898"
+                />
+            <TextView
+                android:id="@+id/Txt_symptom"
+                android:layout_below="@+id/line2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="증 상"
+                android:textColor="@color/appBaseColor"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="26dp"
+                />
+            <View
+                android:id="@+id/line3"
+                android:layout_below="@+id/Txt_symptom"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_width="100dp"
+                android:layout_height="1dp"
+                android:background="@color/appBaseColor"
+                />
+            <TextView
+                android:id="@+id/Txt_symptom_content"
+                android:layout_below="@+id/line3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:textSize="16sp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+
+                />
+            <View
+                android:id="@+id/line4"
+                android:layout_below="@+id/Txt_symptom_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#989898"
+                />
+            <TextView
+                android:id="@+id/Txt_department"
+                android:layout_below="@+id/line4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="과"
+                android:textColor="@color/appBaseColor"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="26dp"
+                />
+            <View
+                android:id="@+id/line5"
+                android:layout_below="@+id/Txt_department"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_width="100dp"
+                android:layout_height="1dp"
+                android:background="@color/appBaseColor"
+                />
+            <TextView
+                android:id="@+id/Txt_department_content"
+                android:layout_below="@+id/line5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:textSize="16sp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                />
+            <View
+                android:id="@+id/line6"
+                android:layout_below="@+id/Txt_department_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#989898"
+                />
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+
+
+</LinearLayout>

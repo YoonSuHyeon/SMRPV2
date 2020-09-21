@@ -205,11 +205,22 @@
                 android:textSize="18sp"
                 android:textColor="#FFFFFF"
                 android:id="@+id/btn_set"
-                android:visibility="invisible"
+                android:visibility="gone"
                 android:text="알람설정"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/appBaseColor"/>
+            <Button
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:id="@+id/btn_add"
+                android:text="추가하기"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/appBaseColor"
+                android:visibility="gone"
+                />
         </LinearLayout>
     </ScrollView>
 
