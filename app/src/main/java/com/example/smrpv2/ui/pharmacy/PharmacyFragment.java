@@ -228,10 +228,14 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         reLocation_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(movelatititue != 0.0 && movelongitude != 0.0){
+                    mapView.removeAllCircles();
+                    setMapView(movelatititue,movelongitude);
+                    parsingData(movelatititue,movelongitude,radiuse);
+                }else{
+                    Toast.makeText(getActivity(),"지도를 움직인 후 다시 클릭해 주세요.",Toast.LENGTH_SHORT).show();
+                }
 
-                mapView.removeAllCircles();
-                setMapView(movelatititue,movelongitude);
-                parsingData(movelatititue,movelongitude,radiuse);
             }
         });
         return root;
@@ -327,9 +331,9 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
             }
         });
     }
-    private void addMarker(List<PharmacyItem> totalList){
+    private void addMarker(List<PharmacyItem> totalList) {
         this.list = totalList;
-
+        list_inform.clear();
         recyclerView.setAdapter(adapter);
         mapView.removeAllPOIItems();
 
@@ -350,20 +354,9 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
             //marker2.setAlpha(0.2f);// marker 투명도
             mapView.addPOIItem(marker);//mapview위에 marker 띄우기
             list_inform.add(list.get(i));
+            adapter.notifyDataSetChanged();
         }
 
-        /*new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // runOnUiThread를 추가하고 그 안에 UI작업을 한다.
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-            }
-        }).start();*/
 
 
     }
