@@ -23,15 +23,4 @@ public class Body {
         return items;
     }
 
-    public int getNumOfRows() {
-        return numOfRows;
-    }
-
-    public int getPageNo() {
-        return pageNo;
-    }
-
-    public int getTotalCount() {
-        return totalCount;
-    }
 }

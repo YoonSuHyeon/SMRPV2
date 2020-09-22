@@ -23,11 +23,13 @@ public class PharmacyAdapter extends  RecyclerView.Adapter<PharmacyAdapter.ViewH
     public PharmacyAdapter(List<PharmacyItem> list){
         this.items = list;
     }
+
     /*public interface  OnPharmacyItemClickListener{
         void onItemClick(PharmacyAdapter.ViewHolder holder, View view, int position);
         void onCallClick(int position);
         void onPath(int position);
     }*/
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -78,7 +80,7 @@ public class PharmacyAdapter extends  RecyclerView.Adapter<PharmacyAdapter.ViewH
             textview_address = itemView.findViewById(R.id.textView_address);
             textView_telno = itemView.findViewById(R.id.textView_telno);
             button_path= itemView.findViewById(R.id.root_Btn);
-
+            button_call = itemView.findViewById(R.id.call_Btn);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

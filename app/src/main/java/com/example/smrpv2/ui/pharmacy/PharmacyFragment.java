@@ -1,6 +1,8 @@
 package com.example.smrpv2.ui.pharmacy;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.smrpv2.R;
 import com.example.smrpv2.common.location.LocationValue;
@@ -30,6 +33,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import com.example.smrpv2.model.pharmcy_model.Response_phy;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.kakao.kakaonavi.KakaoNaviParams;
+import com.kakao.kakaonavi.KakaoNaviService;
+import com.kakao.kakaonavi.NaviOptions;
+import com.kakao.kakaonavi.options.CoordType;
+import com.kakao.kakaonavi.options.RpOption;
+import com.kakao.kakaonavi.options.VehicleType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,16 +67,25 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     // TODO: Rename and change types of parameters
     private Double latitude = 0.0;
     private Double longitude = 0.0;
+    private Double movelatititue = 0.0;
+    private Double movelongitude = 0.0;
+    // TODO: Rename and change types of parameters
+    private FloatingActionButton locaton_Btn,reLocation_Btn;    // location_Btn: 내 위치 재 검색
+                                                                // reLocation_Btn: 지도에 표시된 곳 재 검색
 
     // TODO: Rename and change types of parameters
     private List<PharmacyItem> list;
     private ArrayList<PharmacyItem> list_inform;
     // TODO: Rename and change types of parameters
     private MapViewSingleton mapViewSingleton = null;
+    private LocationValue locationValue;
+    private PharmacyItems pharmacyItems;
     private ViewGroup mapViewContainer = null;
     private View root = null;
+
     private MapView mapView;
     private MapCircle mapCircle;
+
     private PharmacyAdapter adapter; // 약국리스트에 대한 adapter
     private RetrofitService_pharmacy parsing;
     private MapPOIItem marker; //마커 표시를 위한 객체 선언
@@ -108,22 +127,29 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_pharmacy, container, false);
+
+        /** FloationActionButton 객체 할당 **/
+        locaton_Btn = root.findViewById(R.id.floatingActionButton1);
+        reLocation_Btn = root.findViewById(R.id.floatingActionButton2);
+
+        /** ReCyclerView 부분 (시작)**/
         recyclerView = root.findViewById(R.id.recycle_view);
         mlinearLayoutManager = new LinearLayoutManager(root.getContext()); // layout 매니저 객체 선언
         recyclerView.setLayoutManager(mlinearLayoutManager);
         recyclerView.setHasFixedSize(true); //리싸이클 뷰 안 아이템들의 크기를 가변적으로 바꿀건지(false) , 일정한 크기를 사용할 것인지(true)
+        /** ReCyclerView 부분 (끝)**/
 
 
-
+        /** 데이터를 얻고자 하는 서버 주소값이 설정 되어있는 객체를 할당 **/
         parsing = RetrofitHelper.getPharmacy().create(RetrofitService_pharmacy.class);
 
         /// item간에 거리
         RecyclerDecoration spaceDecoration = new RecyclerDecoration(0);
         recyclerView.addItemDecoration(spaceDecoration);
 
-        createMapView();
+        createMapView(); //지도 객체 생성
 
-        LocationValue locationValue = new LocationValue(getActivity());
+        locationValue = new LocationValue(getActivity());
         locationValue.startMoule(); // 모듈을 이용하여 자신의 위치값을 가져온다.
 
         allocateLocation(locationValue); //위치변수에 값을 할당
@@ -140,20 +166,72 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
             allocateLocation(locationValue);
         }
 
+
+        /** 검색된 약국 리스트를 담고 이 리스트를 adapter에 설정**/
+        list_inform = new ArrayList<>();
+        adapter = new PharmacyAdapter(list_inform);
+
+        /** adapter 클릭 이벤트 처리(시작) **/
         adapter.setOnItemClickListener(new OnPharmacyItemClickListener() {
             @Override
             public void onItemClick(PharmacyAdapter.ViewHolder holder, View view, int position) {
+                double lat = list.get(position).getLongitude();
+                double lon = list.get(position).getLatitude();
 
+                mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(lat, lon), true);
             }
 
             @Override
             public void onCallClick(int position) {
-
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+list.get(position).getTelNo()));
+                //ACTION_DIAL: 전화 다이얼로그 Action_call:전화 연결
+                //startActivity(intent);
+                Toast.makeText(getActivity(),"통화 연결다이얼로그로 전환합니다.",Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onPath(int position) {
+                if(KakaoNaviService.isKakaoNaviInstalled(getContext())){
+                    Toast.makeText(getContext(),"카카오내비에 연결합니다.",Toast.LENGTH_SHORT).show();
+                    com.kakao.kakaonavi.Location location = com.kakao.kakaonavi.Location.newBuilder(list.get(position).getAddr(),list.get(position).getLatitude(),
+                            list.get(position).getLongitude()).build();
+                    NaviOptions options = NaviOptions.newBuilder().setCoordType(CoordType.WGS84).setVehicleType(VehicleType.FIRST).setRpOption(RpOption.SHORTEST).build(); //setCoordType: 좌표계  setVehicleType: 차종  setRpOption: 경로 옵션
+                    KakaoNaviParams parms = KakaoNaviParams.newBuilder(location).setNaviOptions(options).build();
+                    KakaoNaviService.navigate(getActivity(),parms);
+                }else{ //카카오 네비게이션 설치가 안되어 있을 경우
+                    Toast.makeText(getContext(),"구글 스토어에 연결합니다.",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("https://play.google.com/store/apps/details?id=com.locnall.KimGiSa"));
+                    startActivity(intent);
 
+                }
+
+            }
+        });
+
+        /** adapter 클릭 이벤트 처리(끝) **/
+
+
+        locaton_Btn.setOnClickListener(new View.OnClickListener() {// 현재 위치값 재 할당 후 주변 검색
+            @Override
+            public void onClick(View view) {
+
+
+                locationValue.startMoule(); //모듈을 이용한 위치값 추출
+                allocateLocation(locationValue); // 위치값을 변수에 재정의
+                mapView.removeAllCircles();
+                setMapView(latitude,longitude);
+                parsingData(latitude,longitude,radiuse);
+            }
+        });
+
+        reLocation_Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mapView.removeAllCircles();
+                setMapView(movelatititue,movelongitude);
+                parsingData(movelatititue,movelongitude,radiuse);
             }
         });
         return root;
@@ -207,7 +285,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         // 줌 아웃
         mapView.zoomOut(true);
         // 트랙
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading); //트래킹 모드 on + 나침반 모드 on
+        //mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading); //트래킹 모드 on + 나침반 모드 on
 
         // 중심점에 Marker 로 표시해줍니다
         //CenterMarker(latitude, longitude);
@@ -235,38 +313,28 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
             public void onResponse(Call<Response_phy> call, Response<Response_phy> response) {
                 Log.d(TAG, "onResponse: "+response.body().getHeader().getResultMsg());
                 if(response.isSuccessful()){
-
-                    int size = response.body().getBody().getItems().getItemsList().size();
-
-                    List<PharmacyItem> list = response.body().getBody().getItems().getItemsList();
-                    Log.d(TAG, "list.size(): "+list.size());
-
-                    for(int i = 0 ; i < size; i++){
-                        String addr = response.body().getBody().getItems().getItemsList().get(i).getAddr();
-                        String distance = response.body().getBody().getItems().getItemsList().get(i).getDistance();
-                        String postNo = response.body().getBody().getItems().getItemsList().get(i).getPostNo();
-                        String telno = response.body().getBody().getItems().getItemsList().get(i).getTelNo();
-                        String yadmNm = response.body().getBody().getItems().getItemsList().get(i).getYadmNm();
-                        double latittude = response.body().getBody().getItems().getItemsList().get(i).getLatitude();
-                        double longitude = response.body().getBody().getItems().getItemsList().get(i).getLongitude();
-
-                        Log.d(TAG, "addr: "+addr +" distance: "+distance+" postNo: "+postNo+" telno: "+telno+" yadmNm: "+yadmNm+" latittude: "+latittude+" longitude: "+longitude );
-                    }
+                    pharmacyItems = response.body().getBody().getItems();
+                    list = pharmacyItems.getItemsList();
                     addMarker(list);
+
                 }
             }
 
             @Override
             public void onFailure(Call<Response_phy> call, Throwable t) {
                 Log.d(TAG, "Faill: FaillFaillFaillFaill");
+
             }
         });
     }
     private void addMarker(List<PharmacyItem> totalList){
         this.list = totalList;
-        list_inform = new ArrayList<>();
-        adapter = new PharmacyAdapter(list_inform);
+
         recyclerView.setAdapter(adapter);
+        mapView.removeAllPOIItems();
+
+        Log.d(TAG, "totalList.size(): "+totalList.size());
+        Toast.makeText(getActivity(),"총"+totalList.size()+"건이 검색되었습니다.",Toast.LENGTH_SHORT).show();
         for(int i = 0 ; i < list.size(); i++){
             marker= new MapPOIItem(); // 약국들을 mapview 에 표시하기 전에 marker를 생성함.
             marker.setItemName(list.get(i).getYadmNm()); //marker의 타이틀(제목)값을 부여
@@ -283,28 +351,77 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
             mapView.addPOIItem(marker);//mapview위에 marker 띄우기
             list_inform.add(list.get(i));
         }
-        Log.d(TAG, "list.size: "+adapter.getItemCount());
-        adapter.notifyDataSetChanged();
+
+        /*new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // runOnUiThread를 추가하고 그 안에 UI작업을 한다.
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();*/
+
+
     }
+
 
     //////////////////      MapView 객체 이벤트 처리  ////////////////////////////
     @Override
-    public void onCurrentLocationUpdate(MapView mapView, MapPoint mapPoint, float v) {
+    public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {//사용자가 MapView 에 등록된 POI Item 아이콘(마커)를 터치한 경우 호출된다.
 
     }
 
     @Override
-    public void onCurrentLocationDeviceHeadingUpdate(MapView mapView, float v) {
+    public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) { //사용하지 않은 메소드
 
     }
 
     @Override
-    public void onCurrentLocationUpdateFailed(MapView mapView) {
+    public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {//클릭한 Balloon의 정보를 가져온다.
 
     }
 
     @Override
-    public void onCurrentLocationUpdateCancelled(MapView mapView) {
+    public void onDraggablePOIItemMoved(MapView mapView, MapPOIItem mapPOIItem, MapPoint mapPoint) {
+        //단말 사용자가 길게 누른 후(long press) 끌어서(dragging) 위치 이동이 가능한 POI Item의 위치를 이동시킨 경우 호출된다
+        /*GeoCoordinate geoCoordinate = mapView.getMapCenterPoint();
+        double latitude = geoCoordinate.latitude; // 위도
+        double longitude = geoCoordinate.longitude; // 경도*/
+
+
+    }
+
+    /** 지도 객체에 대한 메소드 **/
+    /*
+     *  현재 위치 업데이트(setCurrentLocationEventListener)
+     */
+    @Override
+    public void onCurrentLocationUpdate(MapView mapView, MapPoint mapPoint, float v) { // Tracking 모드가 켜진경우 단말의 현위치 좌표값을 통보받을 수 있다.
+        /*MapPoint.GeoCoordinate mPointGeo = mapPoint.getMapPointGeoCoord();
+        longitude = mPointGeo.longitude;
+        latitude = mPointGeo.latitude;*/
+        //Toast.makeText(getActivity().getApplicationContext(),"현재 위치 좌표 업데이트 됨",Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    public void onCurrentLocationDeviceHeadingUpdate(MapView mapView, float v) { //단말의 방향(Heading) 각도값을 통보받을 수 있다.
+        //Toast.makeText(getActivity().getApplicationContext(), "단말기의 방향 각도값:"+v , Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onCurrentLocationUpdateFailed(MapView mapView) { //현위치 갱신 작업에 실패한 경우 호출된다.
+
+    }
+
+    @Override
+    public void onCurrentLocationUpdateCancelled(MapView mapView) {//현위치 트랙킹 기능이 사용자에 의해 취소된 경우 호출된다.
+        //처음 현위치를 찾는 동안에 현위치를 찾는 중이라는 Alert Dialog 인터페이스가 사용자에게 노출된다.
+        //첫 현위치를 찾기전에 사용자가 취소 버튼을 누른 경우 호출 된다.
 
     }
 
@@ -314,62 +431,44 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     }
 
     @Override
-    public void onMapViewCenterPointMoved(MapView mapView, MapPoint mapPoint) {
+    public void onMapViewCenterPointMoved(MapView mapView, MapPoint mapPoint) { //지도 중심 좌표가 이동한 경우 호출 됨.
+        //Toast.makeText(getActivity().getApplicationContext(),"지도 중심 좌표 변경",Toast.LENGTH_LONG).show();
+        movelatititue = mapPoint.getMapPointGeoCoord().latitude;
+        movelongitude = mapPoint.getMapPointGeoCoord().longitude;
+    }
+
+    @Override
+    public void onMapViewZoomLevelChanged(MapView mapView, int i) { //지도의 레벨이
 
     }
 
     @Override
-    public void onMapViewZoomLevelChanged(MapView mapView, int i) {
+    public void onMapViewSingleTapped(MapView mapView, MapPoint mapPoint) { //사용자가 지도 위 한지점을 터치 한 경우 호출
 
     }
 
     @Override
-    public void onMapViewSingleTapped(MapView mapView, MapPoint mapPoint) {
+    public void onMapViewDoubleTapped(MapView mapView, MapPoint mapPoint) { //사용자가 지도 위 한지점을 연속으로 두번 터치 한 경우 호출
 
     }
 
     @Override
-    public void onMapViewDoubleTapped(MapView mapView, MapPoint mapPoint) {
+    public void onMapViewLongPressed(MapView mapView, MapPoint mapPoint) { //사용자가 지도 한 지점을 길게 누른경우
 
     }
 
     @Override
-    public void onMapViewLongPressed(MapView mapView, MapPoint mapPoint) {
+    public void onMapViewDragStarted(MapView mapView, MapPoint mapPoint) { //사용자가 지도 드래그를 시작한 경우
 
     }
 
     @Override
-    public void onMapViewDragStarted(MapView mapView, MapPoint mapPoint) {
+    public void onMapViewDragEnded(MapView mapView, MapPoint mapPoint) { //사용자가 지도 드래그를 끝낸 경우
 
     }
 
     @Override
-    public void onMapViewDragEnded(MapView mapView, MapPoint mapPoint) {
-
-    }
-
-    @Override
-    public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
-
-    }
-
-    @Override
-    public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
-
-    }
-
-    @Override
-    public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
-
-    }
-
-    @Override
-    public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
-
-    }
-
-    @Override
-    public void onDraggablePOIItemMoved(MapView mapView, MapPOIItem mapPOIItem, MapPoint mapPoint) {
-
+    public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) { // 지도의 이동이 완료된 경우
+        //Toast.makeText(getContext().getApplicationContext(),"end of move",Toast.LENGTH_LONG).show();
     }
 }
