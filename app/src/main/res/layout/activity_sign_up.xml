@@ -9,9 +9,6 @@
     tools:context=".ui.signup.SignUpActivity">
 
 
-
-
-
     <RelativeLayout
 
         android:layout_width="match_parent"

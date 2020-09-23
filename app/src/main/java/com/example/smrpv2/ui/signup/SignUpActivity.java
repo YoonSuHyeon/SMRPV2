@@ -2,15 +2,165 @@ package com.example.smrpv2.ui.signup;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.example.smrpv2.R;
+import com.example.smrpv2.model.Message;
+import com.example.smrpv2.model.User;
+import com.example.smrpv2.retrofit.RetrofitHelper;
+import com.example.smrpv2.retrofit.RetrofitService_Server;
+import com.example.smrpv2.ui.login.LoginActivity;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+/**
+ * 회원가입 화면  : 아이디 중복검사 ,  회원가입 기능
+ **/
 public class SignUpActivity extends AppCompatActivity {
+    Context context;
+    EditText Txt_sua_id, Txt_sua_email, Txt_sua_password, Txt_sua_passwordCheck, Txt_sua_name, Txt_birth;
+    Button Btn_duplicate, Btn_sua_signUp;
+    RadioButton Rdb_man,Rdn_woman;
+    boolean checkIdStatus = false; // 중복확인검사 상태확인을 위한 변수
+
+    RetrofitService_Server networkService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        context = this;
+        initView(); //findViewById 초기화
+        networkService = RetrofitHelper.getRetrofit().create(RetrofitService_Server.class);
+
+
+        Btn_duplicate.setOnClickListener(new View.OnClickListener() {//중복확인 버튼 클릭시
+            @Override
+            public void onClick(View view) {
+                checkId(Txt_sua_id.getText().toString()); //id 중복확인
+
+            }
+        });
+
+        Btn_sua_signUp.setOnClickListener(new View.OnClickListener() {//회원가입 버튼을 클릭시..
+            @Override
+            public void onClick(View view) {
+                if (!checkAllText()) { //처음으로 전부 모든 입력을 했는지 검사를한다.
+                    show("모두 입력해 주세요");
+                } else if (!checkIdStatus) {//중복 확인 버튼 상태 확인.
+                    show("아이디 중복확인을 해주세요.");
+                } else {//회원가입
+                    signUp();
+                }
+
+
+            }
+        });
+
+
+    }
+
+    /*
+    * 아래부터는 사용된 메소드
+    * */
+
+
+
+
+    public void signUp() { //회원가입..
+
+        //새로운 User 생성
+        String id = Txt_sua_id.getText().toString();
+        String email= Txt_sua_email.getText().toString();
+        String passWord=Txt_sua_password.getText().toString();
+        String name = Txt_sua_name.getText().toString();
+        String gender="WOMAN";
+        if(Rdb_man.isChecked()) gender="MAN";
+        String birth = Txt_birth.getText().toString();
+
+
+        User user=new User(id,email,passWord,name,gender,birth);
+
+        //서버에게 user를 보내줌
+        Call<Message> call = networkService.join(user);
+        call.enqueue(new Callback<Message>(){
+
+            @Override
+            public void onResponse(Call<Message> call, Response<Message> response) {
+                show("회원가입 완료.");
+                //회원가입 완료시 Login Activity 이동
+                Intent intent= new Intent(context, LoginActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Call<Message> call, Throwable t) {
+                show("오류입니다.");
+                Log.d("Sign",t.toString());
+            }
+        });
+
+
+    }
+
+
+    public Boolean checkAllText() { //EditText 에 입력이 되어있는지 확인..
+
+        return false;
+    }
+
+
+    private void checkId(String id) { //ID 중복확인
+
+        Call<Message> call = networkService.findId(id);
+        call.enqueue(new Callback<Message>() {
+
+            @Override
+            public void onResponse(Call<Message> call, Response<Message> response) {
+                Log.d("gg", response.toString());
+                //중복검사
+                String message = response.body().getResultCode();
+                if (message.equals("OK")) {
+                    show("사용할 수 있는 ID 입니다.");
+                    checkIdStatus = true;
+                } else {
+                    show("이미 등록된 ID 입니다.");
+                    checkIdStatus = false;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Message> call, Throwable t) {
+                Log.d("zzzzzz", t.toString());
+            }
+        });
+    }
+
+    public void show(String s) { //Toast 메시지 출력
+        Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+    }
+
+    private void initView() { //init
+        Txt_sua_id = findViewById(R.id.Txt_sua_id);
+        Txt_sua_email = findViewById(R.id.Txt_sua_email);
+        Txt_sua_password = findViewById(R.id.Txt_sua_password);
+        Txt_sua_passwordCheck = findViewById(R.id.Txt_sua_passwordCheck);
+        Txt_sua_name = findViewById(R.id.Txt_sua_name);
+        Txt_birth = findViewById(R.id.Txt_birth);
+        Btn_duplicate = findViewById(R.id.Btn_duplicate);
+        Btn_sua_signUp = findViewById(R.id.Btn_sua_signUp);
+        Rdb_man=findViewById(R.id.Rdb_man);
+        Rdn_woman=findViewById(R.id.Rdn_woman);
+
     }
 }

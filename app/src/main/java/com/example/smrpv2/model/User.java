@@ -3,7 +3,7 @@ package com.example.smrpv2.model;
  * 사용자 정보 클래스
  * **/
 public class User {
-    String userId;
+    String id;
     String email;
     String password;
     String name;
@@ -11,7 +11,7 @@ public class User {
     String birth;
 
     public User(String id, String email, String password, String name, String gender, String birth) {
-        this.userId = id;
+        this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
@@ -19,12 +19,12 @@ public class User {
         this.birth = birth;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getId() {
+        return id;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setId(String userId) {
+        this.id = userId;
     }
 
     public String getEmail() {
