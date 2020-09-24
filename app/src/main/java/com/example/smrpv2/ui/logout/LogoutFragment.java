@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,16 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
 
-import com.example.smrpv2.model.User;
-import com.example.smrpv2.ui.alarm.Alarm_Reciver;
+import com.example.smrpv2.model.user.User;
 import com.example.smrpv2.ui.login.LoginActivity;
 import com.example.smrpv2.R;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LogoutFragment extends DialogFragment implements View.OnClickListener {
     private SharedPreferences loginInfromation;

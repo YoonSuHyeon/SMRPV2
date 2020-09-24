@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.Message;
-import com.example.smrpv2.model.User;
+import com.example.smrpv2.model.user.User;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_Server;
 import com.example.smrpv2.ui.login.LoginActivity;
@@ -30,10 +30,10 @@ public class SignUpActivity extends AppCompatActivity {
     Context context;
     EditText Txt_sua_id, Txt_sua_email, Txt_sua_password, Txt_sua_passwordCheck, Txt_sua_name, Txt_birth;
     Button Btn_duplicate, Btn_sua_signUp;
-    RadioButton Rdb_man,Rdn_woman;
+    RadioButton Rdb_man, Rdn_woman;
     boolean checkIdStatus = false; // 중복확인검사 상태확인을 위한 변수
 
-    RetrofitService_Server networkService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         context = this;
         initView(); //findViewById 초기화
-        networkService = RetrofitHelper.getRetrofit().create(RetrofitService_Server.class);
+
 
 
         Btn_duplicate.setOnClickListener(new View.OnClickListener() {//중복확인 버튼 클릭시
@@ -71,42 +71,43 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     /*
-    * 아래부터는 사용된 메소드
-    * */
-
-
+     * 아래부터는 사용된 메소드
+     * */
 
 
     public void signUp() { //회원가입..
 
         //새로운 User 생성
         String id = Txt_sua_id.getText().toString();
-        String email= Txt_sua_email.getText().toString();
-        String passWord=Txt_sua_password.getText().toString();
+        String email = Txt_sua_email.getText().toString();
+        String passWord = Txt_sua_password.getText().toString();
         String name = Txt_sua_name.getText().toString();
-        String gender="WOMAN";
-        if(Rdb_man.isChecked()) gender="MAN";
+        String gender = "WOMAN";
+        if (Rdb_man.isChecked()) gender = "MAN";
         String birth = Txt_birth.getText().toString();
 
 
-        User user=new User(id,email,passWord,name,gender,birth);
+        User user = new User(id, email, passWord, name, gender, birth);
 
         //서버에게 user를 보내줌
-        Call<Message> call = networkService.join(user);
-        call.enqueue(new Callback<Message>(){
+        Call<Message> call = RetrofitHelper.getRetrofitService_server().join(user);
+        call.enqueue(new Callback<Message>() {
 
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
+
+                Log.d("회원가입", response.toString());
+                Log.d("회원가입이이", response.body().toString());
                 show("회원가입 완료.");
                 //회원가입 완료시 Login Activity 이동
-                Intent intent= new Intent(context, LoginActivity.class);
+                Intent intent = new Intent(context, LoginActivity.class);
                 startActivity(intent);
             }
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
                 show("오류입니다.");
-                Log.d("Sign",t.toString());
+                Log.d("Sign", t.toString());
             }
         });
 
@@ -116,13 +117,32 @@ public class SignUpActivity extends AppCompatActivity {
 
     public Boolean checkAllText() { //EditText 에 입력이 되어있는지 확인..
 
-        return false;
+        //입력된 사용자 정보를 가져온다 .
+        String id = Txt_sua_id.getText().toString();
+        String email = Txt_sua_email.getText().toString();
+        String passWord = Txt_sua_password.getText().toString();
+        String name = Txt_sua_name.getText().toString();
+        String gender = "WOMAN";
+        if (Rdb_man.isChecked()) gender = "MAN";
+        String birth = Txt_birth.getText().toString();
+
+        //이메일 형식 검사
+        /*if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())
+        {
+            Toast.makeText(context, "이메일 형식이 아닙니다", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+         */
+
+
+        return true;
     }
 
 
     private void checkId(String id) { //ID 중복확인
 
-        Call<Message> call = networkService.findId(id);
+        Call<Message> call = RetrofitHelper.getRetrofitService_server().findId(id);
         call.enqueue(new Callback<Message>() {
 
             @Override
@@ -130,7 +150,8 @@ public class SignUpActivity extends AppCompatActivity {
                 Log.d("gg", response.toString());
                 //중복검사
                 String message = response.body().getResultCode();
-                if (message.equals("OK")) {
+
+                if (message.equals("FAIL")) {
                     show("사용할 수 있는 ID 입니다.");
                     checkIdStatus = true;
                 } else {
@@ -159,8 +180,8 @@ public class SignUpActivity extends AppCompatActivity {
         Txt_birth = findViewById(R.id.Txt_birth);
         Btn_duplicate = findViewById(R.id.Btn_duplicate);
         Btn_sua_signUp = findViewById(R.id.Btn_sua_signUp);
-        Rdb_man=findViewById(R.id.Rdb_man);
-        Rdn_woman=findViewById(R.id.Rdn_woman);
+        Rdb_man = findViewById(R.id.Rdb_man);
+        Rdn_woman = findViewById(R.id.Rdn_woman);
 
     }
 }

@@ -1,4 +1,7 @@
-package com.example.smrpv2.model;
+package com.example.smrpv2.model.user;
+
+import java.time.LocalDate;
+
 /**
  * 사용자 정보 클래스
  * **/
