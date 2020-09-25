@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent">
 
         <com.google.android.gms.maps.MapView
@@ -15,34 +15,62 @@
             android:layout_width="match_parent"
             android:layout_height="370dp"
             tools:layout_editor_absoluteX="-96dp"
-            tools:layout_editor_absoluteY="35dp"></com.google.android.gms.maps.MapView>
+            tools:layout_editor_absoluteY="35dp"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="350dp"
+            android:orientation="vertical"
+            android:gravity="bottom">
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/relocationBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="5dp"
+                android:backgroundTint="#FFFFFF"
+                android:clickable="true"
+                android:src="@drawable/re_icon"
+                app:backgroundTint="#FFFFFF"
+                app:fabSize="mini" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/mylocationtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#FFFFFF"
+                android:clickable="true"
+                android:src="@drawable/gps_16px"
+                app:backgroundTint="#FFFFFF"
+                app:fabSize="mini" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:orientation="vertical"
+            android:gravity="right|bottom">
+
+            <Button
+                android:id="@+id/hos_plusBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/mapsize_btn"
+                android:text="+"
+                android:textSize="15dp" />
+            <Button
+                android:id="@+id/hos_minusBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:textSize="15dp"
+                android:gravity="center"
+                android:text="ㅡ"
+                android:background="@drawable/mapsize_btn"/>
+        </LinearLayout>
 
     </RelativeLayout>
 
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/mylocationtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="11dp"
-        android:backgroundTint="#FFFFFF"
-        android:clickable="true"
-        android:src="@drawable/gps_16px"
-        app:backgroundTint="#FFFFFF"
-        app:fabSize="mini" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/relocationBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="7dp"
-        android:layout_marginBottom="60dp"
-        android:backgroundTint="#FFFFFF"
-        android:clickable="true"
-        android:src="@drawable/re_icon"
-        app:backgroundTint="#FFFFFF"
-        app:fabSize="mini" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -73,7 +101,6 @@
         android:id="@+id/recycle_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#E4BFD7FF">
+        android:background="#E4BFD7FF"/>
 
-    </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>

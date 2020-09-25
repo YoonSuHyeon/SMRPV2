@@ -9,40 +9,71 @@
 
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
-        android:id="@+id/phy_map_view"
         android:layout_width="match_parent"
-        android:layout_height="370dp"
-        tools:layout_editor_absoluteX="-96dp"
-        tools:layout_editor_absoluteY="35dp">
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/relocationBtn"
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/phy_map_view"
+            android:layout_width="match_parent"
+            android:layout_height="370dp"
+            tools:layout_editor_absoluteX="-96dp"
+            tools:layout_editor_absoluteY="35dp"/>
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="61dp"
-            android:backgroundTint="#FFFFFF"
-            android:clickable="true"
-            android:src="@drawable/re_icon"
-            app:backgroundTint="#FFFFFF"
-            app:fabSize="mini" />
+            android:layout_height="350dp"
+            android:orientation="vertical"
+            android:gravity="bottom">
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/relocationBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="5dp"
+                android:backgroundTint="#FFFFFF"
+                android:clickable="true"
+                android:src="@drawable/re_icon"
+                app:backgroundTint="#FFFFFF"
+                app:fabSize="mini" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/mylocationtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="11dp"
-            android:backgroundTint="#FFFFFF"
-            android:clickable="true"
-            android:src="@drawable/gps_16px"
-            app:backgroundTint="#FFFFFF"
-            app:fabSize="mini" />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/mylocationtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#FFFFFF"
+                android:clickable="true"
+                android:src="@drawable/gps_16px"
+                app:backgroundTint="#FFFFFF"
+                app:fabSize="mini" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:orientation="vertical"
+            android:gravity="right|bottom">
 
+            <Button
+                android:id="@+id/phy_plusBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/mapsize_btn"
+                android:text="+"
+                android:textSize="15dp" />
+
+            <Button
+                android:id="@+id/phy_minusBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:textSize="15dp"
+                android:gravity="center"
+                android:text="ㅡ"
+                android:background="@drawable/mapsize_btn"/>
+        </LinearLayout>
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView

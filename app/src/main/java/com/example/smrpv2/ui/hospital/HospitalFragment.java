@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -62,6 +63,9 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
      * int형 변수
      **/
     private int radiuse = 500;
+    private int zoomLevel = 3;
+    private int select_zoomLevel=1;//줌을 눌렀을 경우
+    private int dealut_zoomLevel=3;//zoomlevel 디폴트값
     /**
      * Duble형 변수
      **/
@@ -77,10 +81,7 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
     private RetrofitService_hospital retrofit;
     private LocationValue locationValue;
     private HospitalAdapter adapter;
-
     private ViewGroup mapViewContainer;
-
-
 
 
     private MapView mapView;
@@ -110,9 +111,14 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
         AlertDialog.Builder alertdialog = new AlertDialog.Builder(getContext());
 
 
-        recyclerView = root.findViewById(R.id.recycle_view); //recyclerView 객체 선언
+
+        /**Mapview객체 위 버튼 객체 선언**/
         FloatingActionButton location_fb = root.findViewById(R.id.mylocationtn);//내 위치
         FloatingActionButton research_fb = root.findViewById(R.id.relocationBtn);//재검색
+        Button hos_plusBtn = root.findViewById(R.id.hos_plusBtn);
+        Button hos_minusBtn = root.findViewById(R.id.hos_minusBtn);
+
+        recyclerView = root.findViewById(R.id.recycle_view); //recyclerView 객체 선언
         LinearLayoutManager mlinearLayoutManager = new LinearLayoutManager(root.getContext()); // layout 매니저 객체 선언
         recyclerView.setLayoutManager(mlinearLayoutManager);
         recyclerView.setHasFixedSize(true); //리싸이클 뷰 안 아이템들의 크기를 가변적으로 바꿀건지(false) , 일정한 크기를 사용할 것인지(true)
@@ -150,7 +156,7 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
                 String lat = list.get(position).getXPos();
                 String lon = list.get(position).getYPos();
                 mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(lon), Double.parseDouble(lat)), true);
-                mapView.setZoomLevel(1,true);
+                mapView.setZoomLevel(select_zoomLevel,true);
             }
 
             @Override
@@ -205,33 +211,50 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
             }
         });
 
+        hos_plusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(zoomLevel>0)
+                    mapView.setZoomLevel(--zoomLevel,true);
+                else
+                    Toast.makeText(getActivity(),"더 이상 축소할 수 없습니다.",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        hos_minusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(zoomLevel<11)
+                    mapView.setZoomLevel(++zoomLevel,true);
+                else
+                    Toast.makeText(getActivity(),"더 이상 확대할 수 없습니다.",Toast.LENGTH_SHORT).show();
+            }
+        });
         return root;
     }
 
-    private void parsingData(double latitude, double longitude, int radiuse, String dgsbjtCd) {
+    private void parsingData(double latitude, double longitude, int radiuse, final String dgsbjtCd) {
         /**
          *  병원정보서비스 API와 통신하는 메소드
          *
          **/
 
-        Log.d(TAG, "latitude: "+latitude);
-        Log.d(TAG, "longitude: "+longitude);
-        Log.d(TAG, "radiuse: "+radiuse);
-        Log.d(TAG, "dgsbjtCd: "+dgsbjtCd);
-
+        final double lat = latitude;
+        final double lng = longitude;
+        final int rad = radiuse;
+        final String dgsb = dgsbjtCd;
         Call<Response_hos> call = retrofit.getList(latitude, longitude, radiuse, dgsbjtCd);
         call.enqueue(new Callback<Response_hos>() {
             @Override
             public void onResponse(Call<Response_hos> call, Response<Response_hos> response) {
                 Log.d(TAG, "onResponse.size(): " + response.body().getResponse().getBody().getItems().getItemsList().size());
-
                 addMarker(response.body().getResponse().getBody().getItems().getItemsList());
             }
 
             @Override
             public void onFailure(Call<Response_hos> call, Throwable t) {
-                Log.d(TAG, "onFailure:onFailure");
-                Toast.makeText(getActivity(),"서버 오류",Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(),"잠시만 기다려 주세요.",Toast.LENGTH_SHORT).show();
+                parsingData(lat,lng,rad,dgsbjtCd);
             }
         });
     }
@@ -300,7 +323,7 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
         mapView.addCircle(mapCircle);
 
         //줌 레벨 변경
-        mapView.setZoomLevel(3, true);
+        mapView.setZoomLevel(dealut_zoomLevel, true);
 
         // 줌 인
         mapView.zoomIn(true);

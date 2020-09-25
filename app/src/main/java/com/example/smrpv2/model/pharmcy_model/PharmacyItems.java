@@ -12,8 +12,8 @@ import java.util.List;
 public class PharmacyItems {
 
     @ElementList(name="item",inline = true)
-    ArrayList<PharmacyItem> items;
-    public ArrayList<PharmacyItem> getItemsList(){ return items; }
+    List<PharmacyItem> items;
+    public List<PharmacyItem> getItemsList(){ return items; }
     public void clear(){
         items.clear();
     }

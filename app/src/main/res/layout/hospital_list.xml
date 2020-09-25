@@ -38,6 +38,7 @@
                             android:id="@+id/textView_hos_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+
                             android:layout_marginEnd="5dp"
                             android:breakStrategy="high_quality"
                             android:text="병원이름"
@@ -48,18 +49,18 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="7dp" />
 
                             <TextView
                                 android:id="@+id/textView_hos_type"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="bottom"
+                                android:layout_marginBottom="-4dp"
                                 android:text="규모"
+                                android:layout_gravity="bottom"
                                 android:textColor="#D5B6B0B0"
                                 android:textSize="10sp" />
 
@@ -67,8 +68,9 @@
                                 android:id="@+id/textView_hos_distance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
+
                                 android:gravity="top"
+                                android:layout_gravity="bottom"
                                 android:text="거리"
                                 android:textColor="#CBFF0000"
                                 android:textSize="10sp" />

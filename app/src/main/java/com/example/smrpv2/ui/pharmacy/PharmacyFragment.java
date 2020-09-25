@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.smrpv2.R;
@@ -64,7 +65,9 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
 
     // TODO: Rename and change types of parameters
     private int radiuse = 500;
-
+    private int select_zoomLevel = 1;
+    private int zoomLevel = 3;
+    private int defalut_zoomLevel = 3;
     // TODO: Rename and change types of parameters
     private Double latitude = 0.0;
     private Double longitude = 0.0;
@@ -135,6 +138,10 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         locaton_Btn = root.findViewById(R.id.mylocationtn);
         reLocation_Btn = root.findViewById(R.id.relocationBtn);
 
+        /** 지도 확대 축소 객체 할당**/
+        Button plusBtn = root.findViewById(R.id.phy_plusBtn);
+        Button minusBtn = root.findViewById(R.id.phy_minusBtn);
+
         /** ReCyclerView 부분 (시작)**/
         recyclerView = root.findViewById(R.id.recycle_view);
         mlinearLayoutManager = new LinearLayoutManager(root.getContext()); // layout 매니저 객체 선언
@@ -169,14 +176,6 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
 
 
 
-        /*if(latitude != 0.0 && longitude != 0.0){
-            Log.d(TAG, "latitude2: "+latitude);
-            Log.d(TAG, "longitude2: "+longitude);
-
-        }else{
-            locationValue.startMoule();
-            allocateLocation(locationValue);
-        }*/
 
 
         /** 검색된 약국 리스트를 담고 이 리스트를 adapter에 설정**/
@@ -187,11 +186,12 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         adapter.setOnItemClickListener(new OnPharmacyItemClickListener() {
             @Override
             public void onItemClick(PharmacyAdapter.ViewHolder holder, View view, int position) {
+                zoomLevel = defalut_zoomLevel;
                 double lat = list.get(position).getLongitude();
                 double lon = list.get(position).getLatitude();
 
                 mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(lat, lon), true);
-                mapView.setZoomLevel(1,true);
+                mapView.setZoomLevel(select_zoomLevel,true);
             }
 
             @Override
@@ -224,7 +224,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
 
         /** adapter 클릭 이벤트 처리(끝) **/
 
-
+        /** mapview 지도 객체 위에 버튼들의 클릭 이벤트 처리 **/
         locaton_Btn.setOnClickListener(new View.OnClickListener() {// 현재 위치값 재 할당 후 주변 검색
             @Override
             public void onClick(View view) {
@@ -251,9 +251,28 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
 
             }
         });
-        //setMapView(latitude,longitude);
 
+        plusBtn.setOnClickListener(new View.OnClickListener(){
+//0~11
+            @Override
+            public void onClick(View view) {
+                if(zoomLevel>0)
+                    mapView.setZoomLevel(--zoomLevel,true);
+                else
+                    Toast.makeText(getActivity(),"더 이상 축소할 수 없습니다.",Toast.LENGTH_SHORT).show();
+            }
+        });
 
+        minusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(zoomLevel<11)
+                    mapView.setZoomLevel(++zoomLevel,true);
+                else
+                    Toast.makeText(getActivity(),"더 이상 확대할 수 없습니다.",Toast.LENGTH_SHORT).show();
+            }
+
+        });
         return root;
     }
 
@@ -305,7 +324,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         mapCircle.setTag(2);
         mapView.addCircle(mapCircle);
         //줌 레벨 변경
-        mapView.setZoomLevel(3,true);
+        mapView.setZoomLevel(defalut_zoomLevel,true);
         // 줌 인
         mapView.zoomIn(true);
         // 줌 아웃
@@ -331,9 +350,9 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     }
 
     private void parsingData(double latitude,double longitude,int radiuse){
-        Log.d(TAG, "latitude: "+latitude);
-        Log.d(TAG, "longitude: "+longitude);
-
+        final double lat = latitude;
+        final double lng = longitude;
+        final int rad = radiuse;
 
         Call<Response_phy> call = parsing.getList(longitude,latitude,radiuse);
 
@@ -350,7 +369,8 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
 
             @Override
             public void onFailure(Call<Response_phy> call, Throwable t) {
-                Log.d(TAG, "Faill: FaillFaillFaillFaill");
+                Toast.makeText(getActivity(),"잠시만 기다려 주세요.",Toast.LENGTH_SHORT).show();
+                parsingData(lat,lng,rad);
 
             }
         });
@@ -452,7 +472,8 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     }
 
     @Override
-    public void onMapViewZoomLevelChanged(MapView mapView, int i) { //지도의 레벨이
+    public void onMapViewZoomLevelChanged(MapView mapView, int i) { //지도의 레벨이 변경될때
+        zoomLevel = i;
 
     }
 
