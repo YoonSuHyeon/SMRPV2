@@ -16,6 +16,11 @@ public class LocationValue {
     private Location gps_location = null;
     private Location network_location = null;
     private Activity activity;
+
+    /**
+     *요청하는 activity를 인자로 받아 GPS 모듈과 네트워크 모듈을 이용하여
+     * 위치정보값을 가져옴
+     */
     public LocationValue(Activity activity){
         this.activity = activity;
     }

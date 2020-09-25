@@ -21,8 +21,12 @@ public class RetrofitHelper {
     }
 
 
-    static public Retrofit getPharmacy(){
+    static public Retrofit getPhy(){
         return new Retrofit.Builder().baseUrl("http://apis.data.go.kr").
                 addConverterFactory(SimpleXmlConverterFactory.createNonStrict()).build();//SimpleXmlConverterFactory.createNonStrict() : xml용
+    }
+    static public Retrofit getHos(){
+        return new Retrofit.Builder().baseUrl("http://apis.data.go.kr").
+                addConverterFactory(GsonConverterFactory.create()).build();
     }
 }

@@ -44,7 +44,7 @@ public class PopupFragment_Hos extends DialogFragment {
         btn12 = root.findViewById(R.id.btn12);
         btn13 = root.findViewById(R.id.btn13);
         btn_cancle = root.findViewById(R.id.Btn_cancel);
-        hospitalFragment = HospitalFragment.getInstance();
+
         Log.d("TAG", "hospitalFragment2: "+hospitalFragment);
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override

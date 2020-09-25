@@ -58,7 +58,10 @@ public class LoginActivity extends AppCompatActivity {
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                login();
+                /**임시로 Intent로 선언 테스트용**/
+                Intent intent = new Intent(getApplication(), MainActivity.class);
+                startActivity(intent);
+                //login();
             }
         });
     }
