@@ -87,7 +87,7 @@
             android:textColor="@color/colorWhite" />
 
         <Button
-            android:id="@+id/select_dgsbjtCd"
+            android:id="@+id/dgsbjtCd"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"

@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.smrpv2.R;
-import com.example.smrpv2.common.location.LocationValue;
+import com.example.smrpv2.ui.common.LocationValue;
 
 import com.example.smrpv2.model.pharmcy_model.PharmacyItem;
 import com.example.smrpv2.model.pharmcy_model.PharmacyItems;
@@ -199,20 +199,20 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+list.get(position).getTelNo()));
                 //ACTION_DIAL: 전화 다이얼로그 Action_call:전화 연결
                 //startActivity(intent);
-                Toast.makeText(getActivity(),"통화 연결다이얼로그로 전환합니다.",Toast.LENGTH_LONG).show();
+                show("통화 연결다이얼로그로 전환합니다.");
             }
 
             @Override
             public void onPath(int position) {
                 if(KakaoNaviService.isKakaoNaviInstalled(getContext())){
-                    Toast.makeText(getContext(),"카카오내비에 연결합니다.",Toast.LENGTH_SHORT).show();
+                    show("카카오내비에 연결합니다.");
                     com.kakao.kakaonavi.Location location = com.kakao.kakaonavi.Location.newBuilder(list.get(position).getAddr(),list.get(position).getLatitude(),
                             list.get(position).getLongitude()).build();
                     NaviOptions options = NaviOptions.newBuilder().setCoordType(CoordType.WGS84).setVehicleType(VehicleType.FIRST).setRpOption(RpOption.SHORTEST).build(); //setCoordType: 좌표계  setVehicleType: 차종  setRpOption: 경로 옵션
                     KakaoNaviParams parms = KakaoNaviParams.newBuilder(location).setNaviOptions(options).build();
                     KakaoNaviService.navigate(getActivity(),parms);
                 }else{ //카카오 네비게이션 설치가 안되어 있을 경우
-                    Toast.makeText(getContext(),"구글 스토어에 연결합니다.",Toast.LENGTH_SHORT).show();
+                    show("구글 스토어에 연결합니다.");
                     Intent intent = new Intent(Intent.ACTION_VIEW,
                             Uri.parse("https://play.google.com/store/apps/details?id=com.locnall.KimGiSa"));
                     startActivity(intent);
@@ -228,8 +228,8 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         locaton_Btn.setOnClickListener(new View.OnClickListener() {// 현재 위치값 재 할당 후 주변 검색
             @Override
             public void onClick(View view) {
-
-
+                movelongitude=0.0;
+                movelatititue=0.0;
                 locationValue.startMoule(); //모듈을 이용한 위치값 추출
                 allocateLocation(locationValue); // 위치값을 변수에 재정의
                 mapView.removeAllCircles();
@@ -246,7 +246,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
                     setMapView(movelatititue,movelongitude);
                     parsingData(movelatititue,movelongitude,radiuse);
                 }else{
-                    Toast.makeText(getActivity(),"지도를 움직인 후 다시 클릭해 주세요.",Toast.LENGTH_SHORT).show();
+                    show("지도를 움직인 후 다시 클릭해 주세요.");
                 }
 
             }
@@ -259,7 +259,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
                 if(zoomLevel>0)
                     mapView.setZoomLevel(--zoomLevel,true);
                 else
-                    Toast.makeText(getActivity(),"더 이상 축소할 수 없습니다.",Toast.LENGTH_SHORT).show();
+                    show("더 이상 축소할 수 없습니다.");
             }
         });
 
@@ -269,7 +269,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
                 if(zoomLevel<11)
                     mapView.setZoomLevel(++zoomLevel,true);
                 else
-                    Toast.makeText(getActivity(),"더 이상 확대할 수 없습니다.",Toast.LENGTH_SHORT).show();
+                    show("더 이상 확대할 수 없습니다.");
             }
 
         });
@@ -279,19 +279,14 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     private void createMapView() { //MapView 객체 선언과 이벤트 설정하는 클래스
 
 
-        if (mapView == null) { //mapView 객체가 선언되어있지 않을경우
-            Log.d(TAG, "phy mapView null: ");
-
+        if (mapView == null)  //mapView 객체가 선언되어있지 않을경우
            mapView = new MapView(getContext());
-        }else{
-            Log.d(TAG, "mapView is not null: ");
-        }
+
 
 
         if (mapViewContainer != null) {
             mapViewContainer.removeAllViews();
         }else{
-            Log.d(TAG, "phy_createMapView:null ");
             mapViewContainer = (ViewGroup) root.findViewById(R.id.phy_map_view); // mapViewContainer 선언
             mapViewContainer.addView(mapView);
         }
@@ -309,8 +304,6 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     }
 
     private void setMapView(double latitude, double longitude){
-        Log.d(TAG, "setMapView_latitude: "+latitude);
-        Log.d(TAG, "setMapView_longitude: "+longitude);
         //하이브리드 맵 설정
         //mapView.setMapType(MapView.MapType.Hybrid); //Standard ,Statllite, Hybrid
 
@@ -343,8 +336,6 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     }//MapView의 인터페이스 설정 클래스
 
     public void allocateLocation(LocationValue locationValue){
-        Log.d(TAG, "allocateLocation_latitude: "+latitude);
-        Log.d(TAG, "allocateLocation_longitude: "+longitude);
         latitude = locationValue.getLatitude();
         longitude = locationValue.getLongitude();
     }
@@ -359,7 +350,6 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         call.enqueue(new Callback<Response_phy>() {
             @Override
             public void onResponse(Call<Response_phy> call, Response<Response_phy> response) {
-                Log.d(TAG, "onResponse: "+response.body().getHeader().getResultMsg());
                 if(response.isSuccessful()){
                     pharmacyItems = response.body().getBody().getItems();
                     addMarker(pharmacyItems.getItemsList());
@@ -369,7 +359,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
 
             @Override
             public void onFailure(Call<Response_phy> call, Throwable t) {
-                Toast.makeText(getActivity(),"잠시만 기다려 주세요.",Toast.LENGTH_SHORT).show();
+                show("잠시만 기다려 주세요.");
                 parsingData(lat,lng,rad);
 
             }
@@ -381,8 +371,8 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         recyclerView.setAdapter(adapter);
         mapView.removeAllPOIItems();
 
-        Log.d(TAG, "totalList.size(): "+totalList.size());
-        Toast.makeText(getActivity(),"총 "+totalList.size()+"건이 검색되었습니다.",Toast.LENGTH_SHORT).show();
+
+        show("총 "+totalList.size()+"건이 검색되었습니다.");
         for(int i = 0 ; i < list.size(); i++){
             marker= new MapPOIItem(); // 약국들을 mapview 에 표시하기 전에 marker를 생성함.
             marker.setItemName(list.get(i).getYadmNm()); //marker의 타이틀(제목)값을 부여
@@ -403,6 +393,9 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     }
 
 
+    public void show(String s){
+        Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
+    }
     //////////////////      MapView 객체 이벤트 처리  ////////////////////////////
     @Override
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {//사용자가 MapView 에 등록된 POI Item 아이콘(마커)를 터치한 경우 호출된다.
@@ -474,7 +467,6 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     @Override
     public void onMapViewZoomLevelChanged(MapView mapView, int i) { //지도의 레벨이 변경될때
         zoomLevel = i;
-
     }
 
     @Override
@@ -507,18 +499,5 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         //Toast.makeText(getContext().getApplicationContext(),"end of move",Toast.LENGTH_LONG).show();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroyonDestroy: ");
-       // mapViewContainer.removeView(mapView);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d(TAG, "onDestroyViewonDestroyView: ");
-       // mapViewContainer.removeView(mapView);
-    }
 
 }

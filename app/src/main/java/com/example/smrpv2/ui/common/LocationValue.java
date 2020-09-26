@@ -1,4 +1,4 @@
-package com.example.smrpv2.common.location;
+package com.example.smrpv2.ui.common;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 
 public class LocationValue {
 
