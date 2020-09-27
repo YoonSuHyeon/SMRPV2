@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,7 +34,11 @@ public class SignUpActivity extends AppCompatActivity {
     Button Btn_duplicate, Btn_sua_signUp;
     RadioButton Rdb_man, Rdn_woman;
     boolean checkIdStatus = false; // 중복확인검사 상태확인을 위한 변수
-
+    final private static String check_id = "^[a-zA-Z0-9]*$";
+    final private static String check_email = "^[0-9a-zA-Z@\\.\\_\\-]+$";
+    final private static String check_passWord = "^[a-z0-9_-]{6,18}$";
+    final private static String check_birth = "\\d{6}";
+    final private static String check_name ="^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$";
 
 
     @Override
@@ -41,8 +47,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         context = this;
         initView(); //findViewById 초기화
-
-
+        inputFilter();
 
         Btn_duplicate.setOnClickListener(new View.OnClickListener() {//중복확인 버튼 클릭시
             @Override
@@ -85,8 +90,6 @@ public class SignUpActivity extends AppCompatActivity {
         String gender = "WOMAN";
         if (Rdb_man.isChecked()) gender = "MAN";
         String birth = Txt_birth.getText().toString();
-
-
         User user = new User(id, email, passWord, name, gender, birth);
 
         //서버에게 user를 보내줌
@@ -114,27 +117,48 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-
     public Boolean checkAllText() { //EditText 에 입력이 되어있는지 확인..
 
         //입력된 사용자 정보를 가져온다 .
         String id = Txt_sua_id.getText().toString();
         String email = Txt_sua_email.getText().toString();
         String passWord = Txt_sua_password.getText().toString();
+        String passWordCheck = Txt_sua_passwordCheck.getText().toString();
         String name = Txt_sua_name.getText().toString();
         String gender = "WOMAN";
         if (Rdb_man.isChecked()) gender = "MAN";
         String birth = Txt_birth.getText().toString();
 
         //이메일 형식 검사
-        /*if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())
         {
             Toast.makeText(context, "이메일 형식이 아닙니다", Toast.LENGTH_SHORT).show();
             return false;
         }
-
-         */
-
+        //패스워드 형식 검사
+        if(!passWord.matches(check_passWord)){
+            Toast.makeText(getApplicationContext(),"안전하지 않은 패스워드입니다.",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        //패스워드 일치하지 않은 경우
+        if(!passWord.equals(passWordCheck)){
+            Toast.makeText(getApplicationContext(),"패스워드가 다릅니다.",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        //이름이 형식검사
+       if(!name.matches(check_name)){
+           Toast.makeText(getApplicationContext(),"이름을 다시 확인해주세요.",Toast.LENGTH_SHORT).show();
+           return false;
+       }
+        //생년월일이 숫자가 아닐시
+       if(!birth.matches(check_birth)){
+           if(birth.length()==6){
+               Toast.makeText(getApplicationContext(),"생년월일은 숫자만 입력해주세요.",Toast.LENGTH_SHORT).show();
+           }else{
+               Toast.makeText(getApplicationContext(),"생년월일 형식을 yymmdd로 입력해주세요.",Toast.LENGTH_SHORT).show();
+           }
+           return false;
+       }
 
         return true;
     }
@@ -170,7 +194,6 @@ public class SignUpActivity extends AppCompatActivity {
     public void show(String s) { //Toast 메시지 출력
         Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
     }
-
     private void initView() { //init
         Txt_sua_id = findViewById(R.id.Txt_sua_id);
         Txt_sua_email = findViewById(R.id.Txt_sua_email);
@@ -183,5 +206,33 @@ public class SignUpActivity extends AppCompatActivity {
         Rdb_man = findViewById(R.id.Rdb_man);
         Rdn_woman = findViewById(R.id.Rdn_woman);
 
+    }
+
+    /**
+     * 입력 제한
+     */
+    private void inputFilter(){
+        InputFilter id_inputFilter = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                if(source.toString().matches(check_id)){
+                    return source;
+                }else
+                    return "";
+            }
+        };
+        InputFilter email_inputFilter = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                if(source.toString().matches(check_email)){
+                    return source;
+                }else
+                    return "";
+            }
+        };
+        InputFilter[] id_filter = new InputFilter[]{id_inputFilter};
+        InputFilter[] email_filter = new InputFilter[]{email_inputFilter};
+        Txt_sua_id.setFilters(id_filter);
+        Txt_sua_email.setFilters(email_filter);
     }
 }

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="match_parent"
+    android:layout_margin="30dp"
+    android:gravity="center"
+    android:weightSum="1"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_weight="0.9"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:weightSum="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_weight="0.1"
+            android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
+            android:text="개인정보 수집 및 이용동의"
+            android:textStyle="bold"
+            android:textSize="20dp" />
+
+        <ScrollView
+            android:id="@+id/content"
+            style="@android:style/Widget.DeviceDefault.Light.ScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.9"
+            android:fillViewport="false">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/detail_law2" />
+        </ScrollView>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:gravity="bottom"
+        android:orientation="vertical">
+        <Button
+
+            android:gravity="center"
+            android:id="@+id/okbutton"
+            android:layout_width="136dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:background="#223CC9"
+            android:textColor="#ffffffff"
+            android:layout_weight="0"
+            android:text="닫기" />
+    </LinearLayout>
+
+</LinearLayout>
+
+
