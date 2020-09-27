@@ -101,7 +101,6 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
             File file = new File(frontImg);
             Bitmap bitmap = MediaStore.Images.Media
                     .getBitmap(getContentResolver(), Uri.fromFile(file));
-            Log.d("filebit",bitmap.getWidth()+"dd"+bitmap.getHeight());
 
             if (bitmap != null) {
                 ExifInterface ei = new ExifInterface(frontImg);
@@ -302,7 +301,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
                 //imageDetail.setText(result);
 
                 //st_result.append(result);
-                ArrayList<String> pill_list = new ArrayList();
+                ArrayList<String> pill_list = new ArrayList<>();
 
 
                 StringTokenizer token = new StringTokenizer(result , "\n");
