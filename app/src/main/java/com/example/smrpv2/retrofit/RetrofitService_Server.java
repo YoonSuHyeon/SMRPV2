@@ -15,6 +15,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface RetrofitService_Server {
+
     @GET("user/findId")
     Call<Message> findId( //아이디 중복을 위한 메시지..
                           @Query("userId") String userId
@@ -40,5 +41,11 @@ public interface RetrofitService_Server {
     Call<MedicineInfoRsponDTO> findmedicine(
             @Query("itemSeq") String itemSeq
     );
+
+    @POST("/medicine/ocr")
+    Call<MedicineInfoRsponDTO>medicineOcr(//사진촬영 OCR
+            @Body String[] medicineLogo
+    );
+
 
 }

@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.example.smrpv2.R;
+import com.example.smrpv2.model.MedicineInfoRsponDTO;
+import com.example.smrpv2.model.Message;
+import com.example.smrpv2.retrofit.RetrofitHelper;
+import com.example.smrpv2.ui.main.MainActivity;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -56,6 +61,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class GoogleOCRActivity extends AppCompatActivity implements Serializable {
@@ -319,6 +327,25 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
                     Log.d("TAG", "pil_name: ["+i+"]="+pill_list.get(i)+" /length==>"+pill_list.get(i).length());
                     textView.append(pill_list.get(i));
                 }
+
+
+
+                //서버에게 OCR 앞면 뒷면 을보냄.
+
+                String [] medicineLogo = {"HNP","375"};
+                Call<MedicineInfoRsponDTO> call= RetrofitHelper.getRetrofitService_server().medicineOcr(medicineLogo);
+                call.enqueue(new Callback<MedicineInfoRsponDTO>() {
+                    @Override
+                    public void onResponse(Call<MedicineInfoRsponDTO> call, Response<MedicineInfoRsponDTO> response) {
+
+                      Log.d("ItenName",response.body().toString());
+                    }
+
+                    @Override
+                    public void onFailure(Call<MedicineInfoRsponDTO> call, Throwable t) {
+                        Log.d("error", t.toString());
+                    }
+                });
 
 
             }
