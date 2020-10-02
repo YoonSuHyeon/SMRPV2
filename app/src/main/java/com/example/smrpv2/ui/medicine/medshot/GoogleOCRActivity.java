@@ -80,10 +80,11 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
     private ArrayList<String> itemseq_list;
     private Button add_Btn;
     private HashMap<Integer, String> select_pill_list; //사용자 선택한 약 정보를 담는 hashmap
-    private String id ;
+    private String id,pillname1="",pillname2="";
     private ImageView back_imgView;
     private Uri photoUri;
-
+    private Bitmap targetBitmap_front,targetBitmap_back;
+    private ArrayList<String> pill_list_front;
     TextView textView;
     SharedPreferences sharedPreferences;
 
@@ -93,13 +94,20 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
 
         setContentView(R.layout.activity_google_o_c_r);//activity_search_prescription
 
-        String backImg =getIntent().getStringExtra("uri");
+        String frontImg = getIntent().getStringExtra("frontImg");
+        String backImg =getIntent().getStringExtra("backImg");
+        assert frontImg != null;
+        Log.d("gggg",frontImg);
+        assert backImg != null;
         Log.d("gggg",backImg);
-        String frontImg=backImg.substring(0,backImg.lastIndexOf("/"))+"/picF.jpg";
+        String frontImgDate=backImg.substring(0,frontImg.lastIndexOf("/"))+"/picF.jpg"; //앞면이미지
+        String backImgDate=backImg.substring(0,backImg.lastIndexOf("/"))+"/picF.jpg"; //뒷면이미지
 
+        Log.d("TAG", "frontImg: "+frontImgDate);
+        Log.d("TAG", "backImg: "+backImgDate);
         context=this;
-        Bitmap rotatedBitmap = null;
 
+        Bitmap rotatedBitmap = null;
 
         ImageView imageView = findViewById(R.id.image);
 
@@ -108,47 +116,74 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
 
 
         try {
-            File file = new File(frontImg);
-            Bitmap bitmap = MediaStore.Images.Media
-                    .getBitmap(getContentResolver(), Uri.fromFile(file));
+            File frontfile = new File(frontImg);
+            File backfile = new File(backImg);
+            Bitmap frontbitmap = MediaStore.Images.Media
+                    .getBitmap(getContentResolver(), Uri.fromFile(frontfile));
 
-            if (bitmap != null) {
+            Bitmap backbitmap = MediaStore.Images.Media
+                    .getBitmap(getContentResolver(), Uri.fromFile(backfile));
+
+            if (frontbitmap != null) {
                 ExifInterface ei = new ExifInterface(frontImg);
-                int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                int front_orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                         ExifInterface.ORIENTATION_UNDEFINED);
-
-                switch (orientation) {
+                switch (front_orientation) {
 
                     case ExifInterface.ORIENTATION_ROTATE_90:
-                        rotatedBitmap = rotateImage(bitmap, 90);
+                        rotatedBitmap = rotateImage(frontbitmap, 90);
                         break;
 
                     case ExifInterface.ORIENTATION_ROTATE_180:
-                        rotatedBitmap = rotateImage(bitmap, 180);
+                        rotatedBitmap = rotateImage(frontbitmap, 180);
                         break;
 
                     case ExifInterface.ORIENTATION_ROTATE_270:
-                        rotatedBitmap = rotateImage(bitmap, 270);
+                        rotatedBitmap = rotateImage(frontbitmap, 270);
                         break;
 
                     case ExifInterface.ORIENTATION_NORMAL:
                     default:
-                        rotatedBitmap = bitmap;
+                        rotatedBitmap = frontbitmap;
                 }
-                //imageView.setImageBitmap(rotatedBitmap);
+
             }
+            targetBitmap_front=Bitmap.createBitmap(rotatedBitmap,rotatedBitmap.getWidth()/2-250,rotatedBitmap.getHeight()/2-250,500,500);
+            imageView.setImageBitmap(targetBitmap_front);
+            if (backbitmap != null) {
+                ExifInterface ei = new ExifInterface(backImg);
+                int back_orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                        ExifInterface.ORIENTATION_UNDEFINED);
+                switch (back_orientation) {
+
+                    case ExifInterface.ORIENTATION_ROTATE_90:
+                        rotatedBitmap = rotateImage(backbitmap, 90);
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_180:
+                        rotatedBitmap = rotateImage(backbitmap, 180);
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_270:
+                        rotatedBitmap = rotateImage(backbitmap, 270);
+                        break;
+
+                    case ExifInterface.ORIENTATION_NORMAL:
+                    default:
+                        rotatedBitmap = backbitmap;
+                }
+
+            }
+
         }catch(Exception err){
             err.printStackTrace();
         }
 
 
-        // canvas.drawRect(width/4,width/4,(width/4)*3,(width/4)*3,paint);
-        Log.d("size","width"+rotatedBitmap.getWidth()+"height="+rotatedBitmap.getHeight());
+        targetBitmap_back = Bitmap.createBitmap(rotatedBitmap,rotatedBitmap.getWidth()/2-250,rotatedBitmap.getHeight()/2-250,500,500);
 
-        Bitmap targetBitmap=Bitmap.createBitmap(rotatedBitmap,rotatedBitmap.getWidth()/2-250,rotatedBitmap.getHeight()/2-250,500,500);
-        imageView.setImageBitmap(targetBitmap);
 
-        Uploading_bitmap(targetBitmap);
+        Uploading_bitmap_front(targetBitmap_front);
 
     }
     public static Bitmap rotateImage(Bitmap source, float angle) {
@@ -158,7 +193,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
                 matrix, true);
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+   /* protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 672 && resultCode == RESULT_OK) {
@@ -174,7 +209,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
         }else{
             onBackPressed();
         }
-    }
+    }*/
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "TEST_" + timeStamp + "_";
@@ -230,7 +265,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
     }
 
 
-    private void Uploading_bitmap(Bitmap bitmap){
+    private void Uploading_bitmap_front(Bitmap bitmap){ //앞면의 이미지를 final로 정의한 상수에 맞게 이미지 처리
         if(bitmap != null){
 
             Log.d("TAG", "bitmap width: "+bitmap.getWidth());
@@ -239,10 +274,20 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
 
             //cameraView.setVisibility(View.GONE);
             //imageView.setImageBitmap(bitmap);
-            callCloudVision(bitmap);
+            front_callCloudVision(bitmap);
         }
+    }
+    private void Uploading_bitmap_back(Bitmap bitmap){//뒷면의 이미지를 final로 정의한 상수에 맞게 이미지 처리
+        if(bitmap != null){
 
+            Log.d("TAG", "bitmap width: "+bitmap.getWidth());
+            Log.d("TAG", "bitmap height: "+bitmap.getHeight());
+            bitmap = scaleBitmapDown(bitmap,MAX_DIMENSION);
 
+            //cameraView.setVisibility(View.GONE);
+            //imageView.setImageBitmap(bitmap);
+            back_callCloudVision(bitmap);
+        }
     }
 
     private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
@@ -264,11 +309,11 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
         return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
     }
 
-    private class LableDetectionTask extends AsyncTask<Object, Void, String> {
+    private class front_LableDetectionTask extends AsyncTask<Object, Void, String> {
         private final WeakReference<GoogleOCRActivity> mActivityWeakReference;
         private Vision.Images.Annotate mRequest;
         ProgressDialog progressDialog = new ProgressDialog(GoogleOCRActivity.this);
-        LableDetectionTask(GoogleOCRActivity activity, Vision.Images.Annotate annotate) {
+        front_LableDetectionTask(GoogleOCRActivity activity, Vision.Images.Annotate annotate) {
             mActivityWeakReference = new WeakReference<>(activity);
             mRequest = annotate;
         }
@@ -286,20 +331,17 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
                 Log.d("TAG", "failed to make API request because of other IOException " +
                         e.getMessage());
             }
-            //return "Cloud Vision API request failed. Check logs for details.";
 
             return "Cloud Vision API request failed. Check logs for details.";
         }
         @Override
         protected void onPreExecute() {
-            /*ViewGroup group = (ViewGroup) root.getParent();
-            if(group!=null)
-                group.removeView(root);*/
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+           /* progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setMessage("로딩중입니다..");
 
             // show dialog
-            progressDialog.show();
+            progressDialog.show();*/
             super.onPreExecute();
         }
         protected void onPostExecute(String result) { ///////////////////////////////// 객체에서 문자 추출한 결과: result
@@ -307,45 +349,111 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
 
             progressDialog.dismiss();
             if (activity != null && !activity.isFinishing()) {
-                // TextView imageDetail = activity.findViewById(R.id.textViewResult);
-                //imageDetail.setText(result);
-
-                //st_result.append(result);
-                ArrayList<String> pill_list = new ArrayList<>();
-
-
+                pill_list_front = new ArrayList<>();
+                result = result.replaceAll("nothing","");
                 StringTokenizer token = new StringTokenizer(result , "\n");
                 while(token.hasMoreTokens()){
                     String temp = token.nextToken();
-                    if(!pill_list.contains(temp))
-                        pill_list.add(temp);
+                    if(!pill_list_front.contains(temp))
+                        pill_list_front.add(temp);
                 }
-                //pill_list.remove(pill_list.size() -1); //약 리스트의 마지막 리스트 삭제
-                Log.d("TAG", "onPostExecute: "+result);
-                Log.d("TAG", "size: "+ pill_list.size());
 
-
-                for(int i = 0 ; i<pill_list.size();i++){
-                    Log.d("TAG", "pil_name: ["+i+"]="+pill_list.get(i)+" /length==>"+pill_list.get(i).length());
-                    textView.append(pill_list.get(i));
+                for(int i = 0 ; i<pill_list_front.size();i++){
+                    Log.d("TAG", "pil_name: ["+i+"]="+pill_list_front.get(i)+" /length==>"+pill_list_front.get(i).length());
+                    textView.append(pill_list_front.get(i));
                 }
 
 
+                Uploading_bitmap_back(targetBitmap_back);
 
-                //서버에게 OCR 앞면 뒷면 을보냄.
+            }
+        }
+    }
+    private class back_LableDetectionTask extends AsyncTask<Object, Void, String> {
+        private final WeakReference<GoogleOCRActivity> mActivityWeakReference;
+        private Vision.Images.Annotate mRequest;
+        ProgressDialog progressDialog = new ProgressDialog(GoogleOCRActivity.this);
+        back_LableDetectionTask(GoogleOCRActivity activity, Vision.Images.Annotate annotate) {
+            mActivityWeakReference = new WeakReference<>(activity);
+            mRequest = annotate;
+        }
 
-                String [] medicineLogo = {"HNP","375"};
+        @Override
+        protected String doInBackground(Object... params) {
+            try {
+
+                BatchAnnotateImagesResponse response = mRequest.execute();
+                return convertResponseToString(response);
+
+            } catch (GoogleJsonResponseException e) {
+                Log.d("TAG", "failed to make API request because " + e.getContent());
+            } catch (IOException e) {
+                Log.d("TAG", "failed to make API request because of other IOException " +
+                        e.getMessage());
+            }
+
+            return "Cloud Vision API request failed. Check logs for details.";
+        }
+        @Override
+        protected void onPreExecute() {
+
+            /*progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("로딩중입니다..");
+
+            // show dialog
+            progressDialog.show();*/
+            super.onPreExecute();
+        }
+        protected void onPostExecute(String result) { ///////////////////////////////// 객체에서 문자 추출한 결과: result
+            GoogleOCRActivity activity = mActivityWeakReference.get();
+
+            //progressDialog.dismiss();
+            if (activity != null && !activity.isFinishing()) {
+                ArrayList<String> pill_list_back = new ArrayList<String>();
+                result = result.replaceAll("nothing","");
+                StringTokenizer token = new StringTokenizer(result , "\n");
+                while(token.hasMoreTokens()){ //서버에서 보내준 응답에 대해 list에 담겨있는 String과 중복값을 배제
+                    String temp = token.nextToken();
+                    if(!pill_list_back.contains(temp))
+                        pill_list_back.add(temp);
+                }
+
+                for(int i = 0 ; i<pill_list_back.size();i++){
+                    Log.d("TAG", "pil_name: ["+i+"]="+pill_list_back.get(i)+" /length==>"+pill_list_back.get(i).length());
+                    textView.append(pill_list_back.get(i));
+                }
+
+
+                Log.d("TAG", "pill_list.size(): "+pill_list_back.size());
+
+
+
+                if (pill_list_front.size()!=0)
+                    pillname1 = pill_list_front.get(0);
+
+
+
+                if (pill_list_back.size()!=0)
+                    pillname2 = pill_list_back.get(0);
+
+                Log.d("TAG", "pill_list.get(1): "+pillname1);
+                Log.d("TAG", "pill_list.get(2): "+pillname2);
+                /**
+                 * 의약품 앞, 뒷면을 OCR결과물을 서버에 보냄
+                 **/
+                String [] medicineLogo = {pillname1,pillname2};
                 Call<MedicineInfoRsponDTO> call= RetrofitHelper.getRetrofitService_server().medicineOcr(medicineLogo);
                 call.enqueue(new Callback<MedicineInfoRsponDTO>() {
                     @Override
                     public void onResponse(Call<MedicineInfoRsponDTO> call, Response<MedicineInfoRsponDTO> response) {
 
-                      Log.d("ItenName",response.body().toString());
-                      if(response.body().getItemName().isEmpty()){
-                          Toast.makeText(context,"없음",Toast.LENGTH_LONG).show();
-                      }else{
-                          Toast.makeText(context,response.body().getItemName(),Toast.LENGTH_LONG).show();
-                      }
+                        //Log.d("ItenName",response.body().toString());
+                        //assert response.body() != null;
+                        if(response.body().getItemName() ==  null){
+                            Toast.makeText(context,"없음",Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(context,response.body().getItemName(),Toast.LENGTH_LONG).show();
+                        }
 
                     }
 
@@ -425,26 +533,34 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
 
         return annotateRequest;
     }
-    /*@Override
-    public void onFinished() {
-    }
-    @Override
-    public void onError(int code, String message) {
-    }*/
-    private void callCloudVision(final Bitmap bitmap) {
-        Log.d("TAG", "callCloudVision: ");
+
+    private void front_callCloudVision(final Bitmap bitmap) { //앞면 이미지를 구글서버에 요청
         // Switch text to loading
         //mImageDetails.setText(R.string.loading_message);
 
         // Do the real work in an async task, because we need to use the network anyway
         try {
-            AsyncTask<Object, Void, String> labelDetectionTask = new LableDetectionTask(this, prepareAnnotationRequest(bitmap));
+            AsyncTask<Object, Void, String> labelDetectionTask = new front_LableDetectionTask(this, prepareAnnotationRequest(bitmap));
             labelDetectionTask.execute();
         } catch (IOException e) {
             Log.d("TAG", "failed to make API request because of other IOException " +
                     e.getMessage());
         }
     }
+    private void back_callCloudVision(final Bitmap bitmap) {//뒷면 이미지를 구글서버에 요청
+        // Switch text to loading
+        //mImageDetails.setText(R.string.loading_message);
+
+        // Do the real work in an async task, because we need to use the network anyway
+        try {
+            AsyncTask<Object, Void, String> labelDetectionTask = new back_LableDetectionTask(this, prepareAnnotationRequest(bitmap));
+            labelDetectionTask.execute();
+        } catch (IOException e) {
+            Log.d("TAG", "failed to make API request because of other IOException " +
+                    e.getMessage());
+        }
+    }
+
     private String convertResponseToString(BatchAnnotateImagesResponse response) {
         StringBuilder message = new StringBuilder();
 

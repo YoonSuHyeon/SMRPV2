@@ -19,7 +19,7 @@ public class MedicineInfoRsponDTO {
     private String itemSeq;
 
     @SerializedName("itemName")
-    @Expose
+    //@Expose
     private String itemName;
 
     @SerializedName("entpSeq")

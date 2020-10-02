@@ -72,6 +72,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
@@ -103,6 +104,7 @@ public class CameraBackFragment extends Fragment
     SurfaceView surfaceView;
     int width ;
     int height;
+    String frontImg;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final String FRAGMENT_DIALOG = "dialog";
@@ -445,9 +447,18 @@ public class CameraBackFragment extends Fragment
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        frontImg = getActivity().getIntent().getStringExtra("uri");
+        Log.d(TAG, "frontImg: "+frontImg);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View  view =inflater.inflate(R.layout.fragment_camera_back, container, false);
+
+
         return view;
     }
 
@@ -941,7 +952,8 @@ public class CameraBackFragment extends Fragment
 
                     //Intent intent = new Intent(getActivity(),MainActivity.class);
                     Intent intent = new Intent(getActivity(),GoogleOCRActivity.class);
-                    intent.putExtra("uri",mFile.getAbsolutePath());
+                    intent.putExtra("frontImg",frontImg);
+                    intent.putExtra("backImg",mFile.getAbsolutePath());
 
                     startActivity(intent);
                     //   imageView.setImageResource(R.drawable.tile);

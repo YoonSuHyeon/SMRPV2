@@ -481,12 +481,6 @@ public class CameraFrontFragment extends Fragment
 
 
 
-
-
-
-
-
-
                     Display display =  getActivity().getWindowManager().getDefaultDisplay() ;
                     Point size = new Point();
                     display.getRealSize(size); // or getSize(size)
@@ -951,6 +945,7 @@ public class CameraFrontFragment extends Fragment
 
                     //Intent intent = new Intent(getActivity(),MainActivity.class);
                     Intent intent = new Intent(getActivity(),CameraBackActivity.class);
+                    intent.putExtra("uri",mFile.getAbsolutePath());//앞면사진
                     startActivity(intent);
                     //   imageView.setImageResource(R.drawable.tile);
                     //  imageView.setImageURI(Uri.parse(mFile.getAbsolutePath()));
