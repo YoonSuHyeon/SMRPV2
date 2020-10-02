@@ -2,6 +2,7 @@ package com.example.smrpv2.ui.medicine.medshot;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -75,7 +76,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
     private static final int MAX_DIMENSION = 1080;//1080
     private Dialog dialog;
     private boolean bool_end = false;
-
+    Context context;
     private ArrayList<String> itemseq_list;
     private Button add_Btn;
     private HashMap<Integer, String> select_pill_list; //사용자 선택한 약 정보를 담는 hashmap
@@ -89,13 +90,14 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_google_o_c_r);//activity_search_prescription
 
         String backImg =getIntent().getStringExtra("uri");
         Log.d("gggg",backImg);
         String frontImg=backImg.substring(0,backImg.lastIndexOf("/"))+"/picF.jpg";
 
-
+        context=this;
         Bitmap rotatedBitmap = null;
 
 
@@ -339,6 +341,12 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
                     public void onResponse(Call<MedicineInfoRsponDTO> call, Response<MedicineInfoRsponDTO> response) {
 
                       Log.d("ItenName",response.body().toString());
+                      if(response.body().getItemName().isEmpty()){
+                          Toast.makeText(context,"없음",Toast.LENGTH_LONG).show();
+                      }else{
+                          Toast.makeText(context,response.body().getItemName(),Toast.LENGTH_LONG).show();
+                      }
+
                     }
 
                     @Override
