@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +16,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
-import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.MedicineItem;
+import com.example.smrpv2.model.ConMedicineAskDto;
+import com.example.smrpv2.model.MedicineInfoRsponDTO;
+import com.example.smrpv2.retrofit.RetrofitHelper;
+import com.example.smrpv2.retrofit.RetrofitService_Server;
+
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * SearchActivity : 약을 검색할 수 있는 Activity
@@ -91,7 +101,7 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
         Lst_result = findViewById(R.id.recycler_medicine);
         Btn_search = findViewById(R.id.Btn_search);
         iv_back = findViewById(R.id.iv_back);
-
+        searchResultItem = new ArrayList<MedicineItem>();
         shape1.add("모양전체");
         color1.add("색상전체");
         formula1.add("제형전체");
@@ -117,122 +127,9 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
         Lst_line .setAdapter(adapter_row4);
         Lst_line .setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)) ;
 
-
-
+        //초기화 작업..
         resizeTableSize();
-
-
-
-
-        //list_row1 - 모양 결정
-        addItem(list_row1,null,
-                "모양\n전체",1, "모양전체");
-        addItem(list_row1,getDrawable(R.drawable.ic_circle), "원형",0,"원형");
-        addItem(list_row1,getDrawable(R.drawable.ic_triangle),
-                "삼각형",0, "삼각형");
-        addItem(list_row1,getDrawable(R.drawable.ic_rectangle),
-                "사각형",0,"사각형");
-        addItem(list_row1,getDrawable(R.drawable.ic_rhombus),
-                "마름모",0,"마름모형");
-        addItem(list_row1,getDrawable(R.drawable.ic_oblong),
-                "장방형",0,"장방형");
-        addItem(list_row1,getDrawable(R.drawable.ic_oval),
-                "타원형",0,"타원형");
-        addItem(list_row1,getDrawable(R.drawable.ic_semicircle),
-                "반원형",0,"반원형");
-
-        addItem(list_row1,getDrawable(R.drawable.ic_pentagon),
-                "오각형",0,"오각형");
-
-        addItem(list_row1,getDrawable(R.drawable.ic_hexagon),
-                "육각형",0,"육각형");
-
-        addItem(list_row1,getDrawable(R.drawable.ic_octagon),
-                "팔각형",0,"팔각형");
-
-
-        addItem(list_row1,getDrawable(R.drawable.ic_etc),
-                "기타",0,"기타");
-
-
-        //list_row2 - 색상
-        addItem(list_row2,null,
-                "색상\n전체",1, "색상전체");
-        addItem(list_row2,getDrawable(R.drawable.ic_white),
-                "하양",0, "하양");
-        addItem(list_row2,getDrawable(R.drawable.ic_yellow),
-                "노랑",0,"노랑");
-        addItem(list_row2,getDrawable(R.drawable.ic_orange),
-                "주황",0,"주황");
-        addItem(list_row2,getDrawable(R.drawable.ic_pink),
-                "분홍",0,"분홍");
-        addItem(list_row2,getDrawable(R.drawable.ic_red),
-                "빨강",0,"빨강");
-        addItem(list_row2,getDrawable(R.drawable.ic_brown),
-                "갈색",0,"갈색");
-        addItem(list_row2,getDrawable(R.drawable.ic_yellowgreen),
-                "연두",0,"연두");
-        addItem(list_row2,getDrawable(R.drawable.ic_purple),
-                "보라",0,"보라");
-        addItem(list_row2,getDrawable(R.drawable.ic_bluegreen),
-                "청록",0,"청록");
-        addItem(list_row2,getDrawable(R.drawable.ic_blue),
-                "파랑",0,"파랑");
-        addItem(list_row2,getDrawable(R.drawable.ic_navy),
-                "남색",0,"남색");
-        addItem(list_row2,getDrawable(R.drawable.ic_redviolet),
-                "자주",0,"자주");
-        addItem(list_row2,getDrawable(R.drawable.ic_gray),
-                "회색",0,"회색");
-        addItem(list_row2,getDrawable(R.drawable.ic_black),
-                "검정",0,"검정");
-
-
-
-
-
-
-
-
-
-        //list_row3 - 제형
-        addItem(list_row3,null,
-                "제형\n전체",1,"제형전체");
-        addItem(list_row3,getDrawable(R.drawable.ic_ref),
-                "정제류",0,"정제류");
-        addItem(list_row3,getDrawable(R.drawable.ic_hard_cap),
-                "경질캡슐",0,"경질캡슐");
-        addItem(list_row3,getDrawable(R.drawable.ic_soft_cap),
-                "연질캡슐",0,"연질캡슐");
-
-        //list_row4 - 분할선
-        addItem(list_row4,null,
-                "분할선전체",1,"분할선전체");
-        addItem(list_row4,getDrawable(R.drawable.ic_empty),
-                "없음",0,"없음");
-        addItem(list_row4,getDrawable(R.drawable.ic_minus),
-                "(-)형",0,"-");
-        addItem(list_row4,getDrawable(R.drawable.ic_line_plus),
-                "(+)형",0,"+");
-        addItem(list_row4,getDrawable(R.drawable.ic_line_etc),
-                "기타",0,"기타");
-
-        mSelectedItems1.put(0,true);
-        mSelectedItems2.put(0,true);
-        mSelectedItems3.put(0,true);
-        mSelectedItems4.put(0,true);
-        for(int i =1 ; i < 12; i++) mSelectedItems1.put(i,false);
-        for(int i =1 ; i < 15; i++) mSelectedItems2.put(i,false);
-        for(int i =1 ; i < 4; i++) mSelectedItems3.put(i,false);
-        for(int i =1 ; i < 5; i++) mSelectedItems4.put(i,false);
-
-        Lst_shape.getItemAnimator().setChangeDuration(0);
-        Lst_color.getItemAnimator().setChangeDuration(0);
-        Lst_dosageForm.getItemAnimator().setChangeDuration(0);
-        Lst_line.getItemAnimator().setChangeDuration(0);
-        adapter_row3.notifyDataSetChanged();
-
-
+        addList();
 
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,26 +137,17 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
                 onBackPressed();
             }
         });
-
-        searchResultItem = new ArrayList<MedicineItem>();
-
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-
         Btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /**
-                 *
-                 * 서버
-                 *
-                 */
-
-
+                imm.hideSoftInputFromWindow(et_findMedicine.getWindowToken(), 0);
+                searchResult(); // 서버와 연결해서 검색 결과 출력
             }
         });
-
-
     }
+
+
     public void addItem(ArrayList<MedicineItem> list, Drawable icon, String n, int v, String t) {
         MedicineItem item = new MedicineItem();
         if((icon!=null)){
@@ -334,6 +222,139 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
         ViewGroup.LayoutParams lay = (ViewGroup.LayoutParams) Layout_table.getLayoutParams();
         lay.height =  mHeight;
         Layout_table.setLayoutParams(lay);
+    }
+    private void addList(){
+        addItem(list_row1,null,
+                "모양\n전체",6, "모양전체");
+        addItem(list_row1,getDrawable(R.drawable.ic_circle), "원형",5,"원형");
+        addItem(list_row1,getDrawable(R.drawable.ic_triangle),
+                "삼각형",5, "삼각형");
+        addItem(list_row1,getDrawable(R.drawable.ic_rectangle),
+                "사각형",5,"사각형");
+        addItem(list_row1,getDrawable(R.drawable.ic_rhombus),
+                "마름모",5,"마름모형");
+        addItem(list_row1,getDrawable(R.drawable.ic_oblong),
+                "장방형",5,"장방형");
+        addItem(list_row1,getDrawable(R.drawable.ic_oval),
+                "타원형",5,"타원형");
+        addItem(list_row1,getDrawable(R.drawable.ic_semicircle),
+                "반원형",5,"반원형");
+
+        addItem(list_row1,getDrawable(R.drawable.ic_pentagon),
+                "오각형",5,"오각형");
+
+        addItem(list_row1,getDrawable(R.drawable.ic_hexagon),
+                "육각형",5,"육각형");
+
+        addItem(list_row1,getDrawable(R.drawable.ic_octagon),
+                "팔각형",5,"팔각형");
+
+
+        addItem(list_row1,getDrawable(R.drawable.ic_etc),
+                "기타",5,"기타");
+
+        //list_row2 - 색상
+        addItem(list_row2,null,
+                "색상\n전체",6, "색상전체");
+        addItem(list_row2,getDrawable(R.drawable.ic_white),
+                "하양",5, "하양");
+        addItem(list_row2,getDrawable(R.drawable.ic_yellow),
+                "노랑",5,"노랑");
+        addItem(list_row2,getDrawable(R.drawable.ic_orange),
+                "주황",5,"주황");
+        addItem(list_row2,getDrawable(R.drawable.ic_pink),
+                "분홍",5,"분홍");
+        addItem(list_row2,getDrawable(R.drawable.ic_red),
+                "빨강",5,"빨강");
+        addItem(list_row2,getDrawable(R.drawable.ic_brown),
+                "갈색",5,"갈색");
+        addItem(list_row2,getDrawable(R.drawable.ic_yellowgreen),
+                "연두",5,"연두");
+        addItem(list_row2,getDrawable(R.drawable.ic_purple),
+                "보라",5,"보라");
+        addItem(list_row2,getDrawable(R.drawable.ic_bluegreen),
+                "청록",5,"청록");
+        addItem(list_row2,getDrawable(R.drawable.ic_blue),
+                "파랑",5,"파랑");
+        addItem(list_row2,getDrawable(R.drawable.ic_navy),
+                "남색",5,"남색");
+        addItem(list_row2,getDrawable(R.drawable.ic_redviolet),
+                "자주",5,"자주");
+        addItem(list_row2,getDrawable(R.drawable.ic_gray),
+                "회색",5,"회색");
+        addItem(list_row2,getDrawable(R.drawable.ic_black),
+                "검정",5,"검정");
+
+        //list_row3 - 제형
+        addItem(list_row3,null,
+                "제형\n전체",6,"제형전체");
+        addItem(list_row3,getDrawable(R.drawable.ic_ref),
+                "정제류",5,"정제류");
+        addItem(list_row3,getDrawable(R.drawable.ic_hard_cap),
+                "경질캡슐",5,"경질캡슐");
+        addItem(list_row3,getDrawable(R.drawable.ic_soft_cap),
+                "연질캡슐",5,"연질캡슐");
+
+        //list_row4 - 분할선
+        addItem(list_row4,null,
+                "분할선전체",6,"분할선전체");
+        addItem(list_row4,getDrawable(R.drawable.ic_empty),
+                "없음",5,"없음");
+        addItem(list_row4,getDrawable(R.drawable.ic_minus),
+                "(-)형",5,"-");
+        addItem(list_row4,getDrawable(R.drawable.ic_line_plus),
+                "(+)형",5,"+");
+        addItem(list_row4,getDrawable(R.drawable.ic_line_etc),
+                "기타",5,"기타");
+
+        mSelectedItems1.put(0,true);
+        mSelectedItems2.put(0,true);
+        mSelectedItems3.put(0,true);
+        mSelectedItems4.put(0,true);
+        for(int i =1 ; i < 12; i++) mSelectedItems1.put(i,false);
+        for(int i =1 ; i < 15; i++) mSelectedItems2.put(i,false);
+        for(int i =1 ; i < 4; i++) mSelectedItems3.put(i,false);
+        for(int i =1 ; i < 5; i++) mSelectedItems4.put(i,false);
+
+        Lst_shape.getItemAnimator().setChangeDuration(0);
+        Lst_color.getItemAnimator().setChangeDuration(0);
+        Lst_dosageForm.getItemAnimator().setChangeDuration(0);
+        Lst_line.getItemAnimator().setChangeDuration(0);
+        adapter_row3.notifyDataSetChanged();
+    }
+    private void searchResult(){
+        RetrofitService_Server networkService= RetrofitHelper.getSearch().create(RetrofitService_Server.class);
+        ConMedicineAskDto selectedItem = new ConMedicineAskDto(et_findMedicine.getText().toString(),shape1,color1,formula1,line1);
+        Call<List<MedicineInfoRsponDTO>> call = networkService.findList(selectedItem);
+
+        call.enqueue(new Callback<List<MedicineInfoRsponDTO>>() {
+            @Override
+            public void onResponse(Call<List<MedicineInfoRsponDTO>> call, Response<List<MedicineInfoRsponDTO>> response) {
+                List<MedicineInfoRsponDTO> list = response.body();
+                RecyclerView recyclerView = findViewById(R.id.recycler_medicine);
+                if(searchResultItem.size()!=0){
+                    searchResultItem.clear();
+                }
+                try {
+                    for (int i = 0; i < list.size(); i++) {
+                        searchResultItem.add(new MedicineItem(list.get(i).getItemSeq(),list.get(i).getItemImage(), list.get(i).getItemName(), list.get(i).getEntpName(), list.get(i).getFormCodeName(), list.get(i).getEtcOtcName()));
+                    }
+                }catch(NullPointerException e){
+                    e.printStackTrace();
+                }
+
+                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+                SearchRecyclerAdapter adapter = new SearchRecyclerAdapter(searchResultItem);
+                recyclerView.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void onFailure(Call<List<MedicineInfoRsponDTO>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
 }

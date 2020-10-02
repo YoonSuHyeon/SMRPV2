@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.MedicineItem;
 import com.example.smrpv2.ui.medicine.MedicineDetailActivity;
@@ -64,12 +65,12 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) ;
 
         View view;
-        if(viewType == 0)
+        if(viewType == 5)
         {
             view = inflater.inflate(R.layout.search_list, parent, false);
             return new ViewHolder(view);
         }
-        else if(viewType == 1){
+        else if(viewType == 6){
             view = inflater.inflate(R.layout.search_list2, parent, false);
             return new TextViewHolder(view);
         }
@@ -109,7 +110,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             ((SearchResultViewHolder) holder).medicine_tv2.setText(entpName);
             ((SearchResultViewHolder) holder).medicine_tv3.setText(form);
             ((SearchResultViewHolder) holder).medicine_tv4.setText(type);
-          //  Glide.with(context).load(stringURL).override(500,100).fitCenter().into(holder.medicine_img);
+           Glide.with(context).load(stringURL).override(500,100).fitCenter().into(((SearchResultViewHolder)holder).medicine_img);
 
         }
 
