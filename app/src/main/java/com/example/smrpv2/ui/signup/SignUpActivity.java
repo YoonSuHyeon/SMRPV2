@@ -38,7 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
     final private static String check_email = "^[0-9a-zA-Z@\\.\\_\\-]+$";
     final private static String check_passWord = "^[a-z0-9_-]{6,18}$";
     final private static String check_birth = "\\d{6}";
-    final private static String check_name ="^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$";
+    final private static String check_name ="^[가-힣]{2,4}$";
 
 
     @Override

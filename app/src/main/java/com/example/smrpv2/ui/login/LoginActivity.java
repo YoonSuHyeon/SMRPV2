@@ -84,9 +84,18 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 /**임시로 Intent로 선언 테스트용**/
                 checkAutoAndStore(); // 이 코드는 임시.. (테스트용) 나중에 서버랑 합쳐야함..
-                Intent intent = new Intent(getApplication(), MainActivity.class);
-                startActivity(intent);
-                //login();
+                /*Intent intent = new Intent(getApplication(), MainActivity.class);
+                startActivity(intent);*/
+                if(user_id.equals("") || user_pass.equals("")){
+                    if(user_id.equals("") && user_pass.equals(""))
+                        show("아이디와 패스워드를 이용하세요.");
+                    else if(user_id.equals(""))
+                        show("아이디를 입력하세요.");
+                    else
+                        show("비밀번호를 입력하세요.");
+                }
+                else
+                    login();
             }
         });
 
@@ -114,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplication(), MainActivity.class);
                     startActivity(intent);
                 }else{ //로그인 실패
-                    Toast.makeText(context, "로그인 오류", Toast.LENGTH_SHORT).show();
+                    show("로그인 오류");
                 }
 
             }
@@ -207,5 +216,10 @@ public class LoginActivity extends AppCompatActivity {
         autoLogin_editor.commit();
         storeId_editor.commit();
 
+    }
+
+    private void show(String msg){
+        
+        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
     }
 }
