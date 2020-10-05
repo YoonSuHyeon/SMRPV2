@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.smrpv2.R;
-import com.example.smrpv2.ui.common.LocationValue;
+import com.example.smrpv2.common.location.LocationValue;
 
 import com.example.smrpv2.model.pharmcy_model.PharmacyItem;
 import com.example.smrpv2.model.pharmcy_model.PharmacyItems;
@@ -199,20 +199,20 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+list.get(position).getTelNo()));
                 //ACTION_DIAL: 전화 다이얼로그 Action_call:전화 연결
                 //startActivity(intent);
-                show("통화 연결다이얼로그로 전환합니다.");
+                Toast.makeText(getActivity(),"통화 연결다이얼로그로 전환합니다.",Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onPath(int position) {
                 if(KakaoNaviService.isKakaoNaviInstalled(getContext())){
-                    show("카카오내비에 연결합니다.");
+                    Toast.makeText(getContext(),"카카오내비에 연결합니다.",Toast.LENGTH_SHORT).show();
                     com.kakao.kakaonavi.Location location = com.kakao.kakaonavi.Location.newBuilder(list.get(position).getAddr(),list.get(position).getLatitude(),
                             list.get(position).getLongitude()).build();
                     NaviOptions options = NaviOptions.newBuilder().setCoordType(CoordType.WGS84).setVehicleType(VehicleType.FIRST).setRpOption(RpOption.SHORTEST).build(); //setCoordType: 좌표계  setVehicleType: 차종  setRpOption: 경로 옵션
                     KakaoNaviParams parms = KakaoNaviParams.newBuilder(location).setNaviOptions(options).build();
                     KakaoNaviService.navigate(getActivity(),parms);
                 }else{ //카카오 네비게이션 설치가 안되어 있을 경우
-                    show("구글 스토어에 연결합니다.");
+                    Toast.makeText(getContext(),"구글 스토어에 연결합니다.",Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Intent.ACTION_VIEW,
                             Uri.parse("https://play.google.com/store/apps/details?id=com.locnall.KimGiSa"));
                     startActivity(intent);
@@ -228,8 +228,8 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         locaton_Btn.setOnClickListener(new View.OnClickListener() {// 현재 위치값 재 할당 후 주변 검색
             @Override
             public void onClick(View view) {
-                movelongitude=0.0;
-                movelatititue=0.0;
+
+
                 locationValue.startMoule(); //모듈을 이용한 위치값 추출
                 allocateLocation(locationValue); // 위치값을 변수에 재정의
                 mapView.removeAllCircles();
@@ -246,7 +246,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
                     setMapView(movelatititue,movelongitude);
                     parsingData(movelatititue,movelongitude,radiuse);
                 }else{
-                    show("지도를 움직인 후 다시 클릭해 주세요.");
+                    Toast.makeText(getActivity(),"지도를 움직인 후 다시 클릭해 주세요.",Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -259,7 +259,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
                 if(zoomLevel>0)
                     mapView.setZoomLevel(--zoomLevel,true);
                 else
-                    show("더 이상 축소할 수 없습니다.");
+                    Toast.makeText(getActivity(),"더 이상 축소할 수 없습니다.",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -283,10 +283,9 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
            mapView = new MapView(getContext());
 
 
-
-        if (mapViewContainer != null) {
+        if (mapViewContainer != null)
             mapViewContainer.removeAllViews();
-        }else{
+        else{
             mapViewContainer = (ViewGroup) root.findViewById(R.id.phy_map_view); // mapViewContainer 선언
             mapViewContainer.addView(mapView);
         }
@@ -304,9 +303,9 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     }
 
     private void setMapView(double latitude, double longitude){
+        /** MapView객체에 원을 그리고 색상설정 및 초점 설정**/
         //하이브리드 맵 설정
         //mapView.setMapType(MapView.MapType.Hybrid); //Standard ,Statllite, Hybrid
-
         // 내 현재위치 원 그리기
         mapView.setCurrentLocationRadius(radiuse);
         //mapView.setHDMapTileEnabled(true);
@@ -334,13 +333,12 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         mapView.setCurrentLocationRadiusStrokeColor(Color.argb(128,95,0,255));*/
         parsingData(latitude,longitude,radiuse);
     }//MapView의 인터페이스 설정 클래스
-
     public void allocateLocation(LocationValue locationValue){
         latitude = locationValue.getLatitude();
         longitude = locationValue.getLongitude();
     }
-
     private void parsingData(double latitude,double longitude,int radiuse){
+        /** 경도 위도 반경에 대한 데이터통신을 하는 메소드**/
         final double lat = latitude;
         final double lng = longitude;
         final int rad = radiuse;
@@ -366,11 +364,11 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         });
     }
     private void addMarker(List<PharmacyItem> totalList) {
+        /** 수신한 데이터르 MapView객체에 표시하는 메소드**/
         this.list = totalList;
         list_inform.clear();
         recyclerView.setAdapter(adapter);
         mapView.removeAllPOIItems();
-
 
         show("총 "+totalList.size()+"건이 검색되었습니다.");
         for(int i = 0 ; i < list.size(); i++){
@@ -392,10 +390,10 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         }
     }
 
-
     public void show(String s){
         Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
     }
+
     //////////////////      MapView 객체 이벤트 처리  ////////////////////////////
     @Override
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {//사용자가 MapView 에 등록된 POI Item 아이콘(마커)를 터치한 경우 호출된다.
@@ -418,8 +416,6 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         /*GeoCoordinate geoCoordinate = mapView.getMapCenterPoint();
         double latitude = geoCoordinate.latitude; // 위도
         double longitude = geoCoordinate.longitude; // 경도*/
-
-
     }
 
     /** 지도 객체에 대한 메소드 **/
@@ -467,6 +463,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     @Override
     public void onMapViewZoomLevelChanged(MapView mapView, int i) { //지도의 레벨이 변경될때
         zoomLevel = i;
+
     }
 
     @Override
@@ -498,6 +495,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) { // 지도의 이동이 완료된 경우
         //Toast.makeText(getContext().getApplicationContext(),"end of move",Toast.LENGTH_LONG).show();
     }
+
 
 
 }

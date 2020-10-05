@@ -44,11 +44,12 @@ public class StartActivity extends AppCompatActivity {
         autoSlide.startSlide();
 
 
-        if (Build.VERSION.SDK_INT >= 23) {      //퍼미션 권한 부여
+        /*if (Build.VERSION.SDK_INT >= 23) {      //퍼미션 권한 부여
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET,Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.CALL_PHONE,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.CAMERA}, PERMISSION);
-        }//퍼미션접근 권한
+        }//퍼미션접근 권한*/
+        Permission p = new Permission(this);
 
         //로그인 버튼 클릭 시 ..
         login.setOnClickListener(new View.OnClickListener() {

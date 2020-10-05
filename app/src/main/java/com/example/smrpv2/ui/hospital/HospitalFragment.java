@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smrpv2.R;
-import com.example.smrpv2.ui.common.LocationValue;
+import com.example.smrpv2.common.location.LocationValue;
 import com.example.smrpv2.model.hospital_model.Response_hos;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_hospital;
@@ -58,6 +58,7 @@ import static java.lang.Thread.sleep;
 
 public class HospitalFragment extends Fragment implements MapView.MapViewEventListener, MapView.POIItemEventListener, MapView.CurrentLocationEventListener {
 
+
     /**
      * int형 변수
      **/
@@ -69,7 +70,7 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
      * Duble형 변수
      **/
     private double movelatititue = 0.0, movelongitude = 0.0;//지도 움직임 위치
-
+    private View root;
     private double latitude = 0.0, longitude = 0.0; //사용자 위치
     /**
      * String형 변수
@@ -77,14 +78,11 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
     private String dgsbjtCd = ""; //진료과목
 
 
-
     private RetrofitService_hospital retrofit;
     private LocationValue locationValue;
     private HospitalAdapter adapter;
-    private PopupHospital popupHospital;
-    private static HospitalFragment hospitalFragment;
-    private View root;
     private ViewGroup mapViewContainer;
+
 
     private MapView mapView;
     private MapCircle mapCircle;
@@ -92,7 +90,9 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
     private List<Item> list;
     private ArrayList<Item> arr_list;
 
-    private HashMap<String, String> hash_dgsbjtCd = new HashMap<>();
+    /*private Spinner dgsbjtCd_spinner, radiuse_spinner;*/
+    private ArrayAdapter dgsbjtCd_adapter, radiuse_adapter;
+    private HashMap<String, String> hash_dgsbjtCd;
     private final String TAG = "TAG";
 
 
@@ -106,7 +106,7 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
 
         root = inflater.inflate(R.layout.fragment_hospital, container, false);
         /** 진료과목 선택 버튼 **/
-        hospitalFragment = this;
+
 
         AlertDialog.Builder alertdialog = new AlertDialog.Builder(getContext());
 
@@ -115,9 +115,8 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
         /**Mapview객체 위 버튼 객체 선언**/
         FloatingActionButton location_fb = root.findViewById(R.id.mylocationtn);//내 위치
         FloatingActionButton research_fb = root.findViewById(R.id.relocationBtn);//재검색
-        Button hos_plusBtn = root.findViewById(R.id.hos_plusBtn); //지도 확대 버튼
-        Button hos_minusBtn = root.findViewById(R.id.hos_minusBtn); //지도 축소 버튼
-        Button btn_dgsbjtCd = root.findViewById(R.id.dgsbjtCd);
+        Button hos_plusBtn = root.findViewById(R.id.hos_plusBtn);
+        Button hos_minusBtn = root.findViewById(R.id.hos_minusBtn);
 
         recyclerView = root.findViewById(R.id.recycle_view); //recyclerView 객체 선언
         LinearLayoutManager mlinearLayoutManager = new LinearLayoutManager(root.getContext()); // layout 매니저 객체 선언
@@ -164,21 +163,20 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
             public void onCallClick(int position) {
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + list.get(position).getTelno()));
                 startActivity(intent);
-                show("통화 연결다이얼로그로 전환합니다.");
-
+                Toast.makeText(getActivity(), "통화 연결다이얼로그로 전환합니다.", Toast.LENGTH_LONG).show();
             }
 
 
             @Override
             public void onPathClick(int position) {
                 if (KakaoNaviService.isKakaoNaviInstalled(getContext())) {
-                    show("카카오내비에 연결합니다.");
+                    Toast.makeText(getContext(), "카카오내비에 연결합니다.", Toast.LENGTH_SHORT).show();
                     com.kakao.kakaonavi.Location location = com.kakao.kakaonavi.Location.newBuilder(list.get(position).getYadmNm(), Double.parseDouble(list.get(position).getXPos()), Double.parseDouble(list.get(position).getYPos())).build();
                     NaviOptions options = NaviOptions.newBuilder().setCoordType(CoordType.WGS84).setVehicleType(VehicleType.FIRST).setRpOption(RpOption.SHORTEST).build();
                     KakaoNaviParams parms = KakaoNaviParams.newBuilder(location).setNaviOptions(options).build();
                     KakaoNaviService.navigate(getActivity(), parms);
                 } else { //카카오 네비게이션 설치가 안되어 있을 경우
-                    show("구글 스토어에 연결합니다.");
+                    Toast.makeText(getContext(), "구글 스토어에 연결합니다.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Intent.ACTION_VIEW,
                             Uri.parse("https://play.google.com/store/apps/details?id=com.locnall.KimGiSa"));
                     startActivity(intent);
@@ -191,8 +189,6 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
         location_fb.setOnClickListener(new View.OnClickListener() { // 내 위치
             @Override
             public void onClick(View view) {
-                movelongitude=0.0;
-                movelatititue=0.0;
                 locationValue.startMoule();
                 allocateLocation(locationValue);
                 mapView.removeAllCircles();
@@ -210,7 +206,7 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
                     setMapView(movelatititue,movelongitude);
                     parsingData(movelatititue,movelongitude,radiuse,dgsbjtCd);
                 }else{
-                    show("지도를 움직인 후 다시 클릭해 주세요.");
+                    Toast.makeText(getActivity(),"지도를 움직인 후 다시 클릭해 주세요.",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -221,7 +217,7 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
                 if(zoomLevel>0)
                     mapView.setZoomLevel(--zoomLevel,true);
                 else
-                    show("더 이상 축소할 수 없습니다.");
+                    Toast.makeText(getActivity(),"더 이상 축소할 수 없습니다.",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -231,14 +227,7 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
                 if(zoomLevel<11)
                     mapView.setZoomLevel(++zoomLevel,true);
                 else
-                    show("더 이상 확대할 수 없습니다.");
-            }
-        });
-        btn_dgsbjtCd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                popupHospital = PopupHospital.getInstance();
-                popupHospital.show(getActivity().getSupportFragmentManager(),"진료과목선택");
+                    Toast.makeText(getActivity(),"더 이상 확대할 수 없습니다.",Toast.LENGTH_SHORT).show();
             }
         });
         return root;
@@ -264,7 +253,7 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
 
             @Override
             public void onFailure(Call<Response_hos> call, Throwable t) {
-                show("잠시만 기다려 주세요.");
+                Toast.makeText(getActivity(),"잠시만 기다려 주세요.",Toast.LENGTH_SHORT).show();
                 parsingData(lat,lng,rad,dgsbjtCd);
             }
         });
@@ -276,8 +265,8 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
         recyclerView.setAdapter(adapter);
         mapView.removeAllPOIItems();
         int size = list.size();
-
-        show("총 "+size+"건이 검색되었습니다.");
+        Log.d(TAG, "sizesize: "+size);
+        Toast.makeText(getActivity(),"총 "+size+"건이 검색되었습니다.",Toast.LENGTH_SHORT).show();
         MapPOIItem marker = new MapPOIItem();
 
         for(int i = 0; i < size;i++){
@@ -297,17 +286,23 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
     private void createMapView() { //MapView 객체 선언과 이벤트 설정하는 클래스
 
 
-        if (mapView == null)  //mapView 객체가 선언되어있지 않을경우
+        if (mapView == null) { //mapView 객체가 선언되어있지 않을경우
+            Log.d(TAG, "hos mapView null: ");
             mapView = new MapView(getContext());
+        }
 
-        if (mapViewContainer != null)
+        if (mapViewContainer != null) {
+            Log.d(TAG, "hos_createMapView:not null ");
             mapViewContainer.removeAllViews();
-        else {
+        } else {
+            Log.d(TAG, "hos_createMapView:null ");
             mapViewContainer = (ViewGroup) root.findViewById(R.id.hos_map_view); // mapViewContainer 선언
             mapViewContainer.addView(mapView);
         }
 
 
+        /*btn_location.setVisibility(View.VISIBLE);
+        btn_research.setVisibility(View.VISIBLE);*/
         mapView.setMapViewEventListener(this); //MapView의 Event 처리를 위함
         mapView.setPOIItemEventListener(this); // MapView의 marker 표시를 위함
         mapView.setCurrentLocationEventListener(this); // MapView의 현재위치 리스너
@@ -318,6 +313,8 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
     }
 
     private void setMapView(double latitude, double longitude) { //MapView의 인터페이스 설정 클래스
+        Log.d(TAG, "setMapView_latitude: "+latitude);
+        Log.d(TAG, "setMapView_longitude: "+longitude);
         //중심적 변경
         mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(latitude, longitude), true);// 중심점 변경
 
@@ -341,6 +338,8 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
         /**
          * 모듈을 통해 위치정보값을 가져와 해당 변수에 값을 저장
          **/
+        Log.d(TAG, "allocateLocation_latitude: "+latitude);
+        Log.d(TAG, "allocateLocation_longitude: "+longitude);
         latitude = locationValue.getLatitude(); //위도
         longitude = locationValue.getLongitude();//경도
     }
@@ -348,10 +347,22 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
     protected void DgsbjtCd(String select_dgsbjtCd) {
 
         dgsbjtCd = getDgsbjtCd(select_dgsbjtCd);
+        mapView.removeAllCircles();
+        mapView.removeAllPOIItems(); //mapview 의 marker 표시를 모두 지움(새로운 marker를 최신화 하기 위해)
+
+
+
+        list.clear();
 
         if (movelatititue == 0.0 && movelongitude == 0.0) { //지도를 움직이지 않았을때
+            mapCircle = new MapCircle(MapPoint.mapPointWithGeoCoord(latitude, longitude), radiuse, Color.argb(50, 102, 102, 153), Color.argb(70, 186, 255, 255));//MapCircle(MapPoint center, int radius, int strokeColor, int fillColor)
+            mapCircle.setTag(2);
+            mapView.addCircle(mapCircle);
             parsingData(latitude, longitude, radiuse, dgsbjtCd);
         } else { //지도를 움직였을때
+            mapCircle = new MapCircle(MapPoint.mapPointWithGeoCoord(movelatititue, movelongitude), radiuse, Color.argb(50, 102, 102, 153), Color.argb(70, 186, 255, 255));//MapCircle(MapPoint center, int radius, int strokeColor, int fillColor)
+            mapCircle.setTag(2);
+            mapView.addCircle(mapCircle);
             parsingData(movelatititue, movelongitude, radiuse, dgsbjtCd);
 
         }
@@ -359,12 +370,11 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
     }
 
     private String getDgsbjtCd(String dgsbjtCd) {
-        if (hash_dgsbjtCd.size()==0) {
+        if (hash_dgsbjtCd == null) {
             hash_dgsbjtCd = new HashMap<>();
             hash_dgsbjtCd.put("-전체-", "");
             hash_dgsbjtCd.put("가정의학과", "23");
-            hash_dgsbjtCd.put("일반내과", "01");
-            hash_dgsbjtCd.put("침구과", "85");
+            hash_dgsbjtCd.put("내과", "01");
             hash_dgsbjtCd.put("외과", "04");
             hash_dgsbjtCd.put("성형외과", "08");
             hash_dgsbjtCd.put("소아과", "11");
@@ -380,9 +390,9 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
         String result = hash_dgsbjtCd.get(dgsbjtCd);
         return result;
     }
-    public void show(String s){
-        Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
-    }
+
+
+
 
     @Override
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {//사용자가 MapView 에 등록된 POI Item 아이콘(마커)를 터치한 경우 호출된다.
@@ -474,7 +484,36 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
 
 
     }
-    protected static HospitalFragment getInstance(){
-        return hospitalFragment;
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroyonDestroy: ");
+        //mapViewContainer.removeView(mapView);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG, "onDestroyViewonDestroyView: ");
+        //mapViewContainer.removeView(mapView);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPauseonPause: ");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStoponStop: ");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d(TAG, "onDetachonDetach: ");
     }
 }
