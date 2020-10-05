@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.MedicineItem;
-import com.example.smrpv2.model.ConMedicineAskDto;
-import com.example.smrpv2.model.MedicineInfoRsponDTO;
+import com.example.smrpv2.model.searchMed_model.ConMedicineAskDto;
+import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_Server;
 

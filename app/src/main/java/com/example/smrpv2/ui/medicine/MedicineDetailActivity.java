@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,10 +18,6 @@ import com.example.smrpv2.ui.alarm.BottomSheetDialog;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * MedicineDetailActivity : 약 리스트 클릭 시 상세 정보 보여줌
@@ -91,7 +86,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
             Btn_add.setVisibility(View.VISIBLE);
             ic_dot.setVisibility(View.INVISIBLE);
         }
-        display_medicineDetailInform();
+
 
 
         iv_back.setOnClickListener(new View.OnClickListener() {
@@ -146,6 +141,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
      * 약 상세 정보 각 View에 추가
      */
     void display_medicineDetailInform(){
+
         /**
          *
          *

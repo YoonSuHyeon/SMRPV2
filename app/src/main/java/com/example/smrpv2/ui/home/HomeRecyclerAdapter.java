@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.smrpv2.R;
-import com.example.smrpv2.model.HomeMedItem;
+import com.example.smrpv2.model.home_model.HomeMedItem;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 

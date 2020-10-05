@@ -1,4 +1,4 @@
-package com.example.smrpv2.model;
+package com.example.smrpv2.model.searchMed_model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
