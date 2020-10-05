@@ -14,6 +14,8 @@ import com.example.smrpv2.R;
 import com.example.smrpv2.ui.login.LoginActivity;
 import com.example.smrpv2.ui.tos.ToSActivity;
 
+import me.relex.circleindicator.CircleIndicator;
+
 /*
  * StartActivity   : 처음 으로 시작하는 액티비티  LoginActivity, TosActivity  버튼 클릭시 화면 전환
  */
@@ -22,11 +24,11 @@ public class StartActivity extends AppCompatActivity {
     ViewPagerAdapter startAdapter;
     ViewPager startViewPager;
     Button login,signUp; //로그인 버튼 , 회원가입 버튼
-
+    CircleIndicator indicator;
     AutoSlide autoSlide;
     final long DELAY_MS = 1000;
     final long PERIOD_MS = 6000;
-    private int[] images = {R.drawable.start_slide1,R.drawable.start_slide2, R.drawable.start_slide3};
+    private int[] images = {R.drawable.start_slide1, R.drawable.start_slide2,R.drawable.start_slide3};
     final int PERMISSION = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +39,12 @@ public class StartActivity extends AppCompatActivity {
         login = findViewById(R.id.Btn_login);
         signUp = findViewById(R.id.Btn_signup);
         startViewPager = findViewById(R.id.viewpager);
+        indicator = findViewById(R.id.indicator);
         startAdapter = new ViewPagerAdapter(this, images);
 
+
         startViewPager.setAdapter(startAdapter);
+        indicator.setViewPager(startViewPager);
         autoSlide = new AutoSlide(startViewPager, DELAY_MS, PERIOD_MS);
         autoSlide.startSlide();
 

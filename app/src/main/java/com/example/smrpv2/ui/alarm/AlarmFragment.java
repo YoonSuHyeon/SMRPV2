@@ -15,17 +15,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.smrpv2.R;
-import com.example.smrpv2.model.AlarmItem;
+import com.example.smrpv2.model.alarm_model.AlarmItem;
 import com.example.smrpv2.ui.start.AutoSlide;
 import com.example.smrpv2.ui.start.ViewPagerAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import me.relex.circleindicator.CircleIndicator;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * 알람 리스트 출력

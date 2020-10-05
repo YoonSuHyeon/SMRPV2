@@ -1,8 +1,8 @@
 package com.example.smrpv2.retrofit;
 
 import com.example.smrpv2.model.Message;
-import com.example.smrpv2.model.ConMedicineAskDto;
-import com.example.smrpv2.model.MedicineInfoRsponDTO;
+import com.example.smrpv2.model.searchMed_model.ConMedicineAskDto;
+import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
 import com.example.smrpv2.model.user.LoginUser;
 import com.example.smrpv2.model.user.User;
 

@@ -2,16 +2,10 @@ package com.example.smrpv2.ui.alarm;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -23,9 +17,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.widget.NestedScrollView;
-import androidx.lifecycle.ViewModelProviders;
 
 //import com.example.smrp.LoginActivity;
 import com.example.smrpv2.R;
@@ -38,11 +29,6 @@ import com.example.smrpv2.ui.medicine.ListViewAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * AlarmSetActivity : AlarmFragment에서 +버튼 눌렀을 때 알람을 설정하는 액티비티

@@ -17,7 +17,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,10 +28,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.example.smrpv2.R;
-import com.example.smrpv2.model.MedicineInfoRsponDTO;
-import com.example.smrpv2.model.Message;
+import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
 import com.example.smrpv2.retrofit.RetrofitHelper;
-import com.example.smrpv2.ui.main.MainActivity;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -59,7 +56,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 import retrofit2.Call;

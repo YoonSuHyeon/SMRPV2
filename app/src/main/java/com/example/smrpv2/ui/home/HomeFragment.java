@@ -3,7 +3,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -23,9 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import com.example.smrpv2.R;
-import com.example.smrpv2.model.HomeMedItem;
-import com.example.smrpv2.retrofit.Response;
-import com.example.smrpv2.retrofit.RetrofitFactory_home;
+import com.example.smrpv2.model.home_model.HomeMedItem;
 import com.example.smrpv2.retrofit.RetrofitService_home;
 import com.example.smrpv2.ui.search.SearchActivity;
 import com.example.smrpv2.ui.start.AutoSlide;
@@ -37,11 +34,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
+
 import me.relex.circleindicator.CircleIndicator;
-import retrofit2.Call;
-import retrofit2.Callback;
 
 /**
  * HomeFragment : 메인 화면

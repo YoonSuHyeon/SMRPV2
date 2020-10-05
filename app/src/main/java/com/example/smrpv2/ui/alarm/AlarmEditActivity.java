@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -16,19 +15,12 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.widget.NestedScrollView;
 
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.MedicineItem;
 import com.example.smrpv2.ui.medicine.ListViewAdapter;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * AlarmEditActivity : AlarmFragment에서 알람 목록 중 하나를 눌렀을 때, 그 클릭한 알람을 수정하기 위한 수정 ACTIVITY

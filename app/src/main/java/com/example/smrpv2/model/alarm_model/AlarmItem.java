@@ -1,4 +1,4 @@
-package com.example.smrpv2.model;
+package com.example.smrpv2.model.alarm_model;
 
 /**
  * AlarmItem : 알람 정보

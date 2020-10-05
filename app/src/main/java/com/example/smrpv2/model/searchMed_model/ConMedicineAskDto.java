@@ -1,4 +1,4 @@
-package com.example.smrpv2.model;
+package com.example.smrpv2.model.searchMed_model;
 
 import java.util.ArrayList;
 

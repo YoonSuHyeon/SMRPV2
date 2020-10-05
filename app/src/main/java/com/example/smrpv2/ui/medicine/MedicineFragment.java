@@ -1,6 +1,5 @@
 package com.example.smrpv2.ui.medicine;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -49,6 +49,7 @@
         <activity android:name=".ui.start.StartActivity" />
         <activity android:name=".ui.main.MainActivity" />
         <activity android:name=".ui.report.DetailActivity"/>
+        <activity android:name=".ui.medicine.searchMed.Search_prescriptionActivity"/>
 
         <meta-data
             android:name="com.kakao.sdk.kakaonavi.useWebView"
@@ -56,6 +57,17 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="adc15b958c5d03495cd889d997401566" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.smrpv2"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/image" />
+        </provider>
+
     </application>
     <uses-feature android:name="android.hardware.camera.autofocus" />
 

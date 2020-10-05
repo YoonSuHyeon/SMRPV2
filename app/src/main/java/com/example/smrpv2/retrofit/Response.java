@@ -1,7 +1,7 @@
 package com.example.smrpv2.retrofit;
 
-import com.example.smrpv2.model.Weather_item;
-import com.example.smrpv2.model.Weather_main;
+import com.example.smrpv2.model.home_model.Weather_item;
+import com.example.smrpv2.model.home_model.Weather_main;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

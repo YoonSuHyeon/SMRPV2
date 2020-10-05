@@ -2,7 +2,6 @@ package com.example.smrpv2.ui.alarm;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.smrpv2.R;
-import com.example.smrpv2.model.AlarmItem;
+import com.example.smrpv2.model.alarm_model.AlarmItem;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

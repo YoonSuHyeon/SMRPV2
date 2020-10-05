@@ -13,11 +13,11 @@ public class MedicineItem implements Serializable {
     private String Str_text;
 
     //
-    private String url; //약 이미지
-    private String name; //약 이름
-    private String itemSeq; //약 식별번호
-    private String time; //시간
-    private String entpName; //제조사
+    private String Str_url; //약 이미지
+    private String Str_name; //약 이름
+    private String Str_itemSeq; //약 식별번호
+    private String Str_time; //시간
+    private String Str_entpName; //제조사
     private String Str_form;
     private String Str_type;
 
@@ -28,20 +28,33 @@ public class MedicineItem implements Serializable {
      *
      */
     public MedicineItem(String itemSeq, String url, String name, String entpName, String Str_form, String Str_type) {
-        this.itemSeq = itemSeq;
-        this.url = url;
-        this.name = name;
-        this.entpName = entpName;
+        this.Str_itemSeq = itemSeq;
+        this.Str_url = url;
+        this.Str_name = name;
+        this.Str_entpName = entpName;
         this.Str_form = Str_form;
         this.Str_type = Str_type;
     }
     public MedicineItem(String url, String name, String itemSeq, String time, String entpName){
-        this.url = url;
-        this.name = name;
-        this.itemSeq=itemSeq;
-        this.time=time;
-        this.entpName = entpName;
+        this.Str_url = url;
+        this.Str_name = name;
+        this.Str_itemSeq =itemSeq;
+        this.Str_time =time;
+        this.Str_entpName = entpName;
     }
+
+    /**
+     *
+     * Search_prescriptionActivity && PrescriptionAdapter 에서 쓰임
+     * (약 봉투 & 처방전 찍은 거에 대한 약 리스트)
+     */
+    public MedicineItem(String itemSeq, String url, String name, String type){
+        this.Str_url = url;
+        this.Str_name = name;
+        this.Str_itemSeq =itemSeq;
+        this.Str_type = type;
+    }
+
 
     public void setIcon(Drawable icon) {Dra_icon = icon;}
     public void setInform(String n) {
@@ -71,34 +84,34 @@ public class MedicineItem implements Serializable {
         return Str_type;
     }
     public String getTime() {
-        return time;
+        return Str_time;
     }
-    public void setTime(String time) {
-        this.time = time;
+    public void setTime(String str_time) {
+        this.Str_time = str_time;
     }
     public String getItemSeq() {
-        return itemSeq;
+        return Str_itemSeq;
     }
-    public void setItemSeq(String itemSeq) {
-        this.itemSeq = itemSeq;
+    public void setItemSeq(String str_itemSeq) {
+        this.Str_itemSeq = str_itemSeq;
     }
     public String getUrl() {
-        return url;
+        return Str_url;
     }
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUrl(String str_url) {
+        this.Str_url = str_url;
     }
     public String getName() {
-        return name;
+        return Str_name;
     }
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String str_name) {
+        this.Str_name = str_name;
     }
     public String getEntpName() {
-        return entpName;
+        return Str_entpName;
     }
-    public void setEntpName(String entpName) {
-        this.entpName = entpName;
+    public void setEntpName(String str_entpName) {
+        this.Str_entpName = str_entpName;
     }
 
 }

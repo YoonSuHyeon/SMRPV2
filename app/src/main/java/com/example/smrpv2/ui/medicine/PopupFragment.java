@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.smrpv2.R;
 import com.example.smrpv2.ui.medicine.medshot.CameraFrontActivity;
+import com.example.smrpv2.ui.medicine.searchMed.Search_prescriptionActivity;
 import com.example.smrpv2.ui.search.SearchActivity;
 
 import java.net.Inet4Address;
@@ -50,11 +51,17 @@ public class PopupFragment extends DialogFragment {
         Img_envelope.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                intent = new Intent(getContext().getApplicationContext(), Search_prescriptionActivity.class);//
+                startActivity(intent);
+                dismiss();
             }
         });
         Img_prescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                intent = new Intent(getContext().getApplicationContext(), Search_prescriptionActivity.class);//
+                startActivity(intent);
+                dismiss();
 
             }
         });
