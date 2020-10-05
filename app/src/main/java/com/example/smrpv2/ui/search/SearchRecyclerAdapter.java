@@ -110,7 +110,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             ((SearchResultViewHolder) holder).medicine_tv2.setText(entpName);
             ((SearchResultViewHolder) holder).medicine_tv3.setText(form);
             ((SearchResultViewHolder) holder).medicine_tv4.setText(type);
-           Glide.with(context).load(stringURL).override(500,100).fitCenter().into(((SearchResultViewHolder)holder).medicine_img);
+            Glide.with(context).load(stringURL).override(500,100).fitCenter().into(((SearchResultViewHolder)holder).medicine_img);
 
         }
 

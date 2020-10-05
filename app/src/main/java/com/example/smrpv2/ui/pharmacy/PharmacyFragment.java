@@ -18,11 +18,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.smrpv2.R;
-import com.example.smrpv2.common.location.LocationValue;
 
 import com.example.smrpv2.model.pharmcy_model.PharmacyItem;
 import com.example.smrpv2.model.pharmcy_model.PharmacyItems;
-
+import com.example.smrpv2.ui.common.LocationValue;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_pharmacy;
 
@@ -68,6 +67,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     private int select_zoomLevel = 1;
     private int zoomLevel = 3;
     private int defalut_zoomLevel = 3;
+    int count = 1;
     // TODO: Rename and change types of parameters
     private Double latitude = 0.0;
     private Double longitude = 0.0;
@@ -199,20 +199,20 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+list.get(position).getTelNo()));
                 //ACTION_DIAL: 전화 다이얼로그 Action_call:전화 연결
                 //startActivity(intent);
-                Toast.makeText(getActivity(),"통화 연결다이얼로그로 전환합니다.",Toast.LENGTH_LONG).show();
+                show("통화 연결다이얼로그로 전환합니다.");
             }
 
             @Override
             public void onPath(int position) {
                 if(KakaoNaviService.isKakaoNaviInstalled(getContext())){
-                    Toast.makeText(getContext(),"카카오내비에 연결합니다.",Toast.LENGTH_SHORT).show();
+                    show("카카오내비에 연결합니다.");
                     com.kakao.kakaonavi.Location location = com.kakao.kakaonavi.Location.newBuilder(list.get(position).getAddr(),list.get(position).getLatitude(),
                             list.get(position).getLongitude()).build();
                     NaviOptions options = NaviOptions.newBuilder().setCoordType(CoordType.WGS84).setVehicleType(VehicleType.FIRST).setRpOption(RpOption.SHORTEST).build(); //setCoordType: 좌표계  setVehicleType: 차종  setRpOption: 경로 옵션
                     KakaoNaviParams parms = KakaoNaviParams.newBuilder(location).setNaviOptions(options).build();
                     KakaoNaviService.navigate(getActivity(),parms);
                 }else{ //카카오 네비게이션 설치가 안되어 있을 경우
-                    Toast.makeText(getContext(),"구글 스토어에 연결합니다.",Toast.LENGTH_SHORT).show();
+                    show("구글 스토어에 연결합니다.");
                     Intent intent = new Intent(Intent.ACTION_VIEW,
                             Uri.parse("https://play.google.com/store/apps/details?id=com.locnall.KimGiSa"));
                     startActivity(intent);
@@ -234,7 +234,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
                 allocateLocation(locationValue); // 위치값을 변수에 재정의
                 mapView.removeAllCircles();
                 setMapView(latitude,longitude);
-                parsingData(latitude,longitude,radiuse);
+                //parsingData(latitude,longitude,radiuse);
             }
         });
 
@@ -244,9 +244,9 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
                 if(movelatititue != 0.0 && movelongitude != 0.0){
                     mapView.removeAllCircles();
                     setMapView(movelatititue,movelongitude);
-                    parsingData(movelatititue,movelongitude,radiuse);
+                    //parsingData(movelatititue,movelongitude,radiuse);
                 }else{
-                    Toast.makeText(getActivity(),"지도를 움직인 후 다시 클릭해 주세요.",Toast.LENGTH_SHORT).show();
+                    show("지도를 움직인 후 다시 클릭해 주세요.");
                 }
 
             }
@@ -259,7 +259,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
                 if(zoomLevel>0)
                     mapView.setZoomLevel(--zoomLevel,true);
                 else
-                    Toast.makeText(getActivity(),"더 이상 축소할 수 없습니다.",Toast.LENGTH_SHORT).show();
+                    show("더 이상 축소할 수 없습니다.");
             }
         });
 
@@ -349,6 +349,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
             @Override
             public void onResponse(Call<Response_phy> call, Response<Response_phy> response) {
                 if(response.isSuccessful()){
+                    count = 1;
                     pharmacyItems = response.body().getBody().getItems();
                     addMarker(pharmacyItems.getItemsList());
 
@@ -357,8 +358,24 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
 
             @Override
             public void onFailure(Call<Response_phy> call, Throwable t) {
-                show("잠시만 기다려 주세요.");
-                parsingData(lat,lng,rad);
+
+                if(count<4){
+                    show("재시도("+count+"/3)");
+                    ++count;
+
+                    try {
+                        Thread.sleep(1000);
+                        parsingData(lat,lng,rad);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }else{
+                    count =1;
+                    list_inform.clear();
+                    adapter.notifyDataSetChanged();
+                    show("해당지역의 약국이 존재하지 않습니다.");
+                }
 
             }
         });

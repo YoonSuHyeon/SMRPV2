@@ -12,6 +12,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.example.smrpv2.R;
+import com.example.smrpv2.ui.common.SharedData;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,7 +34,10 @@ public class MainActivity extends AppCompatActivity {
         toolbar= findViewById(R.id.appbar);
         toolbar.setTitle(R.string.app_bar_title);
         setSupportActionBar(toolbar);
-
+        SharedData sharedData = new SharedData(this);
+        boolean auto_state = sharedData.isAuto_login();
+        if(auto_state)
+            Toast.makeText(getApplicationContext(),"자동로그인 정상적으로 되었습니다.",Toast.LENGTH_LONG).show();
 
 
         name = getIntent().getStringExtra("name");

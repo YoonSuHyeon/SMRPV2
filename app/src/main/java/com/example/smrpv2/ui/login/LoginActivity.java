@@ -19,6 +19,7 @@ import com.example.smrpv2.R;
 import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.user.LoginUser;
 import com.example.smrpv2.retrofit.RetrofitHelper;
+import com.example.smrpv2.ui.common.SharedData;
 import com.example.smrpv2.ui.findid.FindIdActivity;
 
 import com.example.smrpv2.ui.main.MainActivity;
@@ -37,12 +38,14 @@ public class LoginActivity extends AppCompatActivity {
     Button Btn_login;
     CheckBox Chk_autoLogin,Chk_storeId;
 
-    boolean bool_store_login = false;
-    boolean bool_store_id = false;
+    boolean bool_store_login = false; //자동로그인 유무
+    boolean bool_store_id = false; //아이디 저장 유무
     SharedPreferences loginInformation, storeIdInformation; //자동로그인 및 아이디 저장 시 필요
     SharedPreferences.Editor autoLogin_editor, storeId_editor;//자동로그인 및 아이디 저장 시 필요
-    String user_id="",user_pass="",getAutoLogin="", getStoreId ="";//자동로그인 및 아이디 저장 시 필요
+    String user_id="",user_pass="";//자동로그인 및 아이디 저장 시 필요
+    boolean getAutoLogin= false, getStoreId =false;//자동로그인 및 아이디 저장 시 필요
     String name="";
+    SharedData sharedData = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +54,8 @@ public class LoginActivity extends AppCompatActivity {
         //초기화 작업
         context=this;
         initView();
-        storeId();
-        autoLogin();
+        storeId(); //아이디 저장 기능이 설정되어있는지 확인
+       // autoLogin(); //자동로그인 기능이 설정되어있는지 확인
 
 
         //자동 로그인 체크박스...
@@ -83,9 +86,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 /**임시로 Intent로 선언 테스트용**/
-                checkAutoAndStore(); // 이 코드는 임시.. (테스트용) 나중에 서버랑 합쳐야함..
-                /*Intent intent = new Intent(getApplication(), MainActivity.class);
+               /* Intent intent = new Intent(getApplication(), MainActivity.class);
                 startActivity(intent);*/
+
+                checkAutoAndStore(); // 이 코드는 임시.. (테스트용) 나중에 서버랑 합쳐야함..
                 if(user_id.equals("") || user_pass.equals("")){
                     if(user_id.equals("") && user_pass.equals(""))
                         show("아이디와 패스워드를 이용하세요.");
@@ -95,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                         show("비밀번호를 입력하세요.");
                 }
                 else
-                    login();
+                    login(user_id,user_pass);
             }
         });
 
@@ -104,10 +108,12 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void login(){
+    private void login(String id, String passwd){
 
-        LoginUser loginUser = new LoginUser(user_id,user_pass);
+        LoginUser loginUser = new LoginUser(id,passwd);
 
+        Log.d("TAG", "login_id: "+id);
+        Log.d("TAG", "login_passwd: "+passwd);
         //로그인 시도
         Call<Message> call=RetrofitHelper.getRetrofitService_server().login(loginUser);
         call.enqueue(new Callback<Message>() {
@@ -119,9 +125,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 if(response.body().getResultCode().equals("PASS")){ //로그인 성공
 
+                    checkAutoAndStore();
                     //MainActivity로 화면 이동
                     Intent intent = new Intent(getApplication(), MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }else{ //로그인 실패
                     show("로그인 오류");
                 }
@@ -149,12 +157,11 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * 아이디 저장 코드
      */
-    private void storeId(){
-        storeIdInformation = getSharedPreferences("store_id",0);
-        storeId_editor = storeIdInformation.edit();
-        getStoreId = storeIdInformation.getString("store_id","");
-        if(getStoreId.equals("true")){
-            user_id = storeIdInformation.getString("id","");
+    private void storeId(){//아이디 저장 기능이 설정되어있는지 확인하고 설정
+        allocteSharedData(); //sharedData 할당
+        bool_store_id = sharedData.isStroe_id(); //파일에 저장되어있는 아이디 저장 기능 설정 값을 읽어옴
+        if(bool_store_id){ //아이디 저장 기능이 설정이 되어있을경우
+            String user_id = sharedData.getUser_id();
             Txt_id.setText(user_id);
             Chk_storeId.setChecked(true);
         }
@@ -163,25 +170,27 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * 자동 로그인 코드
      */
-    private void autoLogin(){
-        loginInformation = getSharedPreferences("setting",0);
-        autoLogin_editor = loginInformation.edit();
-        getAutoLogin = loginInformation.getString("auto_login","");
+    private void autoLogin(){//자동 로그인이 설정되어있는지 확인
+        allocteSharedData(); //sharedData 할당
 
-        if(getAutoLogin.equals("true")){
-            user_id = loginInformation.getString("id","");
-            user_pass = loginInformation.getString("password","");
-            name = loginInformation.getString("name","");
+        getAutoLogin = sharedData.isAuto_login(); //파일에 자동로그인 설정이 되어있는지 확인
+
+        if(getAutoLogin){
+            String user_id = sharedData.getUser_id(); //사용자 id값을 저장된 파일에서 가져온다
+            String user_pass = sharedData.getUser_password();//사용자 password값을 저장된 파일에서 가져온다
+
+            //name = loginInformation.getString("name","");
             Txt_id.setText(user_id);
             Txt_password.setText(user_pass);
             Chk_autoLogin.setChecked(true);
             Btn_login.setClickable(false);
 
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            login(user_id,user_pass);//로그인 시도
+
+            /*Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra("name", name);
             startActivity(intent);
-            finish();
-
+            finish();*/
         }
 
     }
@@ -194,27 +203,15 @@ public class LoginActivity extends AppCompatActivity {
     private void checkAutoAndStore(){
 
         //입력된 아이디 비밀번호 가져오기
-        user_id =  Txt_id.getText().toString();
-        user_pass =  Txt_password.getText().toString();
-        if (bool_store_login) {//자동 로그인을 체크 하고 로그인 버튼을 누를시
-            autoLogin_editor.putString("auto_login", "true");
-            autoLogin_editor.putString("id", user_id); //자동로그인시 ID 값 입력
-            autoLogin_editor.putString("password", user_pass); //자동로그인시 패스워드 값 입력
-            autoLogin_editor.putString("name",name); //자동로그인시 패스워드 이름 입력
-        }else{ //자동로그인을 하지 않은 상태에서 로그인시
-            autoLogin_editor.putString("auto_login", "false");
-        }
+        user_id =  Txt_id.getText().toString(); //TextView 필드에 입력한 아이디 값을 가져온다
+        user_pass =  Txt_password.getText().toString(); //TextView필드에 입력한 비밀번호 값을 가져온다.
+        if (bool_store_login) //자동 로그인을 체크 하고 로그인 버튼을 누를시
+            sharedData.setUserAuto(this,user_id,user_pass,bool_store_login);
 
-        if(bool_store_id){//아이디저장
 
-            storeId_editor.putString("store_id","true");
-            storeId_editor.putString("id",user_id);
-        }else{
-            storeId_editor.putString("store_id","false");
-        }
-        autoLogin_editor.putString("id", user_id); //자동로그인시 ID 값 입력
-        autoLogin_editor.commit();
-        storeId_editor.commit();
+        if(bool_store_id) //아이디저장 기능이 활성화 된경우
+            sharedData.setUserId(this, user_id, bool_store_id); //아이디 저장 기능을 사용하고 사용자 id값을 저장
+
 
     }
 
@@ -222,4 +219,9 @@ public class LoginActivity extends AppCompatActivity {
         
         Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
     }
+    private void allocteSharedData(){
+        if(sharedData == null)
+            sharedData = new SharedData(this);
+    }
+
 }
