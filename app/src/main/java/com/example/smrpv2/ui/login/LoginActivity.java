@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.Message;
-import com.example.smrpv2.model.user.LoginUser;
+import com.example.smrpv2.model.user_model.LoginUser;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.common.SharedData;
 import com.example.smrpv2.ui.findid.FindIdActivity;

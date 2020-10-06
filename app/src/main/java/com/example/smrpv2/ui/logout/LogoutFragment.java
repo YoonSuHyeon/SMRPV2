@@ -18,7 +18,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.smrpv2.model.user.User;
+import com.example.smrpv2.model.user_model.User;
 import com.example.smrpv2.ui.login.LoginActivity;
 import com.example.smrpv2.R;
 

@@ -16,9 +16,8 @@ import android.widget.Toast;
 
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.Message;
-import com.example.smrpv2.model.user.User;
+import com.example.smrpv2.model.user_model.User;
 import com.example.smrpv2.retrofit.RetrofitHelper;
-import com.example.smrpv2.retrofit.RetrofitService_Server;
 import com.example.smrpv2.ui.login.LoginActivity;
 
 import retrofit2.Call;

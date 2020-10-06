@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +20,9 @@ import com.example.smrpv2.R;
 
 import com.example.smrpv2.model.pharmcy_model.PharmacyItem;
 import com.example.smrpv2.model.pharmcy_model.PharmacyItems;
+import com.example.smrpv2.retrofit.RetrofitService_Server;
 import com.example.smrpv2.ui.common.LocationValue;
 import com.example.smrpv2.retrofit.RetrofitHelper;
-import com.example.smrpv2.retrofit.RetrofitService_pharmacy;
 
 import net.daum.mf.map.api.MapCircle;
 import net.daum.mf.map.api.MapPOIItem;
@@ -91,7 +90,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     private MapCircle mapCircle;
 
     private PharmacyAdapter adapter; // 약국리스트에 대한 adapter
-    private RetrofitService_pharmacy parsing;
+    private RetrofitService_Server parsing;
     private MapPOIItem marker; //마커 표시를 위한 객체 선언
     private RecyclerView recyclerView;
     private LinearLayoutManager mlinearLayoutManager;
@@ -151,7 +150,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
 
 
         /** 데이터를 얻고자 하는 서버 주소값이 설정 되어있는 객체를 할당 **/
-        parsing = RetrofitHelper.getPhy().create(RetrofitService_pharmacy.class);
+        parsing = RetrofitHelper.getPhy().create(RetrofitService_Server.class);
 
         /// item간에 거리
         RecyclerDecoration spaceDecoration = new RecyclerDecoration(0);
@@ -343,7 +342,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         final double lng = longitude;
         final int rad = radiuse;
 
-        Call<Response_phy> call = parsing.getList(longitude,latitude,radiuse);
+        Call<Response_phy> call = parsing.getphyList(longitude,latitude,radiuse);
 
         call.enqueue(new Callback<Response_phy>() {
             @Override

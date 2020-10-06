@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.home_model.HomeMedItem;
-import com.example.smrpv2.retrofit.RetrofitService_home;
+import com.example.smrpv2.model.home_model.Weather_response;
+import com.example.smrpv2.retrofit.RetrofitHelper;
+import com.example.smrpv2.retrofit.RetrofitService_Server;
+import com.example.smrpv2.ui.common.LocationValue;
 import com.example.smrpv2.ui.search.SearchActivity;
 import com.example.smrpv2.ui.start.AutoSlide;
 import com.example.smrpv2.ui.start.ViewPagerAdapter;
@@ -36,6 +40,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import me.relex.circleindicator.CircleIndicator;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * HomeFragment : 메인 화면
@@ -74,7 +80,7 @@ public class HomeFragment extends Fragment {
     final HashMap<String,String> sky_image = new HashMap<>();
     private ArrayList<HomeMedItem> homeMedItemArrayList=new ArrayList<HomeMedItem>();
 
-    private static RetrofitService_home json;
+    private RetrofitService_Server json;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -84,6 +90,8 @@ public class HomeFragment extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         /* 초기화 작업.... */
+        //서버 통신 영역
+        json = RetrofitHelper.getWeather().create(RetrofitService_Server.class);
         //weather 영역
         weather_imageview = root.findViewById(R.id.weather_imageview); //하늘 상태 사진
         temp_textview = root.findViewById(R.id.temp_textview); //온도 textVie
@@ -141,8 +149,14 @@ public class HomeFragment extends Fragment {
         input_weatherStyle(sky_image);
         autoSlide = new AutoSlide(smallViewPager, DELAY_MS, PERIOD_MS);
         autoSlide.startSlide();
-        displayWeather();
-        displayRank();
+
+        LocationValue location = new LocationValue(getActivity());
+        location.startMoule();
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+
+        displayWeather(latitude,longitude);//디스플레이 날씨 표시
+        displayRank(); //디스플레이 랭크 표시
 
         //하단 이미지 버튼 이동
         ic_med_search.setOnClickListener(new View.OnClickListener() {
@@ -228,7 +242,7 @@ public class HomeFragment extends Fragment {
             sky_image.put("13n", "snow");
             sky_image.put("50n", "mist");
 
-            //아침,낮 일떄 return 받는 이미지가 d으로 끝남
+            //아침,낮 일때 return 받는 이미지가 d으로 끝남
             sky_image.put("01d", "clear_sky");
             sky_image.put("02d", "few_clouds");
             sky_image.put("03d", "scattered_clouds");
@@ -242,14 +256,26 @@ public class HomeFragment extends Fragment {
         }
 
     }
-    void displayWeather(){ // 날씨 표시 메소드
-
+    void displayWeather(double latitude, double longitude){ // 날씨 표시 메소드
         /**
          *
          *  서버 연결이 안돼서 제대로 구할 수가 없음. 나중에 수정 예정이라 임시로 비어놓음
          *
          *
          */
+        Call<Weather_response> call = json.getweatherList(latitude,longitude);
+        call.enqueue(new Callback<Weather_response>() {
+            @Override
+            public void onResponse(Call<Weather_response> call, retrofit2.Response<Weather_response> response) {
+                if(response.isSuccessful())
+                    Log.d("TAG", "onResponse: 성공"+response.body().getWeather_main().getTemp());
+            }
+
+            @Override
+            public void onFailure(Call<Weather_response> call, Throwable t) {
+
+            }
+        });
 
     }
     void displayRank(){ // 랭크 표시 메소드

@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -20,10 +19,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smrpv2.R;
+import com.example.smrpv2.retrofit.RetrofitService_Server;
 import com.example.smrpv2.ui.common.LocationValue;
 import com.example.smrpv2.model.hospital_model.Response_hos;
 import com.example.smrpv2.retrofit.RetrofitHelper;
-import com.example.smrpv2.retrofit.RetrofitService_hospital;
 import com.example.smrpv2.ui.pharmacy.RecyclerDecoration;
 import com.example.smrpv2.model.hospital_model.Item;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -79,7 +78,7 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
 
 
 
-    private RetrofitService_hospital retrofit;
+    private RetrofitService_Server retrofit;
     private LocationValue locationValue;
     private HospitalAdapter adapter;
     private PopupHospital popupHospital;
@@ -149,7 +148,7 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
 
 
 
-        retrofit = RetrofitHelper.getHos().create(RetrofitService_hospital.class);
+        retrofit = RetrofitHelper.getHos().create(RetrofitService_Server.class);
 
 
         adapter.setOnitemClickListener(new OnHospitalItemClickListener() {
@@ -256,7 +255,7 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
         final double lng = longitude;
         final int rad = radiuse;
         final String dgsb = dgsbjtCd;
-        Call<Response_hos> call = retrofit.getList(latitude, longitude, radiuse, dgsbjtCd);
+        Call<Response_hos> call = retrofit.gethosList(latitude, longitude, radiuse, dgsbjtCd);
         call.enqueue(new Callback<Response_hos>() {
             @Override
             public void onResponse(Call<Response_hos> call, Response<Response_hos> response) {
