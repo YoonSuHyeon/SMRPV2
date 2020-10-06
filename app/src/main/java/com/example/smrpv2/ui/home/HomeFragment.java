@@ -36,7 +36,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import me.relex.circleindicator.CircleIndicator;
@@ -66,7 +68,7 @@ public class HomeFragment extends Fragment {
     ImageView ic_register_record;
     ImageView ic_dose_record;
     ImageView ic_alarm_set;
-    private static TextView humidity_textView,temp_textview,Txt_statement, Txt_weather;
+    private static TextView humidity_textView,temp_textview,Txt_statement, Txt_weather,clock_textView;
     private static ImageView weather_imageview;
 
 
@@ -98,6 +100,9 @@ public class HomeFragment extends Fragment {
         humidity_textView = root.findViewById(R.id.humidity_textView); //하늘상태
         Txt_statement = root.findViewById(R.id.Txt_statement);
         Txt_weather = root.findViewById(R.id.Txt_weather);
+
+        //Clock영역
+        clock_textView = root.findViewById(R.id.colockTextview);
 
         // 각 종 viewPager(배너), adapter, 초기화
         mainViewPager =  root.findViewById(R.id.banner);
@@ -157,7 +162,7 @@ public class HomeFragment extends Fragment {
 
         displayWeather(latitude,longitude);//디스플레이 날씨 표시
         displayRank(); //디스플레이 랭크 표시
-
+        current_time(); // 시간표시
         //하단 이미지 버튼 이동
         ic_med_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -285,6 +290,17 @@ public class HomeFragment extends Fragment {
          *
          *
          */
+    }
+    void current_time(){
+        long now = System.currentTimeMillis();
+
+        Date date = new Date(now);
+
+        SimpleDateFormat format = new SimpleDateFormat("YYYY년 MM월 dd일\r\n HH시 mm분");
+        String formatDate = format.format(date);
+
+        clock_textView.setText(formatDate);
+
     }
 
     private class Url_Connection extends AsyncTask<String,Void,String>{
