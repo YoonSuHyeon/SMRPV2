@@ -29,7 +29,7 @@ public class Weather_main {
     }
 
     @SerializedName("humidity")
-    private String humidity;
+    private String humidity; //습도
 
     public String getHumidity(){
         return humidity;

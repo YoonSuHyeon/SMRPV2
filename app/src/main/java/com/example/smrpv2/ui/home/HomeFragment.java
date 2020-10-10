@@ -1,12 +1,14 @@
 package com.example.smrpv2.ui.home;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +70,7 @@ public class HomeFragment extends Fragment {
     ImageView ic_register_record;
     ImageView ic_dose_record;
     ImageView ic_alarm_set;
-    private static TextView humidity_textView,temp_textview,Txt_statement, Txt_weather,clock_textView;
+    private static TextView humidity_textView,temp_textview,Txt_statement, Txt_weather,clock_textView,feel_textView,min_temp_textView,max_temp_textView;
     private static ImageView weather_imageview;
 
 
@@ -79,7 +81,8 @@ public class HomeFragment extends Fragment {
     private double latitude, longitude;
     private int[] images= {R.drawable.home_main_banner3, R.drawable.home_main_banner1,R.drawable.home_main_banner2};
     private int[] bannerImages ={R.drawable.home_small_banner1, R.drawable.home_small_banner2,R.drawable.home_small_banner3};
-    final HashMap<String,String> sky_image = new HashMap<>();
+    private boolean isRunning = true;
+    HashMap<String,String> sky_image;
     private ArrayList<HomeMedItem> homeMedItemArrayList=new ArrayList<HomeMedItem>();
 
     private RetrofitService_Server json;
@@ -100,7 +103,9 @@ public class HomeFragment extends Fragment {
         humidity_textView = root.findViewById(R.id.humidity_textView); //하늘상태
         Txt_statement = root.findViewById(R.id.Txt_statement);
         Txt_weather = root.findViewById(R.id.Txt_weather);
-
+        feel_textView = root.findViewById(R.id.feel_textview);
+        min_temp_textView = root.findViewById(R.id.min_temp_textview);
+        max_temp_textView = root.findViewById(R.id.max_temp_textview);
         //Clock영역
         clock_textView = root.findViewById(R.id.colockTextview);
 
@@ -151,7 +156,11 @@ public class HomeFragment extends Fragment {
         resizeBannerSize(viewP2,4);
 
 
-        input_weatherStyle(sky_image);
+        if(sky_image != null)
+            input_weatherStyle(sky_image);
+        else
+            sky_image = new HashMap<String,String>();
+
         autoSlide = new AutoSlide(smallViewPager, DELAY_MS, PERIOD_MS);
         autoSlide.startSlide();
 
@@ -270,10 +279,18 @@ public class HomeFragment extends Fragment {
          */
         Call<Weather_response> call = json.getweatherList(latitude,longitude);
         call.enqueue(new Callback<Weather_response>() {
+            @SuppressLint({"DefaultLocale", "SetTextI18n"})
             @Override
             public void onResponse(Call<Weather_response> call, retrofit2.Response<Weather_response> response) {
-                if(response.isSuccessful())
-                    Log.d("TAG", "onResponse: 성공"+response.body().getWeather_main().getTemp());
+                if(response.isSuccessful()) {
+                    assert response.body() != null;
+                    temp_textview.setText(String.format("%.1f°C",response.body().getWeather_main().getTemp()));//현재온도
+                    feel_textView.setText(String.format("%.1f°C",response.body().getWeather_main().getFells_like()));//체감온도
+                    min_temp_textView.setText(String.format("%.1f°C",response.body().getWeather_main().getTemp_min()));//최저온도
+                    max_temp_textView.setText(String.format("%.1f°C",response.body().getWeather_main().getTemp_max()));//최고온도
+                    humidity_textView.setText((int) response.body().getWeather_main().getFells_like()+"%");//습도
+                }
+
             }
 
             @Override
@@ -291,16 +308,30 @@ public class HomeFragment extends Fragment {
          *
          */
     }
-    void current_time(){
-        long now = System.currentTimeMillis();
+    void current_time(){//현재 시간을 표시하는 메소드
 
-        Date date = new Date(now);
-
-        SimpleDateFormat format = new SimpleDateFormat("YYYY년 MM월 dd일\r\n HH시 mm분");
-        String formatDate = format.format(date);
-
-        clock_textView.setText(formatDate);
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(isRunning){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    long now = System.currentTimeMillis();
+                    Date date = new Date(now);
+                    @SuppressLint("SimpleDateFormat")
+                    SimpleDateFormat format = new SimpleDateFormat("YYYY년 MM월 dd일\r\n HH시 mm분");
+                    final String formatDate = format.format(date);
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            clock_textView.setText(formatDate);
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
     private class Url_Connection extends AsyncTask<String,Void,String>{
@@ -329,5 +360,10 @@ public class HomeFragment extends Fragment {
     }
 
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        isRunning = false;
+    }
 }
 
