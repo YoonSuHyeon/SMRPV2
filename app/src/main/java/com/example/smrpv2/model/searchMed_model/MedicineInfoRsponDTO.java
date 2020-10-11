@@ -77,6 +77,17 @@ public class MedicineInfoRsponDTO {
     @Expose
     private String formula;
 
+    @SerializedName("effect")
+    @Expose
+    private String effect;
+
+    public String getEffect() {
+        return effect;
+    }
+
+    public void setEffect(String effect) {
+        this.effect = effect;
+    }
     public String getFormula() {
         return formula;
     }

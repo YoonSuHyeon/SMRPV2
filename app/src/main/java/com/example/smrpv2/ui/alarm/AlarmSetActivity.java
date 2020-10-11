@@ -25,10 +25,16 @@ import com.example.smrpv2.R;
 //import com.example.smrp.medicine.ListViewItem;
 //import com.example.smrp.reponse_medicine3;
 import com.example.smrpv2.model.MedicineItem;
+import com.example.smrpv2.model.SumMedInfo;
+import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.medicine.ListViewAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * AlarmSetActivity : AlarmFragment에서 +버튼 눌렀을 때 알람을 설정하는 액티비티
@@ -219,12 +225,27 @@ public class AlarmSetActivity extends AppCompatActivity {
             }
         });
 
-        /**
-         *
-         *  서버 내용. 연결이 안돼서 임시로 비움. 나중에 연결 후 추가예정
-         *
-         *
-         */
+        Call<ArrayList<SumMedInfo>> call= RetrofitHelper.getRetrofitService_server().medicineRegs("q");
+        call.enqueue(new Callback<ArrayList<SumMedInfo>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SumMedInfo>> call, Response<ArrayList<SumMedInfo>> response) {
+                ArrayList<SumMedInfo> med_items = response.body();
+
+                items.clear();
+                for(int i = 0; i<  med_items.size(); i++)
+                {
+                    items.add(new MedicineItem(med_items.get(i).getImageUrl(),med_items.get(i).getItemName(),med_items.get(i).getItemSeq(),med_items.get(i).getCreatedAt(),med_items.get(i).getEntpName()));
+
+
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SumMedInfo>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
         dialog.show();
     }
 }

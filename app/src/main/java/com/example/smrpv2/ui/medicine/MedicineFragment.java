@@ -95,26 +95,24 @@ public class MedicineFragment extends Fragment {
     }
     public void onStart() {
         super.onStart();
-        /**
-         *
-         *
-         * 서버서버
-         *
-         *
-         */
-
 
         Call<ArrayList<SumMedInfo>> call= RetrofitHelper.getRetrofitService_server().medicineRegs("q");
         call.enqueue(new Callback<ArrayList<SumMedInfo>>() {
             @Override
             public void onResponse(Call<ArrayList<SumMedInfo>> call, Response<ArrayList<SumMedInfo>> response) {
-                ArrayList<MedicineItem> items = new ArrayList<MedicineItem>();
-                //서버에게 Id를 보낸후 받은 약 리스트를 Adapter에 등록해야함
+                ArrayList<SumMedInfo> med_items = response.body();
+
+                items.clear();
+                for(int i = 0; i<  med_items.size(); i++) {
+                    items.add(new MedicineItem(med_items.get(i).getImageUrl(), med_items.get(i).getItemName(), med_items.get(i).getItemSeq(), med_items.get(i).getCreatedAt(), med_items.get(i).getEntpName()));
+
+                }
+                listViewAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(Call<ArrayList<SumMedInfo>> call, Throwable t) {
-
+                t.printStackTrace();
             }
         });
 

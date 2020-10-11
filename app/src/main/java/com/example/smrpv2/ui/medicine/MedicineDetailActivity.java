@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.MedicineItem;
 import com.example.smrpv2.model.Message;
@@ -113,7 +114,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
 
         Btn_set.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { //알람설정
                 ArrayList<MedicineItem> list = new ArrayList<>();
                 list.add(new MedicineItem(str_image,str_name,str_seq,time,str_eq)); //ListViewItem 클래스의 성질을 가지고 있는 ArrayList 객체에 정보(약 이미지url, 약 이름, 약 식별번호
 
@@ -126,7 +127,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
         Btn_add.setOnClickListener(new View.OnClickListener() { //약추가하는 버튼..
             @Override
             public void onClick(View v) {
-
+                Log.e("C","click");
                 RegmedicineAsk regmedicineAsk = new RegmedicineAsk("q",itemSeq);
                 Call<Message> call= RetrofitHelper.getRetrofitService_server().medicineAdd(regmedicineAsk);
                 call.enqueue(new Callback<Message>() {
@@ -135,7 +136,8 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
                       /*  if(response.body().getResultCode().equals("PASS")){
                             Toast.makeText(context, "등록 완료", Toast.LENGTH_SHORT).show();
                         }*/
-
+                        onBackPressed();
+                        finish();
                     }
 
                     @Override
@@ -181,9 +183,17 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
             public void onResponse(Call<MedicineInfoRsponDTO> call, Response<MedicineInfoRsponDTO> response) {
                 MedicineInfoRsponDTO medicineInfoRsponDTO=response.body();
                 medicineName.setText(medicineInfoRsponDTO.getItemName());
-               //추가적으로 값을 넣어주어야한다.
+                Glide.with(context).load(medicineInfoRsponDTO.getItemImage()).override(1200, 700).fitCenter().into(medicineImage);//이미지 등록
+                medicineChart.setText(medicineInfoRsponDTO.getChart());
+                medicineEntpName.setText(medicineInfoRsponDTO.getEntpName());
+                medicineClassName.setText(medicineInfoRsponDTO.getClassName());
+                medicineEtcOtcName.setText(medicineInfoRsponDTO.getEtcOtcName());
+                medicineEffect.setText(medicineInfoRsponDTO.getEffect());
+                medicineUsage.setText(medicineInfoRsponDTO.getUsage());
 
-
+                str_image = medicineInfoRsponDTO.getItemImage();
+                str_name = medicineInfoRsponDTO.getItemName();
+                str_seq = medicineInfoRsponDTO.getItemSeq();
                 Log.d("zzvbb","끝");
             }
 

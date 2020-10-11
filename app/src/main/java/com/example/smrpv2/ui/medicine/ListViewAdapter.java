@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.fragment.app.FragmentActivity;
 
 //import com.bumptech.glide.Glide;
+import com.bumptech.glide.Glide;
 import com.example.smrpv2.R;
 
 import com.example.smrpv2.model.MedicineItem;
@@ -82,8 +83,8 @@ public class ListViewAdapter extends BaseAdapter {
         final MedicineItem listViewItem = listViewItemArrayList.get(position);
 
         // 연결이 안되어 임시로 막아놓음
-        /*iconImageView.setImageDrawable(listViewItem.getUrl());//500,100
-        Glide.with(activity).load(listViewItem.getUrl()).override(500, 150).fitCenter().into(iconImageView);*/
+
+        Glide.with(activity).load(listViewItem.getUrl()).override(500, 150).fitCenter().into(iconImageView);
         titleTextView.setText(listViewItem.getName());
         descTextView.setText(listViewItem.getTime());
         entpTextView.setText(listViewItem.getEntpName());

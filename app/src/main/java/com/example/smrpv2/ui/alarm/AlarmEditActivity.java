@@ -18,9 +18,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.MedicineItem;
+import com.example.smrpv2.model.SumMedInfo;
+import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.medicine.ListViewAdapter;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * AlarmEditActivity : AlarmFragment에서 알람 목록 중 하나를 눌렀을 때, 그 클릭한 알람을 수정하기 위한 수정 ACTIVITY
@@ -184,12 +190,27 @@ public class AlarmEditActivity extends AppCompatActivity  {
                 dialog.dismiss();
             }
         });
-        /**
-         *
-         *  서버 내용. 연결이 안돼서 임시로 비움. 나중에 연결 후 추가예정
-         *
-         *
-         */
+        Call<ArrayList<SumMedInfo>> call= RetrofitHelper.getRetrofitService_server().medicineRegs("q");
+        call.enqueue(new Callback<ArrayList<SumMedInfo>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SumMedInfo>> call, Response<ArrayList<SumMedInfo>> response) {
+                ArrayList<SumMedInfo> med_items = response.body();
+
+                items.clear();
+                for(int i = 0; i<  med_items.size(); i++)
+                {
+                    items.add(new MedicineItem(med_items.get(i).getImageUrl(),med_items.get(i).getItemName(),med_items.get(i).getItemSeq(),med_items.get(i).getCreatedAt(),med_items.get(i).getEntpName()));
+
+
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SumMedInfo>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
         dialog.show();
     }
     void read_alarm(){

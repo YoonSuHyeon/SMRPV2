@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -143,7 +144,9 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
             @Override
             public void onClick(View v) {
                 imm.hideSoftInputFromWindow(et_findMedicine.getWindowToken(), 0);
-                searchResult(); // 서버와 연결해서 검색 결과 출력
+
+                if(checkItem()) // 약 아이템 정보 선택 안 한 거 있는지 검사
+                    searchResult(); // 서버와 연결해서 검색 결과 출력
             }
         });
     }
@@ -197,7 +200,7 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
         }
         else {
             mSelectedItems.put(position, true);
-            if(item.getViewType()==1){
+            if(item.getViewType()==6){
                 for (int i = 1; i < mSelectedItems.size(); i++)
                     mSelectedItems.put(i, false);
             }
@@ -209,7 +212,7 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
         for(int i=0; i <mSelectedItems.size(); i++){
             if(i==0)type.clear();
             item = list_row.get(i);
-            if(mSelectedItems.get(i)){
+            if(mSelectedItems.get(i,false)){
                 type.add(item.getText());
             }
         }
@@ -323,16 +326,39 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
         Lst_line.getItemAnimator().setChangeDuration(0);
         adapter_row3.notifyDataSetChanged();
     }
+    private boolean checkItem(){
+        if(shape1.isEmpty()) {
+            Toast.makeText(this,"모양을 선택해주세요.",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(color1.isEmpty()){
+            Toast.makeText(this,"색상을 선택해주세요.",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(formula1.isEmpty()){
+            Toast.makeText(this,"제형을 선택해주세요.",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(line1.isEmpty()){
+            Toast.makeText(this,"라인을 선택해주세요.",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+
+
+    }
     private void searchResult(){
+
         ConMedicineAskDto selectedItem = new ConMedicineAskDto(et_findMedicine.getText().toString(),shape1,color1,formula1,line1);
         Call<List<MedicineInfoRsponDTO>> call = RetrofitHelper.getRetrofitService_server().findList(selectedItem);
-
         call.enqueue(new Callback<List<MedicineInfoRsponDTO>>() {
             @Override
             public void onResponse(Call<List<MedicineInfoRsponDTO>> call, Response<List<MedicineInfoRsponDTO>> response) {
                 List<MedicineInfoRsponDTO> list = response.body();
 
                 RecyclerView recyclerView = findViewById(R.id.recycler_medicine);
+
+
                 if(searchResultItem.size()!=0){
                     searchResultItem.clear();
                 }
@@ -348,7 +374,7 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
 
 
 
-                SearchRecyclerAdapter adapter = new SearchRecyclerAdapter(searchResultItem);
+                SearchRecyclerAdapter adapter = new SearchRecyclerAdapter(searchResultItem, getApplicationContext());
                 recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
@@ -359,6 +385,7 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
                 t.printStackTrace();
             }
         });
+
     }
 
 }

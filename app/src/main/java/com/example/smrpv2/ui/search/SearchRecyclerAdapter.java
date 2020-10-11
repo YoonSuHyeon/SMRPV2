@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -54,8 +55,10 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             mSelectedItems.put(i,false);}
     }
-    SearchRecyclerAdapter(ArrayList<MedicineItem> list){
+    SearchRecyclerAdapter(ArrayList<MedicineItem> list, Context context){
         mData = list;
+        if(mData==null) Toast.makeText(context,"검색 결과가 없습니다.", Toast.LENGTH_LONG).show();
+
     }
 
 
