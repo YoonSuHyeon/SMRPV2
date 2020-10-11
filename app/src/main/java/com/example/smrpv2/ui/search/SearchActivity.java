@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.MedicineItem;
+import com.example.smrpv2.model.SumMedInfo;
 import com.example.smrpv2.model.searchMed_model.ConMedicineAskDto;
 import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
 import com.example.smrpv2.retrofit.RetrofitHelper;
@@ -322,14 +324,14 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
         adapter_row3.notifyDataSetChanged();
     }
     private void searchResult(){
-        RetrofitService_Server networkService= RetrofitHelper.getSearch().create(RetrofitService_Server.class);
         ConMedicineAskDto selectedItem = new ConMedicineAskDto(et_findMedicine.getText().toString(),shape1,color1,formula1,line1);
-        Call<List<MedicineInfoRsponDTO>> call = networkService.findList(selectedItem);
+        Call<List<MedicineInfoRsponDTO>> call = RetrofitHelper.getRetrofitService_server().findList(selectedItem);
 
         call.enqueue(new Callback<List<MedicineInfoRsponDTO>>() {
             @Override
             public void onResponse(Call<List<MedicineInfoRsponDTO>> call, Response<List<MedicineInfoRsponDTO>> response) {
                 List<MedicineInfoRsponDTO> list = response.body();
+
                 RecyclerView recyclerView = findViewById(R.id.recycler_medicine);
                 if(searchResultItem.size()!=0){
                     searchResultItem.clear();
@@ -344,13 +346,16 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
 
                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
+
+
                 SearchRecyclerAdapter adapter = new SearchRecyclerAdapter(searchResultItem);
                 recyclerView.setAdapter(adapter);
-
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(Call<List<MedicineInfoRsponDTO>> call, Throwable t) {
+                Log.d("lll",t.toString());
                 t.printStackTrace();
             }
         });
