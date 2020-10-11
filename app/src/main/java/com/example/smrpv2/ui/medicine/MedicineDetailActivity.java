@@ -4,20 +4,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.MedicineItem;
+import com.example.smrpv2.model.Message;
+import com.example.smrpv2.model.RegmedicineAsk;
+import com.example.smrpv2.model.SumMedInfo;
+import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
+import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.alarm.AlarmSetActivity;
 import com.example.smrpv2.ui.alarm.BottomSheetDialog;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * MedicineDetailActivity : 약 리스트 클릭 시 상세 정보 보여줌
@@ -79,6 +90,10 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
         search = intent.getStringExtra("Search");
         listViewItemArrayList = (ArrayList<MedicineItem>) intent.getSerializableExtra("listViewItemArrayList");
 
+        display_medicineDetailInform(itemSeq);
+
+
+
         if(time != null){ // time이 null이 아닌 경우는 MedicineFragment에서 약 클릭한 경우
 
             Btn_set.setVisibility(View.VISIBLE);
@@ -108,9 +123,28 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
 
             }
         });
-        Btn_add.setOnClickListener(new View.OnClickListener() {
+        Btn_add.setOnClickListener(new View.OnClickListener() { //약추가하는 버튼..
             @Override
             public void onClick(View v) {
+
+                RegmedicineAsk regmedicineAsk = new RegmedicineAsk("q",itemSeq);
+                Call<Message> call= RetrofitHelper.getRetrofitService_server().medicineAdd(regmedicineAsk);
+                call.enqueue(new Callback<Message>() {
+                    @Override
+                    public void onResponse(Call<Message> call, Response<Message> response) {
+                      /*  if(response.body().getResultCode().equals("PASS")){
+                            Toast.makeText(context, "등록 완료", Toast.LENGTH_SHORT).show();
+                        }*/
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Message> call, Throwable t) {
+                        Log.d("onadd", itemSeq);
+                    }
+                });
+
+
                 /**
                  * 서버 : searchMed에서 알약 검색 후 밑에 테이블에 약 띄어주는데
                  * 그것을 클릭 시 MedicineDetailActivity가 호출되어 추가하기 버튼이 활성화 돼 약을 추가할 수 있다.
@@ -140,15 +174,24 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
     /**
      * 약 상세 정보 각 View에 추가
      */
-    void display_medicineDetailInform(){
+    void display_medicineDetailInform(String itemSeq){
+        Call<MedicineInfoRsponDTO> call= RetrofitHelper.getRetrofitService_server().getMedicine(itemSeq);
+        call.enqueue(new Callback<MedicineInfoRsponDTO>() {
+            @Override
+            public void onResponse(Call<MedicineInfoRsponDTO> call, Response<MedicineInfoRsponDTO> response) {
+                MedicineInfoRsponDTO medicineInfoRsponDTO=response.body();
+                medicineName.setText(medicineInfoRsponDTO.getItemName());
+               //추가적으로 값을 넣어주어야한다.
 
-        /**
-         *
-         *
-         * 서버 연결이 안돼서 임시로 비어둠 연결 후 다시 수정 예정임
-         *
-         *
-         *
-         */
+
+                Log.d("zzvbb","끝");
+            }
+
+            @Override
+            public void onFailure(Call<MedicineInfoRsponDTO> call, Throwable t) {
+                Log.d("onfail", t.toString());
+            }
+        });
+
     }
 }

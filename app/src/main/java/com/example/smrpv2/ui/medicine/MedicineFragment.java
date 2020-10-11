@@ -1,6 +1,8 @@
 package com.example.smrpv2.ui.medicine;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +18,19 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.smrpv2.R;
 
 import com.example.smrpv2.model.MedicineItem;
+import com.example.smrpv2.model.Message;
+import com.example.smrpv2.model.SumMedInfo;
+import com.example.smrpv2.retrofit.RetrofitHelper;
+import com.example.smrpv2.ui.main.MainActivity;
 import com.example.smrpv2.ui.start.AutoSlide;
 import com.example.smrpv2.ui.start.ViewPagerAdapter;
 
 import java.util.ArrayList;
 
 import me.relex.circleindicator.CircleIndicator;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  *
@@ -93,6 +102,21 @@ public class MedicineFragment extends Fragment {
          *
          *
          */
+
+
+        Call<ArrayList<SumMedInfo>> call= RetrofitHelper.getRetrofitService_server().medicineRegs("q");
+        call.enqueue(new Callback<ArrayList<SumMedInfo>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SumMedInfo>> call, Response<ArrayList<SumMedInfo>> response) {
+                ArrayList<MedicineItem> items = new ArrayList<MedicineItem>();
+                //서버에게 Id를 보낸후 받은 약 리스트를 Adapter에 등록해야함
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SumMedInfo>> call, Throwable t) {
+
+            }
+        });
 
     }
 
