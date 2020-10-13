@@ -57,7 +57,8 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
     SearchRecyclerAdapter(ArrayList<MedicineItem> list, Context context){
         mData = list;
-        if(mData==null) Toast.makeText(context,"검색 결과가 없습니다.", Toast.LENGTH_LONG).show();
+
+        if(mData.isEmpty()) Toast.makeText(context,"검색 결과가 없습니다.", Toast.LENGTH_LONG).show();
 
     }
 

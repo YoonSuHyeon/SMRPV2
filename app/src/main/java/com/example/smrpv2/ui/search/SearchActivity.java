@@ -340,7 +340,7 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
             return false;
         }
         else if(line1.isEmpty()){
-            Toast.makeText(this,"라인을 선택해주세요.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"분할선을 선택해주세요.",Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
