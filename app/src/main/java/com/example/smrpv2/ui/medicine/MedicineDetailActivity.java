@@ -21,6 +21,7 @@ import com.example.smrpv2.model.RegmedicineAsk;
 import com.example.smrpv2.model.SumMedInfo;
 import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
 import com.example.smrpv2.retrofit.RetrofitHelper;
+import com.example.smrpv2.retrofit.RetrofitService_Server;
 import com.example.smrpv2.ui.alarm.AlarmSetActivity;
 import com.example.smrpv2.ui.alarm.BottomSheetDialog;
 
@@ -48,7 +49,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
     ImageView ic_dot;
     Button Btn_set;
     Button Btn_add;
-    TextView medicineName,medicineEntpName,medicineChart,medicineClassName,medicineEtcOtcName,medicineEffect,medicineUsage;
+    TextView medicineName,medicineEntpName,medicineChart,medicineClassName,medicineEtcOtcName,title_effect,medicineEffect,title_usage,medicineUsage;
 
     String itemSeq ,time, search;// intent용 변수
     private String str_image, str_name, str_seq,str_eq;
@@ -78,8 +79,12 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
         medicineChart=findViewById(R.id.tv_chart);//약성상
         medicineClassName=findViewById(R.id.tv_className);//약분류
         medicineEtcOtcName=findViewById(R.id.tv_etcOtcName);//약구분
+        title_effect = findViewById(R.id.title_effect);
         medicineEffect=findViewById(R.id.tv_effect);//약효능효과
+        title_usage = findViewById(R.id.title_usage);
         medicineUsage=findViewById(R.id.tv_usage);//약용법용량
+
+
 
         SharedPreferences loginInfromation = getSharedPreferences("setting",0);
         user_id = loginInfromation.getString("id","");
@@ -126,7 +131,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
         });
         Btn_add.setOnClickListener(new View.OnClickListener() { //약추가하는 버튼..
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { //추가하
                 Log.e("C","click");
                 RegmedicineAsk regmedicineAsk = new RegmedicineAsk("q",itemSeq);
                 Call<Message> call= RetrofitHelper.getRetrofitService_server().medicineAdd(regmedicineAsk);
@@ -159,7 +164,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
 
         ic_dot.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { //뒤로가기버튼 이벤트 클릭 리스너
                 BottomSheetDialog bottomSheetDialog = BottomSheetDialog.getInstance();
 
                 if(time != null){
@@ -171,13 +176,29 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
             }
         });
 
+
+        title_usage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        title_effect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
     }
 
     /**
      * 약 상세 정보 각 View에 추가
      */
     void display_medicineDetailInform(String itemSeq){
-        Call<MedicineInfoRsponDTO> call= RetrofitHelper.getRetrofitService_server().getMedicine(itemSeq);
+        RetrofitService_Server retrofitService_server = RetrofitHelper.getSearch().create(RetrofitService_Server.class);
+        Call<MedicineInfoRsponDTO> call= retrofitService_server.getMedicine(itemSeq);
         call.enqueue(new Callback<MedicineInfoRsponDTO>() {
             @Override
             public void onResponse(Call<MedicineInfoRsponDTO> call, Response<MedicineInfoRsponDTO> response) {

@@ -314,7 +314,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
                     Log.d("TAG", "result_array: "+str+"\n");*/
 
                 //서버와 통신을 하기 위한 RetrofitService_Server 객체 생성성
-               retrofitService = RetrofitHelper.getSearch().create(RetrofitService_Server.class);
+                retrofitService = RetrofitHelper.getSearch().create(RetrofitService_Server.class);
                 Call<ArrayList<MedicineInfoRsponDTO>> call= retrofitService.medicinSendList(result_array);
                 call.enqueue(new Callback<ArrayList<MedicineInfoRsponDTO>>() {
                     @Override
