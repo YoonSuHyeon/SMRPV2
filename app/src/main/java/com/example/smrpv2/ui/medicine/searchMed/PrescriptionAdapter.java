@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.MedicineItem;
+import com.example.smrpv2.model.medicine_model.Prescriptionitem;
 
 import java.util.ArrayList;
 
@@ -23,12 +24,12 @@ import java.util.ArrayList;
  * MedicineItem으로 약 리스트 구성
  */
 public class PrescriptionAdapter extends RecyclerView.Adapter<PrescriptionAdapter.ViewHolder> {
-    private ArrayList<MedicineItem> list = new ArrayList<>();
+    private ArrayList<Prescriptionitem> list = new ArrayList<>();
     private OnItemClickListener listener;
     private SparseBooleanArray mSelectedItems = new SparseBooleanArray(0);
     Context context;
 
-    PrescriptionAdapter(ArrayList<MedicineItem> list){
+    PrescriptionAdapter(ArrayList<Prescriptionitem> list){
         this.list = list;
     }
 
@@ -50,9 +51,9 @@ public class PrescriptionAdapter extends RecyclerView.Adapter<PrescriptionAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {//onBindViewHolder함수는 생성된 뷰홀더에 데이터를 바인딩 해주는 함수
 
-        String stringURL = list.get(position).getUrl();
-        String name = list.get(position).getName();
-        String type = list.get(position).getType();
+        String stringURL = list.get(position).getStringURL(); //의약품 이미지 url
+        String name = list.get(position).getName();//의약품 이름
+        String type = list.get(position).getType();//의약품 타입
         holder.Txt_name.setText(name);
         holder.Txt_type.setText(type);
         Glide.with(context).load(stringURL).override(500,150).fitCenter().into(holder.img);
@@ -78,9 +79,9 @@ public class PrescriptionAdapter extends RecyclerView.Adapter<PrescriptionAdapte
         int pos;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            img = itemView.findViewById(R.id.medicine_search_img);
-            Txt_name = itemView.findViewById(R.id.medicine_search_name);
-            Txt_type = itemView.findViewById(R.id.medicine_search_attirbute);
+            img = itemView.findViewById(R.id.medicine_search_img); //의약품 이미지
+            Txt_name = itemView.findViewById(R.id.medicine_search_name); //의약품 이름
+            Txt_type = itemView.findViewById(R.id.medicine_search_attirbute); //이약품 성분
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

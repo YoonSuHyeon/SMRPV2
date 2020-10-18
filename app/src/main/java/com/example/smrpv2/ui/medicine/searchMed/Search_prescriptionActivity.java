@@ -23,7 +23,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.MedicineItem;
-import com.example.smrpv2.model.PillName;
+import com.example.smrpv2.model.Message;
+import com.example.smrpv2.model.RegmedicineAsk;
+import com.example.smrpv2.model.medicine_model.Prescriptionitem;
+import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
+import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_Server;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -54,6 +58,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  *
  * 처방전 & 약 봉투 사진 찍고 그 결과 알려주는 Activity
@@ -66,7 +74,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
     private static final int MAX_LABEL_RESULTS = 10;
     private static final int MAX_DIMENSION = 1080;
 
-    private ArrayList<MedicineItem> list;
+    private ArrayList<Prescriptionitem> list;
     private ArrayList<String> itemseq_list;
     private Button Btn_add;
     private ImageView iv_back;
@@ -99,8 +107,25 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
                         itemseq_list.add(elem.getValue());
                     /**
                      *
-                     * 서버 : 검색ㄱ된 약 추가하기
+                     * 서버 : 검색된 약 추가하기
                      */
+
+                    RegmedicineAsk regmedicineAsk = new RegmedicineAsk("id","아이템 번호 --> 배열로 바꿔야함");
+                    Call<Message> call = RetrofitHelper.getRetrofitService_server().medicineAdd(regmedicineAsk);
+
+                    call.enqueue(new Callback<Message>() {
+                        @Override
+                        public void onResponse(Call<Message> call, Response<Message> response) {
+                            if(response.body().getResultCode().equals("Ok")){
+                                //정상적으로 반영
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Message> call, Throwable t) {
+
+                        }
+                    });
                 }
 
 
@@ -152,9 +177,10 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
             }
 
             Uploading_bitmap(bitmap);
-        }else{
+        }else if(resultCode==RESULT_OK){ //팝업창 종료시
+            finish();
+        }else
             onBackPressed();
-        }
     }
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -261,18 +287,54 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
         protected void onPostExecute(String result) {
             Search_prescriptionActivity activity = mActivityWeakReference.get();
             if (activity != null && !activity.isFinishing()) {
-                ArrayList<String> pill_list = new ArrayList();
+                List<String> pill_list = new ArrayList();
+
+                //구글 OCR에서 인식된 문자가 없을 경우 nothing을 반환하기 떄문에 이를 제거
+                result = result.replaceAll("nothing","");
                 StringTokenizer token = new StringTokenizer(result , "\n");
 
-                while(token.hasMoreTokens()){
+
+                while(token.hasMoreTokens()){// 구글 Ocr에서 응답 받은 ocr data를 \n 기준으로 token
                     pill_list.add(token.nextToken());
                 }
-                pill_list.remove(pill_list.size() -1);
-                /**
-                 * 약이름에 대한 것을 서버에 요청하기 위해 필요
-                 */
-                PillName pillname = new PillName(pill_list);
+                if(pill_list.size()==0){
+                    progressDialog.dismiss();
+                    Intent intent = new Intent(getApplicationContext(), ErrorMessageActivity.class);
+                    intent.putExtra("data", "검색결과가 없습니다.\n\n 이전 페이지로 이동합니다.");
+                    startActivityForResult(intent, 1);
 
+                }else
+                    pill_list.remove(pill_list.size() -1);
+
+
+                //서버에서 STring형 배열로 요청을 받기 떄문에 List를 STring배열로 변환
+                String[] result_array = (String[])pill_list.toArray(new String[pill_list.size()]); 
+
+                /*for(String str : result_array)
+                    Log.d("TAG", "result_array: "+str+"\n");*/
+
+                //서버와 통신을 하기 위한 RetrofitService_Server 객체 생성성
+               retrofitService = RetrofitHelper.getSearch().create(RetrofitService_Server.class);
+                Call<ArrayList<MedicineInfoRsponDTO>> call= retrofitService.medicinSendList(result_array);
+                call.enqueue(new Callback<ArrayList<MedicineInfoRsponDTO>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<MedicineInfoRsponDTO>> call, Response<ArrayList<MedicineInfoRsponDTO>> response) {
+
+                        ArrayList<MedicineInfoRsponDTO> temp_list = response.body();
+
+
+                        for(int i = 0 ; i < temp_list.size(); i++){//서버에서 응답받은 약 리스트에 대해 각각 Prescritionitem 생성자를 생성하고 이를 list에 저장
+                            list.add(new Prescriptionitem("알약실벽코드","알약 이미지 url","알약 식별포장","알약 제품명"));
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<MedicineInfoRsponDTO>> call, Throwable t) {
+                        finish();
+                    }
+                });
                 /**
                  *
                  * 서버 : 약품명을 서버에게 요청하기 위한 코드가 들어가야함
@@ -388,12 +450,13 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
         }
     }
 
+
     private void initView(){
         Btn_add = findViewById(R.id.add_btn);
         iv_back = findViewById(R.id.iv_back);
         select_pill_list = new HashMap<Integer, String>();
         itemseq_list = new ArrayList<String>();
-        list = new ArrayList<MedicineItem>();
+        list = new ArrayList<Prescriptionitem>();
         prescriptionAdapter = new PrescriptionAdapter(list);
         recyclerView = findViewById(R.id.recycler_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

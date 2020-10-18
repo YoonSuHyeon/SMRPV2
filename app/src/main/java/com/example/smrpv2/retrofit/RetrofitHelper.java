@@ -20,6 +20,7 @@ public class RetrofitHelper {
         return retrofitService_server;
     }
 
+
     static public Retrofit getSearch(){
         return new Retrofit.Builder().baseUrl("http://smrp.iptime.org:8080/").
                 addConverterFactory(GsonConverterFactory.create()).build();

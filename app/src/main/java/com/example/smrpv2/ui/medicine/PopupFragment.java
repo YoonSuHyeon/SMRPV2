@@ -43,14 +43,14 @@ public class PopupFragment extends DialogFragment {
 
         Img_med_shoot.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { //-약촬영
                     Intent intent = new Intent(getActivity(), CameraFrontActivity.class);
                     startActivity(intent);
             }
         });
         Img_envelope.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {// 약봉투
                 intent = new Intent(getContext().getApplicationContext(), Search_prescriptionActivity.class);//
                 startActivity(intent);
                 dismiss();
@@ -58,7 +58,7 @@ public class PopupFragment extends DialogFragment {
         });
         Img_prescription.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {//처방전
                 intent = new Intent(getContext().getApplicationContext(), Search_prescriptionActivity.class);//
                 startActivity(intent);
                 dismiss();
@@ -67,7 +67,7 @@ public class PopupFragment extends DialogFragment {
         });
         Img_search.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {//약명검색
                 Intent intent = new Intent(getContext().getApplicationContext(), SearchActivity.class);
                 startActivity(intent);
                 dismiss();

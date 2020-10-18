@@ -63,8 +63,10 @@ public interface RetrofitService_Server {
                             @Body RegmedicineAsk regmedicineAsk
                             );
 
-
-
+    @POST("/medicine/search")
+    Call<ArrayList<MedicineInfoRsponDTO>> medicinSendList(
+            @Body String[] ocrList
+    );
 
 
 

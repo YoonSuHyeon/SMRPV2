@@ -2,6 +2,7 @@ package com.example.smrpv2.model;
 
 public class Hospital implements Comparable<Hospital> {
 
+
     private String yadmNm;
     private String clCdNm;
     private String addr;

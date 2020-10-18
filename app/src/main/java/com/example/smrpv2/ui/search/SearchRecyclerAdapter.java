@@ -105,11 +105,11 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             ((TextViewHolder) holder).name.setText(item.getName());
 
         }else{
-            String stringURL = mData.get(position).getUrl();
-            String name = mData.get(position).getName();
-            String entpName = mData.get(position).getEntpName();
-            String form = mData.get(position).getForm();
-            String type = mData.get(position).getType();
+            String stringURL = mData.get(position).getUrl(); //이미지 url
+            String name = mData.get(position).getName(); //이미지 이름
+            String entpName = mData.get(position).getEntpName(); // 이름 회사명
+            String form = mData.get(position).getForm(); // 이미지 제원
+            String type = mData.get(position).getType(); // 이미지 구분
             ((SearchResultViewHolder) holder).medicine_tv1.setText(name);
             ((SearchResultViewHolder) holder).medicine_tv2.setText(entpName);
             ((SearchResultViewHolder) holder).medicine_tv3.setText(form);
