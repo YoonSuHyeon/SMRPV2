@@ -163,6 +163,23 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     }
     void delete_alarm(){
         Toast.makeText(getContext(), "delete_alarm", Toast.LENGTH_SHORT).show();
+
+        Call<Message> call = RetrofitHelper.getRetrofitService_server().deleteMedicineAlarm(groupId);
+        call.enqueue(new Callback<Message>() {
+            @Override
+            public void onResponse(Call<Message> call, Response<Message> response) {
+                if(response.body().getResultCode().equals("DELETE")){
+                    Toast.makeText(context, "알람이 삭제 되었습니다.", Toast.LENGTH_LONG);
+                }
+                Log.d("delete_medicine", id+"이다");
+            }
+
+            @Override
+            public void onFailure(Call<Message> call, Throwable t) {
+                Log.d("delete_medicine", t.toString());
+            }
+        });
+
         /**
          *
          *

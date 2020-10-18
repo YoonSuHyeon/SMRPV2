@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -24,7 +25,9 @@ import com.example.smrpv2.R;
 //import com.example.smrp.RetrofitService;
 //import com.example.smrp.medicine.ListViewItem;
 //import com.example.smrp.reponse_medicine3;
+import com.example.smrpv2.model.MedicineAlarmAskDto;
 import com.example.smrpv2.model.MedicineItem;
+import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.SumMedInfo;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.medicine.ListViewAdapter;
@@ -157,6 +160,37 @@ public class AlarmSetActivity extends AppCompatActivity {
         btn_Set_Alarm.setOnClickListener(new View.OnClickListener() {//알람설정을 누른경우
             @Override
             public void onClick(View v) { // 알람설정
+                ArrayList<Long> registerId = new ArrayList<>();
+
+                for(MedicineItem item :alarmMedicineList){
+                    registerId.add(item.getId());
+                }
+                String alarmName =et_alramName.getText().toString();
+                int dosingPeriod =Integer.parseInt(et_dosingPeriod.getText().toString());
+                int oneTimeCapacity =Integer.parseInt(et_oneTimeDose.getText().toString());
+                String doseType ;
+                if(dosingType==1){
+                    doseType="식전";
+                }else{
+                    doseType = "식후";
+
+                }
+                MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(0,"q",registerId,alarmName,dosingPeriod,null,null,oneTimeCapacity,doseType);
+                Call<Message> call = RetrofitHelper.getRetrofitService_server().addMedicineAlarm(medicineAlarmAskDto);
+                call.enqueue(new Callback<Message>() {
+                    @Override
+                    public void onResponse(Call<Message> call, Response<Message> response) {
+                        if(response.body().getResultCode().equals("OK")){
+                            Log.d("등록완료", "등록");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Message> call, Throwable t) {
+
+                    }
+                });
+
 
                    /**
                          * 서버

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +18,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smrpv2.R;
+import com.example.smrpv2.model.MedicineAlarmAskDto;
+import com.example.smrpv2.model.MedicineAlarmResponDto;
 import com.example.smrpv2.model.MedicineItem;
+import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.SumMedInfo;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.medicine.ListViewAdapter;
@@ -35,7 +39,7 @@ import retrofit2.Response;
  */
 public class AlarmEditActivity extends AppCompatActivity  {
     Context context;
-
+    MedicineAlarmResponDto tempBefore; //이전에 정보
     ListView Lst_medicine;
     ListViewAdapter alarmListViewAdapter; //알람에 약을 추가한 어댑터
     ImageView ic_dot;
@@ -148,14 +152,45 @@ public class AlarmEditActivity extends AppCompatActivity  {
                     if (temp.size() == 0) {
                         Toast.makeText(context, "약을 등록해 주세요.", Toast.LENGTH_SHORT).show();
                     }else{
-                        String type;
-                        if(dosingType==BEFORE_MEAL)
-                            type="식전";
-                        else
-                            type ="식후";
+
                         /**
                          * 서버
                          */
+
+                        ArrayList<Long> registerId = new ArrayList<>();
+
+                        for(MedicineItem item :alarmMedicineList){
+                            registerId.add(item.getId());
+                        }
+                        String alarmName =et_alramName.getText().toString();
+                        int dosingPeriod =Integer.parseInt(et_dosingPeriod.getText().toString());
+                        int oneTimeCapacity =Integer.parseInt(et_oneTimeDose.getText().toString());
+                        String doseType ;
+                        if(dosingType==1){
+                            doseType="식전";
+                        }else{
+                            doseType = "식후";
+
+                        }
+                        //이전의 값을 넣어준다 .  현재는  startAlarm과 finishAlarm은 못바꾸게함 따라서 dosingPeriod를 변경 불가능함.
+                        Log.d("변경하기전", tempBefore.getId()+"");
+                        MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(tempBefore.getId(),"q",registerId,"11",dosingPeriod,tempBefore.getStartAlarm(),tempBefore.getFinishAlarm(),oneTimeCapacity,doseType);
+                        Call<Message> call = RetrofitHelper.getRetrofitService_server().medicineAlarmUpdate(medicineAlarmAskDto);
+                        call.enqueue(new Callback<Message>() {
+                            @Override
+                            public void onResponse(Call<Message> call, Response<Message> response) {
+                                if(response.body().getResultCode().equals("OK")){
+                                    Log.d("변경완료", "변경");
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Message> call, Throwable t) {
+                                Log.d("변경 불가능", t.toString());
+                            }
+                        });
+
+
                         Toast.makeText(AlarmEditActivity.this, "수정", Toast.LENGTH_SHORT).show();
                         onBackPressed();
                     }
@@ -214,6 +249,42 @@ public class AlarmEditActivity extends AppCompatActivity  {
         dialog.show();
     }
     void read_alarm(){
+        Call<MedicineAlarmResponDto> call = RetrofitHelper.getRetrofitService_server().getMedicineAlarm(groupId);
+        call.enqueue(new Callback<MedicineAlarmResponDto>() {
+            @Override
+            public void onResponse(Call<MedicineAlarmResponDto> call, Response<MedicineAlarmResponDto> response) {
+                tempBefore=response.body();
+
+                et_alramName.setText(response.body().getAlarmName());
+                String doseType = response.body().getDoseType();
+                if(doseType.equals("식전")){
+                    dosingType=BEFORE_MEAL;
+                    btn_before.setBackgroundResource(R.drawable.setbtnclick);
+                    btn_after.setBackgroundResource(R.drawable.setbtn);
+                }else{
+                    dosingType=AFTER_MEAL;
+                    btn_before.setBackgroundResource(R.drawable.setbtn);
+                    btn_after.setBackgroundResource(R.drawable.setbtnclick);
+                }
+                et_oneTimeDose.setText(String.valueOf(response.body().getOneTimeCapacity()));
+                et_dosingPeriod.setText(String.valueOf(response.body().getDosingPeriod()));
+
+                ArrayList<SumMedInfo> regMedicineArrayList = response.body().getRegMedicineArrayList();
+
+                for (SumMedInfo sumMedInfo : regMedicineArrayList) {
+                    alarmMedicineList.add(new MedicineItem(sumMedInfo.getId(),sumMedInfo.getImageUrl(),sumMedInfo.getItemName(),sumMedInfo.getItemSeq()
+                    ,sumMedInfo.getCreatedAt(),sumMedInfo.getEntpName()));
+                }
+                alarmListViewAdapter.notifyDataSetChanged();
+
+
+            }
+
+            @Override
+            public void onFailure(Call<MedicineAlarmResponDto> call, Throwable t) {
+                Log.d("알람 가져오기", t.toString());
+            }
+        });
         /**
          *
          *  서버 내용. 연결이 안돼서 임시로 비움. 나중에 연결 후 추가예정

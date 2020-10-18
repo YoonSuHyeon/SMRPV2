@@ -11,7 +11,7 @@ public class AlarmItem {
     private String startAlram;
     private String finishAlram;
     private String oneTimeDose;
-    private Long alramGroupId;
+    private Long alramGroupId; // id 알람 id 와 같다 .
     private String doseType;
     private String dosingPeriod;
 

@@ -2,6 +2,7 @@ package com.example.smrpv2.ui.alarm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,19 +79,22 @@ public class AlarmListViewAdapter extends BaseAdapter {
         progressBar = (ProgressBar) convertView.findViewById(R.id.progress);
 
         listViewAlarmItemI = listViewItemArrayList.get(position);
-
+        Log.d("groupIdposition", position + "");
+        Log.d("groupIdpos", pos + "");
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                listViewAlarmItemI = listViewItemArrayList.get(position);
                 Intent intent = new Intent(activity.getBaseContext().getApplicationContext(), AlarmEditActivity.class);
                 intent.putExtra("groupId", listViewAlarmItemI.getAlramGroupId());
+                Log.d("groupId", listViewAlarmItemI.getAlramGroupId() + "");
                 activity.startActivity(intent);
 
             }
         });
 
 
-//        read_date();
+       read_date();
         return convertView;
     }
     void read_date(){

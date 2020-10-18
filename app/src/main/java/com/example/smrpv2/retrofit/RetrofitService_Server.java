@@ -1,5 +1,6 @@
 package com.example.smrpv2.retrofit;
 
+import com.example.smrpv2.model.MedicineAlarmAskDto;
 import com.example.smrpv2.model.MedicineAlarmResponDto;
 import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.RegmedicineAsk;
@@ -19,6 +20,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -77,11 +79,27 @@ public interface RetrofitService_Server {
 
 
     @GET("medicine/alarmAll")
-    Call<ArrayList<MedicineAlarmResponDto>> getMedicineAlarmAll(
+    Call<ArrayList<MedicineAlarmResponDto>> getMedicineAlarmAll( //알람 리스트 가져오기
             @Query("userId") String userId
     );
+    @GET("medicine/alarm")
+    Call<MedicineAlarmResponDto> getMedicineAlarm( // 특정한 알람 가져오기
+            @Query("medicineAlarmId") Long medicineAlarmId
+    );
 
+    @DELETE("medicine/alarm/delete")
+    Call<Message>  deleteMedicineAlarm( //알람삭제
+                                   @Query("medicineAlarmId") long medicineAlarmId
+    );
+    @POST("medicine/alarm/add")
+    Call<Message>  addMedicineAlarm( //알람 등록
+            @Body MedicineAlarmAskDto medicineAlarmAskDto
+    );
 
+    @PATCH("medicine/update")
+    Call<Message> medicineAlarmUpdate( //알람 수정
+               @Body     MedicineAlarmAskDto medicineAlarmAskDto
+    );
 
     /*병원 찾기 기능에 필요한 요청 메시지*/
     @GET("/B551182/hospInfoService/getHospBasisList?serviceKey=LjJVA0wW%2BvsEsLgyJaBLyTywryRMuelTIYxsWnQTaPpxdZjpuxVCdCtyNxvObDmBJ57VVaSi3%2FerYKQFQmKs8g%3D%3D&_type=json")

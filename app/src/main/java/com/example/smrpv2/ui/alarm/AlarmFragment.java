@@ -7,6 +7,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +16,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.smrpv2.R;
+import com.example.smrpv2.model.MedicineAlarmResponDto;
 import com.example.smrpv2.model.alarm_model.AlarmItem;
+import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.start.AutoSlide;
 import com.example.smrpv2.ui.start.ViewPagerAdapter;
 
 import java.util.ArrayList;
 
 import me.relex.circleindicator.CircleIndicator;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 알람 리스트 출력
@@ -87,15 +93,8 @@ public class AlarmFragment extends Fragment {
             }
         });
 
-        items.add(new AlarmItem("hghg",
-                "2020-11-11",
-                "2020-11-12",
-                "3",
-                (long)123,
-                "식전",
-                "4"
-        ));
-        listViewAdapter.notifyDataSetChanged();
+
+
 
 
         return v;
@@ -103,7 +102,26 @@ public class AlarmFragment extends Fragment {
     }
     public void onStart() {
         super.onStart();
+        Call<ArrayList<MedicineAlarmResponDto>> call = RetrofitHelper.getRetrofitService_server().getMedicineAlarmAll("q");
+        call.enqueue(new Callback<ArrayList<MedicineAlarmResponDto>>() {
+            @Override
+            public void onResponse(Call<ArrayList<MedicineAlarmResponDto>> call, Response<ArrayList<MedicineAlarmResponDto>> response) {
+                ArrayList<MedicineAlarmResponDto> body = response.body();
+                items.clear();
+                for (MedicineAlarmResponDto medicineAlarmResponDto : body) {
+                    items.add(new AlarmItem(medicineAlarmResponDto.getAlarmName(), medicineAlarmResponDto.getStartAlarm(), medicineAlarmResponDto.getFinishAlarm(),
+                            String.valueOf(medicineAlarmResponDto.getOneTimeCapacity()), medicineAlarmResponDto.getId(), medicineAlarmResponDto.getDoseType(),
+                            String.valueOf(medicineAlarmResponDto.getDosingPeriod())));
+                    Log.d("넣을때", medicineAlarmResponDto.getId() + "");
+                }
+                listViewAdapter.notifyDataSetChanged();
+            }
 
+            @Override
+            public void onFailure(Call<ArrayList<MedicineAlarmResponDto>> call, Throwable t) {
+                Log.d("AlarmAll", t.toString());
+            }
+        });
         /**
          *
          *  서버 내용. 연결이 안돼서 임시로 비움. 나중에 연결 후 추가예정
