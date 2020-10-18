@@ -1,5 +1,6 @@
 package com.example.smrpv2.retrofit;
 
+import com.example.smrpv2.model.MedicineAlarmResponDto;
 import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.RegmedicineAsk;
 import com.example.smrpv2.model.SumMedInfo;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -66,6 +68,17 @@ public interface RetrofitService_Server {
     @POST("/medicine/search")
     Call<ArrayList<MedicineInfoRsponDTO>> medicinSendList(
             @Body String[] ocrList
+    );
+
+    @DELETE("medicine/register/delete")
+    Call<Message>  delRegMedicine( //약삭제
+            @Query("registerId") long registerId
+    );
+
+
+    @GET("medicine/alarmAll")
+    Call<ArrayList<MedicineAlarmResponDto>> getMedicineAlarmAll(
+            @Query("userId") String userId
     );
 
 

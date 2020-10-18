@@ -98,6 +98,7 @@ public class ListViewAdapter extends BaseAdapter {
 
                 if(call_case == MEDCINE_FRAGMENT){
                     intent.putExtra("time",listViewItem.getTime());
+                    intent.putExtra("id",listViewItem.getId());
                     activity. startActivity(intent);
                 }
                 else if(call_case == TEMP_ALARM){

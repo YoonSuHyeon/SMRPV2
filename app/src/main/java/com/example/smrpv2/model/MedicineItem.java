@@ -11,7 +11,7 @@ public class MedicineItem implements Serializable {
     private String Str_inform;
     private int viewType;
     private String Str_text;
-
+    private long id; // 등록된약
     //
     private String Str_url; //약 이미지
     private String Str_name; //약 이름
@@ -35,7 +35,8 @@ public class MedicineItem implements Serializable {
         this.Str_form = Str_form;
         this.Str_type = Str_type;
     }
-    public MedicineItem(String url, String name, String itemSeq, String time, String entpName){
+    public MedicineItem(long id,String url, String name, String itemSeq, String time, String entpName){
+        this.id=id;
         this.Str_url = url;
         this.Str_name = name;
         this.Str_itemSeq =itemSeq;
@@ -55,6 +56,13 @@ public class MedicineItem implements Serializable {
         this.Str_type = type;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public void setIcon(Drawable icon) {Dra_icon = icon;}
     public void setInform(String n) {

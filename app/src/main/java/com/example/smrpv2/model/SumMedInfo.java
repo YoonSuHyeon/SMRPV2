@@ -4,13 +4,14 @@ import java.time.LocalDate;
 
 public class SumMedInfo {
 
-
+    private long id;
     private String imageUrl;
     private String itemSeq;
     private String itemName;
     private String entpName;
     private String createdAt;
-    public SumMedInfo(String imageUrl, String itemSeq, String itemName, String entpName, String createdAt) {
+    public SumMedInfo(long id,String imageUrl, String itemSeq, String itemName, String entpName, String createdAt) {
+        this.id=id;
         this.imageUrl = imageUrl;
         this.itemSeq = itemSeq;
         this.itemName = itemName;
@@ -19,7 +20,13 @@ public class SumMedInfo {
     }
 
 
+    public long getId() {
+        return id;
+    }
 
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getImageUrl() {
         return imageUrl;

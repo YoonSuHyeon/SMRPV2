@@ -52,6 +52,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
     TextView medicineName,medicineEntpName,medicineChart,medicineClassName,medicineEtcOtcName,title_effect,medicineEffect,title_usage,medicineUsage;
 
     String itemSeq ,time, search;// intent용 변수
+    long id;
     private String str_image, str_name, str_seq,str_eq;
     String user_id;
     final int MEDICINE =0;
@@ -87,7 +88,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
 
 
         SharedPreferences loginInfromation = getSharedPreferences("setting",0);
-        user_id = loginInfromation.getString("id","");
+        user_id = loginInfromation.getString("id","q");
 
         //itemSeq 받는 과정
         Intent intent =getIntent();
@@ -101,7 +102,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
 
 
         if(time != null){ // time이 null이 아닌 경우는 MedicineFragment에서 약 클릭한 경우
-
+            id=intent.getLongExtra("id",0);
             Btn_set.setVisibility(View.VISIBLE);
         }else if(search != null){ // search가 null이 아닌 경우 SearchActivity에서 검색된 약 클릭한 경우
             Btn_add.setVisibility(View.VISIBLE);
@@ -121,7 +122,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
             @Override
             public void onClick(View v) { //알람설정
                 ArrayList<MedicineItem> list = new ArrayList<>();
-                list.add(new MedicineItem(str_image,str_name,str_seq,time,str_eq)); //ListViewItem 클래스의 성질을 가지고 있는 ArrayList 객체에 정보(약 이미지url, 약 이름, 약 식별번호
+                list.add(new MedicineItem(id,str_image,str_name,str_seq,time,str_eq)); //ListViewItem 클래스의 성질을 가지고 있는 ArrayList 객체에 정보(약 이미지url, 약 이름, 약 식별번호
 
                 Intent intent= new Intent(getApplicationContext(), AlarmSetActivity.class);
                 intent.putExtra("list",list);
@@ -168,9 +169,9 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
                 BottomSheetDialog bottomSheetDialog = BottomSheetDialog.getInstance();
 
                 if(time != null){
-                    bottomSheetDialog.init(user_id,itemSeq, MEDICINE);
+                    bottomSheetDialog.init(id,user_id,itemSeq, MEDICINE);
                 }else{
-                    bottomSheetDialog.init(user_id,itemSeq, listViewItemArrayList, TEMP_ALARM);
+                    bottomSheetDialog.init(id,user_id,itemSeq, listViewItemArrayList, TEMP_ALARM);
                 }
                 bottomSheetDialog.show(getSupportFragmentManager(),"bottomSheet");
             }
@@ -197,6 +198,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
      * 약 상세 정보 각 View에 추가
      */
     void display_medicineDetailInform(String itemSeq){
+        Log.d("itemseq:" , itemSeq);
         RetrofitService_Server retrofitService_server = RetrofitHelper.getSearch().create(RetrofitService_Server.class);
         Call<MedicineInfoRsponDTO> call= retrofitService_server.getMedicine(itemSeq);
         call.enqueue(new Callback<MedicineInfoRsponDTO>() {

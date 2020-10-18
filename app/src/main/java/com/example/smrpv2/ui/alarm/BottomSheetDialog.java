@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,14 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.MedicineItem;
+import com.example.smrpv2.model.Message;
+import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -35,7 +42,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
 
     private LinearLayout Lay_delete;
     private LinearLayout Lay_cancel;
-
+    private long id;// 등록된 약 id
     private String userId;
     private String itemSeq;
     private   long groupId;
@@ -56,7 +63,8 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
      * @param itemSeq
      * @param delete_case MEDICINE
      */
-    public void init(String userId, String itemSeq, int delete_case){
+    public void init(long id,String userId, String itemSeq, int delete_case){
+        this.id=id;
         this.userId=userId;
         this.itemSeq=itemSeq;
         this.delete_case = delete_case;
@@ -79,7 +87,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
      * @param list 알람을 설정하기 위해 추가한 약 리스트들
      * @param delete_case TEMP_ALARM
      */
-    public void init(String userId, String itemSeq, ArrayList<MedicineItem> list, int delete_case){
+    public void init(long id,String userId, String itemSeq, ArrayList<MedicineItem> list, int delete_case){
         this.userId=userId;
         this.itemSeq=itemSeq;
         listViewItemArrayList = list;
@@ -126,6 +134,23 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     void delete_medicine(){
 
         Toast.makeText(getContext(), "delete_medicine", Toast.LENGTH_SHORT).show();
+
+        Call<Message> call = RetrofitHelper.getRetrofitService_server().delRegMedicine(id);
+        call.enqueue(new Callback<Message>() {
+            @Override
+            public void onResponse(Call<Message> call, Response<Message> response) {
+                    if(response.body().getResultCode().equals("OK")){
+                        Toast.makeText(context, "약이 삭제 되었습니다.", Toast.LENGTH_LONG);
+                    }
+                Log.d("delete_medicine", id+"이다");
+            }
+
+            @Override
+            public void onFailure(Call<Message> call, Throwable t) {
+                Log.d("delete_medicine", t.toString());
+            }
+        });
+
         /**
          *
          *
