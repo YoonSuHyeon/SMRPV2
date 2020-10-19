@@ -22,6 +22,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface RetrofitService_Server {
@@ -96,7 +97,7 @@ public interface RetrofitService_Server {
             @Body MedicineAlarmAskDto medicineAlarmAskDto
     );
 
-    @PATCH("medicine/update")
+    @PUT("medicine/update")
     Call<Message> medicineAlarmUpdate( //알람 수정
                @Body     MedicineAlarmAskDto medicineAlarmAskDto
     );

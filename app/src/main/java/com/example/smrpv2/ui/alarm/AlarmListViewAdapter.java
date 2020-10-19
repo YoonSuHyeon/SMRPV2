@@ -85,9 +85,11 @@ public class AlarmListViewAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 listViewAlarmItemI = listViewItemArrayList.get(position);
+
                 Intent intent = new Intent(activity.getBaseContext().getApplicationContext(), AlarmEditActivity.class);
                 intent.putExtra("groupId", listViewAlarmItemI.getAlramGroupId());
-                Log.d("groupId", listViewAlarmItemI.getAlramGroupId() + "");
+                intent.putExtra("remainingTime", listViewAlarmItemI.getRemainTime());
+                Log.d("remainTime", listViewAlarmItemI.getAlramGroupId() + "");
                 activity.startActivity(intent);
 
             }
@@ -150,9 +152,12 @@ public class AlarmListViewAdapter extends BaseAdapter {
                 if(FirstDate.getTime()<SecondDate.getTime()){
                     progressBar.setProgress(100);
                     remainingTime.setText(listViewAlarmItemI.getDosingPeriod()+"/"+listViewAlarmItemI.getDosingPeriod());
+                    listViewAlarmItemI.setRemainTime(remainingTime.getText().toString());
+
                 }else{
                     progressBar.setProgress((int) progress);
                     remainingTime.setText((Long.parseLong(listViewAlarmItemI.getDosingPeriod())-calDateDays)+"/"+listViewAlarmItemI.getDosingPeriod());
+                    listViewAlarmItemI.setRemainTime(remainingTime.getText().toString());
                 }
 
 

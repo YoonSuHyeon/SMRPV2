@@ -14,7 +14,7 @@ public class AlarmItem {
     private Long alramGroupId; // id 알람 id 와 같다 .
     private String doseType;
     private String dosingPeriod;
-
+    private String RemainTime;
     public AlarmItem(String alramName, String startAlram, String finishAlram, String oneTimeDose, Long alramGroupId, String doseType, String dosingPeriod) {
         this.alramName = alramName;
         this.startAlram = startAlram;
@@ -23,6 +23,14 @@ public class AlarmItem {
         this.alramGroupId = alramGroupId;
         this.doseType = doseType;
         this.dosingPeriod = dosingPeriod;
+    }
+
+    public String getRemainTime() {
+        return RemainTime;
+    }
+
+    public void setRemainTime(String remainTime) {
+        RemainTime = remainTime;
     }
 
     public String getAlramName() {

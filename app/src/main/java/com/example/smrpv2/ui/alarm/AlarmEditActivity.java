@@ -46,7 +46,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
     ImageView iv_back;
     Button Btn_add,Btn_edit,btn_before,btn_after;
     EditText et_alramName,et_dosingPeriod,et_oneTimeDose;
-
+    String remainingTime;
     Long groupId;
     String user_id;
     final int ALARM = 1;
@@ -77,6 +77,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
         SharedPreferences loginInfromation = getSharedPreferences("setting",0);
         user_id = loginInfromation.getString("id","");
         groupId = intent.getLongExtra("groupId",0);
+        remainingTime = intent.getStringExtra("remainingTime");
         iv_back = findViewById(R.id.iv_back);
 
         Btn_add = findViewById(R.id.Btn_add);
@@ -173,8 +174,16 @@ public class AlarmEditActivity extends AppCompatActivity  {
 
                         }
                         //이전의 값을 넣어준다 .  현재는  startAlarm과 finishAlarm은 못바꾸게함 따라서 dosingPeriod를 변경 불가능함.
-                        Log.d("변경하기전", tempBefore.getId()+"");
-                        MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(tempBefore.getId(),"q",registerId,"11",dosingPeriod,tempBefore.getStartAlarm(),tempBefore.getFinishAlarm(),oneTimeCapacity,doseType);
+                        Log.d("변경하기전", tempBefore.getFinishAlarm()+"");
+                        Log.d("변경하기전남은시간", remainingTime+"");
+
+                        //예외처리 남은 기간보다 더적은  기간을 입력하게되면 입력 하지 못하게 막음..
+                        String[] split = remainingTime.split("/");  // [0] =  진행된 일수  [1] 총 진행해야하는  일수
+                        
+
+
+
+                        MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(tempBefore.getId(),"q",registerId,alarmName,dosingPeriod,tempBefore.getStartAlarm(),tempBefore.getFinishAlarm(),oneTimeCapacity,doseType);
                         Call<Message> call = RetrofitHelper.getRetrofitService_server().medicineAlarmUpdate(medicineAlarmAskDto);
                         call.enqueue(new Callback<Message>() {
                             @Override
