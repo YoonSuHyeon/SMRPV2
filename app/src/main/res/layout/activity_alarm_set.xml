@@ -43,7 +43,7 @@
 
     <LinearLayout
         android:layout_marginTop="8dp"
-        android:background="@drawable/set_shadow"
+        android:background="#FFFFFF"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -51,6 +51,7 @@
         android:layout_marginRight="8dp"
         android:layout_weight="0.05"
         android:weightSum="1"
+
         >
 
         <LinearLayout
@@ -113,6 +114,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="0.31"
                 android:layout_height="match_parent"
+                android:textColor="#000000"
                 android:text="식전" />
 
             <View
@@ -122,7 +124,7 @@
 
             </View>
             <Button
-
+                android:textColor="#000000"
                 android:background="@drawable/setbtn"
                 android:id="@+id/btn_after"
                 android:layout_width="0dp"
@@ -151,33 +153,42 @@
                 android:textSize="15sp"
                 android:textColor="#000000"
                 android:textStyle="bold" />
+            <Button
+                android:id="@+id/btn_morning"
+                android:background="@drawable/setbtn"
+                android:layout_width="0dp"
+                android:layout_weight="0.21"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:text="아침"/>
             <View
                 android:layout_width="0dp"
-                android:layout_weight="0.5"
+                android:layout_weight="0.03"
                 android:layout_height="match_parent">
 
             </View>
-            <EditText
-                android:inputType="number"
-                android:digits="0123456789"
+            <Button
+                android:id="@+id/btn_afternoon"
                 android:background="@drawable/setbtn"
-                android:id="@+id/et_oneTimeDose"
                 android:layout_width="0dp"
-                android:layout_weight="0.1"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:maxLength="1"
-
-
-               />
-            <TextView
-                android:id="@+id/time"
+                android:layout_weight="0.21"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:text="점심"/>
+            <View
                 android:layout_width="0dp"
-                android:layout_weight="0.1"
-                android:layout_height="match_parent"
-                android:gravity="center"
+                android:layout_weight="0.03"
+                android:layout_height="match_parent">
 
-                android:text="회" />
+            </View>
+            <Button
+                android:id="@+id/btn_evening"
+                android:background="@drawable/setbtn"
+                android:layout_width="0dp"
+                android:layout_weight="0.21"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:text="저녁"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/line_period"
@@ -200,19 +211,48 @@
                 android:textColor="#000000"
                 android:textSize="15sp"
                 android:textStyle="bold" />
+            <Button
+                android:id="@+id/btn_init"
+                android:layout_width="0dp"
+                android:layout_weight="0.18"
+                android:layout_height="24dp"
+                android:background="@drawable/btn_alarm"
+                android:textColor="#000000"
+                android:textSize="11sp"
+                android:text="초기화">
+
+            </Button>
             <View
                 android:layout_width="0dp"
-                android:layout_weight="0.5"
+                android:layout_weight="0.05"
+                android:layout_height="match_parent">
+
+            </View>
+            <Button
+                android:id="@+id/btn_addDate"
+                android:layout_width="0dp"
+                android:layout_weight="0.18"
+                android:layout_height="24dp"
+                android:textColor="#000000"
+                android:background="@drawable/btn_alarm"
+                android:textSize="11sp"
+                android:text="+1일">
+
+            </Button>
+            <View
+                android:layout_width="0dp"
+                android:layout_weight="0.1"
                 android:layout_height="match_parent">
 
             </View>
             <EditText
+                android:layout_gravity="top"
                 android:inputType="number"
                 android:digits="0123456789"
                 android:background="@drawable/setbtn"
                 android:id="@+id/et_dosingPeriod"
                 android:layout_width="0dp"
-                android:layout_weight="0.1  "
+                android:layout_weight="0.12"
                 android:gravity="center"
                 android:layout_height="match_parent"
                 />

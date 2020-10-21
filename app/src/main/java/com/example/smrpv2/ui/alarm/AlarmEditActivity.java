@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +29,7 @@ import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.medicine.ListViewAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,6 +40,13 @@ import retrofit2.Response;
  * 기능 1. 클릭한 알람 수정
  * 기능 2. 클릭한 알람 삭제
  */
+
+/**
+ * AlarmEditActivity와 AlarmSetActivity의 XML을 바꿈으로써 서버에서 바꾸어야하는 부분
+ * - oneTimeDose()가 원래 EditText로, 숫자와 관련. 근데 xml이 아침, 점심, 저녁의 3가지 버튼으로 바뀜. => 이거에 대한 서버 값 불러와야 할 듯
+ * - 근데 알람fragment의 알람 리스트에는 oneTimeDose가 숫자로 표기됨. 그래서 임시로 oneTimeDoseCount변수를 만들어 클릭된 거 개수 서버로 보내줌ㅈ => 이것도 바꿀 필요 있어 보임.
+ */
+
 public class AlarmEditActivity extends AppCompatActivity  {
     Context context;
     MedicineAlarmResponDto tempBefore; //이전에 정보
@@ -45,6 +55,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
     ImageView ic_dot;
     ImageView iv_back;
     Button Btn_add,Btn_edit,btn_before,btn_after;
+    Button Btn_morning, Btn_afternoon, Btn_evening, Btn_addDate, Btn_init;
     EditText et_alramName,et_dosingPeriod,et_oneTimeDose;
     String remainingTime;
     Long groupId;
@@ -52,8 +63,17 @@ public class AlarmEditActivity extends AppCompatActivity  {
     final int ALARM = 1;
     final int BEFORE_MEAL=1;
     final int AFTER_MEAL=0;
+    final int AFTERNOON_CHECK=0;
+    final int MORNING_CHECK=0;
+    final int EVENING_CHECK=0;
+    final int NOT_VALUE = -10;
+    int init_dosingPeriod=-10;
+    int oneTimeDoseCount=0;
+    private SparseBooleanArray mSelectedItems = new SparseBooleanArray(0);
     private static int dosingType=1;
     ArrayList<MedicineItem> alarmMedicineList=new ArrayList<>(); // 약추가한 리스트
+    ArrayList<String> array_oneTimeDose = new ArrayList<String>(Arrays.asList("아침","점심","저녁"));
+    ArrayList<String> selectedOneTimeDose= new ArrayList<String>();
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -88,13 +108,17 @@ public class AlarmEditActivity extends AppCompatActivity  {
         btn_after=findViewById(R.id.btn_after);
         et_alramName=findViewById(R.id.et_alramName);
         et_dosingPeriod=findViewById(R.id.et_dosingPeriod);
-        et_oneTimeDose=findViewById(R.id.et_oneTimeDose);
+     //   et_oneTimeDose=findViewById(R.id.et_oneTimeDose);
+        Btn_addDate = findViewById(R.id.btn_addDate);
+        Btn_init = findViewById(R.id.btn_init);
+        Btn_morning = findViewById(R.id.btn_morning);
+        Btn_afternoon = findViewById(R.id.btn_afternoon);
+        Btn_evening = findViewById(R.id.btn_evening);
 
         alarmListViewAdapter=new ListViewAdapter(alarmMedicineList,this,0);
         Lst_medicine.setAdapter(alarmListViewAdapter);
 
         read_alarm(); // 서버로부터 설정한 알람 정보 읽음
-
 
 
         btn_before.setOnClickListener(new View.OnClickListener() {//식전버튼을 눌렀을 때
@@ -117,6 +141,49 @@ public class AlarmEditActivity extends AppCompatActivity  {
 
             }
         });
+        Btn_evening.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkSelectedOneTimeDose(2,selectedOneTimeDose,Btn_evening);
+
+            }
+        });
+        Btn_afternoon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkSelectedOneTimeDose(1,selectedOneTimeDose,Btn_afternoon);
+            }
+        });
+
+        Btn_morning.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkSelectedOneTimeDose(0,selectedOneTimeDose,Btn_morning);
+            }
+        });
+        Btn_init.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(init_dosingPeriod ==NOT_VALUE)
+                    et_dosingPeriod.setText(String.valueOf(0));
+                else
+                    et_dosingPeriod.setText(String.valueOf(init_dosingPeriod));
+            }
+        });
+        Btn_addDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int dosingPeriod;
+
+                if(init_dosingPeriod ==NOT_VALUE) {dosingPeriod = 0;init_dosingPeriod=dosingPeriod;}
+                else dosingPeriod = Integer.parseInt(et_dosingPeriod.getText().toString())+1;
+                et_dosingPeriod.setText(String.valueOf(dosingPeriod));
+
+
+
+            }
+        });
+
         ic_dot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // dialog를 띄울 Activity에서 구현
@@ -165,7 +232,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
                         }
                         String alarmName =et_alramName.getText().toString();
                         int dosingPeriod =Integer.parseInt(et_dosingPeriod.getText().toString());
-                        int oneTimeCapacity =Integer.parseInt(et_oneTimeDose.getText().toString());
+                        int oneTimeCapacity =oneTimeDoseCount;//Integer.parseInt(et_oneTimeDose.getText().toString());
                         String doseType ;
                         if(dosingType==1){
                             doseType="식전";
@@ -275,8 +342,9 @@ public class AlarmEditActivity extends AppCompatActivity  {
                     btn_before.setBackgroundResource(R.drawable.setbtn);
                     btn_after.setBackgroundResource(R.drawable.setbtnclick);
                 }
-                et_oneTimeDose.setText(String.valueOf(response.body().getOneTimeCapacity()));
+                //et_oneTimeDose.setText(String.valueOf(response.body().getOneTimeCapacity()));
                 et_dosingPeriod.setText(String.valueOf(response.body().getDosingPeriod()));
+                init_dosingPeriod = response.body().getDosingPeriod();
 
                 ArrayList<SumMedInfo> regMedicineArrayList = response.body().getRegMedicineArrayList();
 
@@ -300,6 +368,29 @@ public class AlarmEditActivity extends AppCompatActivity  {
          *
          *
          */
+
+    }
+    void checkSelectedOneTimeDose(int position, ArrayList<String> item, Button bt){
+        if (mSelectedItems.get(position, false) ){
+            mSelectedItems.put(position, false);
+            bt.setBackgroundResource(R.drawable.setbtn);
+            bt.setTextColor(Color.BLACK);
+
+        }
+        else {
+            mSelectedItems.put(position, true);
+            bt.setBackgroundResource(R.drawable.setbtnclick);
+            bt.setTextColor(Color.WHITE);
+        }
+
+        for(int i =0; i<3; i++) {
+            if(i==0){item.clear(); oneTimeDoseCount=0;}
+            if (mSelectedItems.get(i, false)) {
+                item.add(array_oneTimeDose.get(i));
+                Log.e("fff", array_oneTimeDose.get(i));
+                oneTimeDoseCount++;
+            }
+        }
 
     }
 }
