@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -131,14 +134,14 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }else{ //로그인 실패
-                    show("로그인 오류");
+                    show("아이디 및 비밀번호를 확인하고 다시 입력하세요.");
                 }
 
             }
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
-
+                show("서버 통신 오류");
             }
         });
 
@@ -223,5 +226,21 @@ public class LoginActivity extends AppCompatActivity {
         if(sharedData == null)
             sharedData = new SharedData(this);
     }
-
+    //사용자가 editText를 클릭한 시점에서 배경부븐을 선택하면 키보드를 자동으로 내려가지도록 설정
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View focusView = getCurrentFocus();
+        if (focusView != null) {
+            Rect rect = new Rect();
+            focusView.getGlobalVisibleRect(rect);
+            int x = (int) ev.getX(), y = (int) ev.getY();
+            if (!rect.contains(x, y)) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if (imm != null)
+                    imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+                focusView.clearFocus();
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
 }
