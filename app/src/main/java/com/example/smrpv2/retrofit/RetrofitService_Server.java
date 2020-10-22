@@ -1,5 +1,6 @@
 package com.example.smrpv2.retrofit;
 
+import com.example.smrpv2.model.InquiryDto;
 import com.example.smrpv2.model.MedicineAlarmAskDto;
 import com.example.smrpv2.model.MedicineAlarmResponDto;
 import com.example.smrpv2.model.Message;
@@ -102,6 +103,11 @@ public interface RetrofitService_Server {
                @Body     MedicineAlarmAskDto medicineAlarmAskDto
     );
 
+
+    @POST("/userInfo/inquiry/add")
+    Call<Message> addInquiry( //문의하기
+            @Body InquiryDto inquiry
+    );
     /*병원 찾기 기능에 필요한 요청 메시지*/
     @GET("/B551182/hospInfoService/getHospBasisList?serviceKey=LjJVA0wW%2BvsEsLgyJaBLyTywryRMuelTIYxsWnQTaPpxdZjpuxVCdCtyNxvObDmBJ57VVaSi3%2FerYKQFQmKs8g%3D%3D&_type=json")
 //("/userInfo")

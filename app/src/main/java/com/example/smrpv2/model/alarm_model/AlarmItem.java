@@ -1,5 +1,7 @@
 package com.example.smrpv2.model.alarm_model;
 
+import com.example.smrpv2.model.DoseTime;
+
 /**
  * AlarmItem : 알람 정보
  * 쓰는 곳 : AlarmFragment, AlarmListViewAdapter
@@ -10,16 +12,16 @@ public class AlarmItem {
     private String alramName;
     private String startAlram;
     private String finishAlram;
-    private String oneTimeDose;
+    private DoseTime doseTime;
     private Long alramGroupId; // id 알람 id 와 같다 .
     private String doseType;
     private String dosingPeriod;
     private String RemainTime;
-    public AlarmItem(String alramName, String startAlram, String finishAlram, String oneTimeDose, Long alramGroupId, String doseType, String dosingPeriod) {
+    public AlarmItem(String alramName, String startAlram, String finishAlram, DoseTime doseTime, Long alramGroupId, String doseType, String dosingPeriod) {
         this.alramName = alramName;
         this.startAlram = startAlram;
         this.finishAlram = finishAlram;
-        this.oneTimeDose = oneTimeDose;
+        this.doseTime = doseTime;
         this.alramGroupId = alramGroupId;
         this.doseType = doseType;
         this.dosingPeriod = dosingPeriod;
@@ -57,12 +59,12 @@ public class AlarmItem {
         this.finishAlram = finishAlram;
     }
 
-    public String getOneTimeDose() {
-        return oneTimeDose;
+    public DoseTime getDoseTime() {
+        return doseTime;
     }
 
-    public void setOneTimeDose(String oneTimeDose) {
-        this.oneTimeDose = oneTimeDose;
+    public void setDoseTime(DoseTime doseTime) {
+        this.doseTime = doseTime;
     }
 
     public Long getAlramGroupId() {

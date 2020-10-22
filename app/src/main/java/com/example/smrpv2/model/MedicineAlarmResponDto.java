@@ -12,7 +12,7 @@ public class MedicineAlarmResponDto {
     private int dosingPeriod;
     private String startAlarm;
     private String finishAlarm;
-    private int oneTimeCapacity;
+    private DoseTime doseTime;
     private String doseType;
 
     public Long getId() {
@@ -71,12 +71,12 @@ public class MedicineAlarmResponDto {
         this.finishAlarm = finishAlarm;
     }
 
-    public int getOneTimeCapacity() {
-        return oneTimeCapacity;
+    public DoseTime getDoseTime() {
+        return doseTime;
     }
 
-    public void setOneTimeCapacity(int oneTimeCapacity) {
-        this.oneTimeCapacity = oneTimeCapacity;
+    public void setDoseTime(DoseTime doseTime) {
+        this.doseTime = doseTime;
     }
 
     public String getDoseType() {

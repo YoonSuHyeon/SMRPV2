@@ -110,7 +110,7 @@ public class AlarmFragment extends Fragment {
                 items.clear();
                 for (MedicineAlarmResponDto medicineAlarmResponDto : body) {
                     items.add(new AlarmItem(medicineAlarmResponDto.getAlarmName(), medicineAlarmResponDto.getStartAlarm(), medicineAlarmResponDto.getFinishAlarm(),
-                            String.valueOf(medicineAlarmResponDto.getOneTimeCapacity()), medicineAlarmResponDto.getId(), medicineAlarmResponDto.getDoseType(),
+                            medicineAlarmResponDto.getDoseTime(), medicineAlarmResponDto.getId(), medicineAlarmResponDto.getDoseType(),
                             String.valueOf(medicineAlarmResponDto.getDosingPeriod())));
                     Log.d("넣을때", medicineAlarmResponDto.getId() + "");
                 }

@@ -10,10 +10,10 @@ public class MedicineAlarmAskDto {
     private int dosingPeriod;  //복용기간
     private String startAlarm; //시작 시간
     private String finishAlarm; // 끝나는 시간
-    private int oneTimeCapacity;  //1회 복용 횟수
+    private DoseTime doseTime;
     private String doseType;  //복용 타입
 
-    public MedicineAlarmAskDto(long id, String userId, ArrayList<Long> registerId, String alarmName, int dosingPeriod, String startAlarm, String finishAlarm, int oneTimeCapacity, String doseType) {
+    public MedicineAlarmAskDto(long id, String userId, ArrayList<Long> registerId, String alarmName, int dosingPeriod, String startAlarm, String finishAlarm, DoseTime doseTime, String doseType) {
         this.id = id;
         this.userId = userId;
         this.registerId = registerId;
@@ -21,7 +21,7 @@ public class MedicineAlarmAskDto {
         this.dosingPeriod = dosingPeriod;
         this.startAlarm = startAlarm;
         this.finishAlarm = finishAlarm;
-        this.oneTimeCapacity = oneTimeCapacity;
+        this.doseTime = doseTime;
         this.doseType = doseType;
     }
 
@@ -81,12 +81,12 @@ public class MedicineAlarmAskDto {
         this.finishAlarm = finishAlarm;
     }
 
-    public int getOneTimeCapacity() {
-        return oneTimeCapacity;
+    public DoseTime getDoseTime() {
+        return doseTime;
     }
 
-    public void setOneTimeCapacity(int oneTimeCapacity) {
-        this.oneTimeCapacity = oneTimeCapacity;
+    public void setDoseTime(DoseTime doseTime) {
+        this.doseTime = doseTime;
     }
 
     public String getDoseType() {

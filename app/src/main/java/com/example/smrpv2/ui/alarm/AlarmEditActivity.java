@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smrpv2.R;
+import com.example.smrpv2.model.DoseTime;
 import com.example.smrpv2.model.MedicineAlarmAskDto;
 import com.example.smrpv2.model.MedicineAlarmResponDto;
 import com.example.smrpv2.model.MedicineItem;
@@ -56,7 +57,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
     ImageView iv_back;
     Button Btn_add,Btn_edit,btn_before,btn_after;
     Button Btn_morning, Btn_afternoon, Btn_evening, Btn_addDate, Btn_init;
-    EditText et_alramName,et_dosingPeriod,et_oneTimeDose;
+    EditText et_alramName,et_dosingPeriod;
     String remainingTime;
     Long groupId;
     String user_id;
@@ -114,7 +115,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
         Btn_morning = findViewById(R.id.btn_morning);
         Btn_afternoon = findViewById(R.id.btn_afternoon);
         Btn_evening = findViewById(R.id.btn_evening);
-
+        et_dosingPeriod.setEnabled(false);
         alarmListViewAdapter=new ListViewAdapter(alarmMedicineList,this,0);
         Lst_medicine.setAdapter(alarmListViewAdapter);
 
@@ -210,7 +211,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
               //수정 누르면 수정하기 작업
 
                 if ( et_alramName.getText().toString().equals("") || et_dosingPeriod.getText().toString().equals("")
-                        || et_oneTimeDose.getText().toString().equals("")) {
+                       ) {
                     Toast.makeText(context, "모두 입력해 주세요 .", Toast.LENGTH_SHORT).show();
                 }else{
                     ArrayList<String> temp = new ArrayList<String>(); //일련번호 리스트를 만드는과정
@@ -232,7 +233,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
                         }
                         String alarmName =et_alramName.getText().toString();
                         int dosingPeriod =Integer.parseInt(et_dosingPeriod.getText().toString());
-                        int oneTimeCapacity =oneTimeDoseCount;//Integer.parseInt(et_oneTimeDose.getText().toString());
+
                         String doseType ;
                         if(dosingType==1){
                             doseType="식전";
@@ -240,6 +241,29 @@ public class AlarmEditActivity extends AppCompatActivity  {
                             doseType = "식후";
 
                         }
+                        //DosTime 아침 점심 저녁 어떤것인지 판단 하는 로직  DoseTime 에는 Y OR N 가 들어간다.
+                        DoseTime doseTime = new DoseTime("N", "N", "N");
+
+                        for (String dose : selectedOneTimeDose) {
+                            switch (dose) {
+                                case "아침": {
+                                    doseTime.setMorning("Y");
+                                    break;
+                                }
+                                case "점심": {
+                                    doseTime.setLunch("Y");
+                                    break;
+                                }
+                                case "저녁": {
+                                    doseTime.setDinner("Y");
+                                    break;
+                                }
+                                default: {
+                                    break;
+                                }
+                            }
+                        }
+
                         //이전의 값을 넣어준다 .  현재는  startAlarm과 finishAlarm은 못바꾸게함 따라서 dosingPeriod를 변경 불가능함.
                         Log.d("변경하기전", tempBefore.getFinishAlarm()+"");
                         Log.d("변경하기전남은시간", remainingTime+"");
@@ -250,7 +274,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
 
 
 
-                        MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(tempBefore.getId(),"q",registerId,alarmName,dosingPeriod,tempBefore.getStartAlarm(),tempBefore.getFinishAlarm(),oneTimeCapacity,doseType);
+                        MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(tempBefore.getId(),"q",registerId,alarmName,dosingPeriod,tempBefore.getStartAlarm(),tempBefore.getFinishAlarm(),doseTime,doseType);
                         Call<Message> call = RetrofitHelper.getRetrofitService_server().medicineAlarmUpdate(medicineAlarmAskDto);
                         call.enqueue(new Callback<Message>() {
                             @Override
@@ -343,6 +367,18 @@ public class AlarmEditActivity extends AppCompatActivity  {
                     btn_after.setBackgroundResource(R.drawable.setbtnclick);
                 }
                 //et_oneTimeDose.setText(String.valueOf(response.body().getOneTimeCapacity()));
+                DoseTime doseTime = tempBefore.getDoseTime();
+                int[] doseTimes = doseTime.getDoseTime();
+                if(doseTimes[0]==1){
+                    checkSelectedOneTimeDose(0,selectedOneTimeDose,Btn_morning);
+                }
+                if(doseTimes[1]==1){
+                    checkSelectedOneTimeDose(1,selectedOneTimeDose,Btn_afternoon);
+                }
+                if(doseTimes[2] ==1){
+                    checkSelectedOneTimeDose(2,selectedOneTimeDose,Btn_evening);
+                }
+
                 et_dosingPeriod.setText(String.valueOf(response.body().getDosingPeriod()));
                 init_dosingPeriod = response.body().getDosingPeriod();
 

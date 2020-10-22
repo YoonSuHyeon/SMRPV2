@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.smrpv2.R;
+import com.example.smrpv2.model.DoseTime;
 import com.example.smrpv2.model.alarm_model.AlarmItem;
 
 import java.text.SimpleDateFormat;
@@ -143,7 +144,18 @@ public class AlarmListViewAdapter extends BaseAdapter {
                 calDateDays = Math.abs(calDateDays);
 
                 alarmName.setText(listViewAlarmItemI.getAlramName());
-                dose.setText(listViewAlarmItemI.getOneTimeDose()+"회");
+
+                //몇회 먹는지 측정
+                DoseTime doseTime=listViewAlarmItemI.getDoseTime();
+                int [] doseTimes=doseTime.getDoseTime();
+                int count= 0;
+                for(int dos :doseTimes){
+                    if(dos==1) count++;
+                }
+
+
+
+                dose.setText(count+"회");
                 doseTypeView.setText(listViewAlarmItemI.getDoseType());
                 period.setText(tempStart+" ~ "+tempFinish);
 
