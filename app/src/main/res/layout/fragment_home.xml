@@ -29,127 +29,14 @@
                 android:layout_height="70dp"
                 android:background="#ECF1FF"
                 android:orientation="horizontal">
-
-
                 <LinearLayout
+
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <ImageView
 
 
-                            android:id="@+id/weather_imageview"
-                            android:layout_width="43dp"
-                            android:layout_height="40dp"
-                            android:layout_marginStart="16dp"
-
-                            android:layout_marginTop="16dp"
-                            android:scaleType="fitStart" />
-
-                        <LinearLayout
-
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="10dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/feel_textview"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/temp_textview"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="#100059"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:id="@+id/min_temp_textview"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:textColor="#0024FF"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="/" />
-
-                                <TextView
-                                    android:id="@+id/max_temp_textview"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="#FF0000" />
-
-                            </LinearLayout>
-
-                        </LinearLayout>
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/Txt_weather"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="#100059"
-                                android:textSize="11sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/humidity_textView"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#100059"
-                                android:textSize="11sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <TextView
-
-                            android:id="@+id/Txt_statement"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:textColor="#100059"
-                            android:textSize="11sp"
-                            android:textStyle="bold" />
-
-
-                    </LinearLayout>
-                    <!-- android:src="@drawable/img_weather"--><![CDATA[ />
-
-                    ]]>
                 </LinearLayout>
 
                 <RelativeLayout
@@ -219,19 +106,12 @@
                 app:ci_width="5dp"
                 />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/Lst_line"
-                android:layout_below="@+id/indicator_home"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                />
-
 
             <LinearLayout
                 android:id="@+id/vP"
                 android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
-                android:layout_below="@+id/Lst_line"
+                android:layout_below="@+id/indicator_home"
                 android:layout_height="wrap_content">
 
                 <androidx.viewpager.widget.ViewPager

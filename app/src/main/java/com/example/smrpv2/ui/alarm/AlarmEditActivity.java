@@ -125,20 +125,22 @@ public class AlarmEditActivity extends AppCompatActivity  {
         btn_before.setOnClickListener(new View.OnClickListener() {//식전버튼을 눌렀을 때
             @Override
             public void onClick(View view) {
-                dosingType=BEFORE_MEAL;
+                dosingType = BEFORE_MEAL;
                 btn_before.setBackgroundResource(R.drawable.setbtnclick);
+                btn_before.setTextColor(Color.WHITE);
                 btn_after.setBackgroundResource(R.drawable.setbtn);
+                btn_after.setTextColor(Color.BLACK);
 
             }
         });
         btn_after.setOnClickListener(new View.OnClickListener() { //식후버튼을 눌렀을 때
             @Override
             public void onClick(View view) {
-
-                dosingType=AFTER_MEAL;
+                dosingType = AFTER_MEAL;
                 btn_before.setBackgroundResource(R.drawable.setbtn);
+                btn_before.setTextColor(Color.BLACK);
                 btn_after.setBackgroundResource(R.drawable.setbtnclick);
-
+                btn_after.setTextColor(Color.WHITE);
 
             }
         });
@@ -317,8 +319,30 @@ public class AlarmEditActivity extends AppCompatActivity  {
         Btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // 확인 버튼 누르기
+                int num = 0;
+                ArrayList<MedicineItem> list = adapter.res();
                 Toast.makeText(getApplicationContext(), "추가 되었습니다.", Toast.LENGTH_SHORT).show();
-                alarmMedicineList.addAll(adapter.res());
+                if (alarmMedicineList.size() == 1) {//등록된 약 기능에서 알람추가시 중복제거
+
+                    for (int i = 0; i < list.size(); i++) {
+                        if (alarmMedicineList.get(0).getItemSeq().equals(list.get(i).getItemSeq())) {
+                            list.remove(i);
+                            num++;
+                        }
+                    }
+                } else {
+                    for (int i = 0; i < alarmMedicineList.size(); i++) {
+                        for (int j = 0; j < list.size(); j++) {
+                            if (alarmMedicineList.get(i).getItemSeq().equals(list.get(j).getItemSeq())) {
+                                list.remove(j);
+                                num++;
+                            }
+                        }
+                    }
+                }
+                if (num > 0)
+                    Toast.makeText(getApplicationContext(), "중복된 약 " + num + "건을 제외하였습니다.", Toast.LENGTH_SHORT).show();
+                alarmMedicineList.addAll(list);
 
 
                 alarmListViewAdapter.notifyDataSetChanged();
@@ -360,9 +384,13 @@ public class AlarmEditActivity extends AppCompatActivity  {
                 if(doseType.equals("식전")){
                     dosingType=BEFORE_MEAL;
                     btn_before.setBackgroundResource(R.drawable.setbtnclick);
+                    btn_before.setTextColor(Color.WHITE);
+                    btn_after.setTextColor(Color.BLACK);
                     btn_after.setBackgroundResource(R.drawable.setbtn);
                 }else{
                     dosingType=AFTER_MEAL;
+                    btn_after.setTextColor(Color.WHITE);
+                    btn_before.setTextColor(Color.BLACK);
                     btn_before.setBackgroundResource(R.drawable.setbtn);
                     btn_after.setBackgroundResource(R.drawable.setbtnclick);
                 }
