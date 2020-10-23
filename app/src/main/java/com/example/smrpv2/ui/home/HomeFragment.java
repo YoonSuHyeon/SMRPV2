@@ -61,7 +61,7 @@ public class HomeFragment extends Fragment {
     NavHostFragment navHostFragment;
     NavController navController;
 
-    private RecyclerView recyclerView;
+   // private RecyclerView recyclerView;
     ImageView ic_med_search;
     ImageView ic_prescription_register;
     ImageView ic_envelope_register;
@@ -70,8 +70,7 @@ public class HomeFragment extends Fragment {
     ImageView ic_register_record;
     ImageView ic_dose_record;
     ImageView ic_alarm_set;
-    private static TextView humidity_textView,temp_textview,Txt_statement, Txt_weather,clock_textView,feel_textView,min_temp_textView,max_temp_textView;
-    private static ImageView weather_imageview;
+    private static TextView clock_textView;
 
 
     AutoSlide autoSlide;
@@ -97,15 +96,6 @@ public class HomeFragment extends Fragment {
         /* 초기화 작업.... */
         //서버 통신 영역
         json = RetrofitHelper.getWeather().create(RetrofitService_Server.class);
-        //weather 영역
-        weather_imageview = root.findViewById(R.id.weather_imageview); //하늘 상태 사진
-        temp_textview = root.findViewById(R.id.temp_textview); //온도 textVie
-        humidity_textView = root.findViewById(R.id.humidity_textView); //하늘상태
-        Txt_statement = root.findViewById(R.id.Txt_statement);
-        Txt_weather = root.findViewById(R.id.Txt_weather);
-        feel_textView = root.findViewById(R.id.feel_textview);
-        min_temp_textView = root.findViewById(R.id.min_temp_textview);
-        max_temp_textView = root.findViewById(R.id.max_temp_textview);
         //Clock영역
         clock_textView = root.findViewById(R.id.colockTextview);
 
@@ -116,7 +106,7 @@ public class HomeFragment extends Fragment {
         bannerAdapter =  new ViewPagerAdapter(getActivity(),bannerImages);
         CircleIndicator indicator = root.findViewById(R.id.indicator_home); // 인디케이터
         CircleIndicator indicator2 = root.findViewById(R.id.indicator_home2); // 인디케이터
-        recyclerView=root.findViewById(R.id.Lst_line);//랭킹
+
 
         // 하단 이미지 버튼
         ic_med_search = root.findViewById(R.id.ic_med_search);
@@ -137,8 +127,7 @@ public class HomeFragment extends Fragment {
 
 
         /* view 설정 */
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(root.getContext());
-        recyclerView.setLayoutManager(mLinearLayoutManager);
+
         mainViewPager.setAdapter(adapter);
         smallViewPager.setAdapter(bannerAdapter);
         mainViewPager.setCurrentItem(1);
@@ -155,22 +144,14 @@ public class HomeFragment extends Fragment {
         resizeBannerSize(viewP, 3);
         resizeBannerSize(viewP2,4);
 
-
-        if(sky_image != null)
-            input_weatherStyle(sky_image);
-        else
-            sky_image = new HashMap<String,String>();
-
         autoSlide = new AutoSlide(smallViewPager, DELAY_MS, PERIOD_MS);
         autoSlide.startSlide();
 
         LocationValue location = new LocationValue(getActivity());
-        location.startMoule();
+      // location.startMoule();
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
 
-        displayWeather(latitude,longitude);//디스플레이 날씨 표시
-        displayRank(); //디스플레이 랭크 표시
         current_time(); // 시간표시
         //하단 이미지 버튼 이동
         ic_med_search.setOnClickListener(new View.OnClickListener() {
@@ -244,70 +225,9 @@ public class HomeFragment extends Fragment {
         lay.height = displayMetrics.heightPixels/div-5 ;
         lay_banner.setLayoutParams(lay);
     }
-    void input_weatherStyle( HashMap<String,String> sky_image){
-        if(sky_image != null) {
-            sky_image.put("01n", "clear_sky");
-            sky_image.put("02n", "few_clouds");
-            sky_image.put("03n", "scattered_clouds");
-            sky_image.put("04n", "broken_clouds");
-            sky_image.put("09n", "show_rain");
-            sky_image.put("10n", "rain");
-            sky_image.put("11n", "thunderstom");
-            sky_image.put("13n", "snow");
-            sky_image.put("50n", "mist");
 
-            //아침,낮 일때 return 받는 이미지가 d으로 끝남
-            sky_image.put("01d", "clear_sky");
-            sky_image.put("02d", "few_clouds");
-            sky_image.put("03d", "scattered_clouds");
-            sky_image.put("04d", "broken_clouds");
-            sky_image.put("09d", "show_rain");
-            sky_image.put("10d", "rain");
-            sky_image.put("11d", "thunderstom");
-            sky_image.put("13d", "snow");
-            sky_image.put("50d", "mist");
 
-        }
 
-    }
-    void displayWeather(double latitude, double longitude){ // 날씨 표시 메소드
-        /**
-         *
-         *  서버 연결이 안돼서 제대로 구할 수가 없음. 나중에 수정 예정이라 임시로 비어놓음
-         *
-         *
-         */
-        Call<Weather_response> call = json.getweatherList(latitude,longitude);
-        call.enqueue(new Callback<Weather_response>() {
-            @SuppressLint({"DefaultLocale", "SetTextI18n"})
-            @Override
-            public void onResponse(Call<Weather_response> call, retrofit2.Response<Weather_response> response) {
-                if(response.isSuccessful()) {
-                    assert response.body() != null;
-                    temp_textview.setText(String.format("%.1f°C",response.body().getWeather_main().getTemp()));//현재온도
-                    feel_textView.setText(String.format("%.1f°C",response.body().getWeather_main().getFells_like()));//체감온도
-                    min_temp_textView.setText(String.format("%.1f°C",response.body().getWeather_main().getTemp_min()));//최저온도
-                    max_temp_textView.setText(String.format("%.1f°C",response.body().getWeather_main().getTemp_max()));//최고온도
-                    humidity_textView.setText((int) response.body().getWeather_main().getFells_like()+"%");//습도
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<Weather_response> call, Throwable t) {
-
-            }
-        });
-
-    }
-    void displayRank(){ // 랭크 표시 메소드
-        /**
-         *
-         *  서버 연결이 안돼서 제대로 구할 수가 없음. 나중에 수정 예정이라 임시로 비어놓음
-         *
-         *
-         */
-    }
     void current_time(){//현재 시간을 표시하는 메소드
 
         new Thread(new Runnable() {
@@ -354,7 +274,7 @@ public class HomeFragment extends Fragment {
             return null;
         }
         protected void onPostExecute(String result){
-            weather_imageview.setImageBitmap(bitmap);
+            //weather_imageview.setImageBitmap(bitmap);
 
         }
     }
