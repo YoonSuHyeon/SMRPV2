@@ -9,8 +9,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.smrpv2.R;
-import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.user_model.LoginUser;
+import com.example.smrpv2.model.UserDto;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.common.SharedData;
 import com.example.smrpv2.ui.main.MainActivity;
@@ -46,22 +46,23 @@ public class SplashActivity extends AppCompatActivity {
                     Log.d("TAG", "login_id: "+id);
                     Log.d("TAG", "login_passwd: "+passwd);
                     //로그인 시도
-                    Call<Message> call= RetrofitHelper.getRetrofitService_server().login(loginUser);
-                    call.enqueue(new Callback<Message>() {
+                    Call<UserDto> call= RetrofitHelper.getRetrofitService_server().login(loginUser);
+                    call.enqueue(new Callback<UserDto>() {
                         @Override
-                        public void onResponse(Call<Message> call, Response<Message> response) {
+                        public void onResponse(Call<UserDto> call, Response<UserDto> response) {
 
                             Log.d("login",response.toString());
-                            Log.d("ddd", response.body().getResultCode());
+                            Log.d("ddd", response.body().getUserId());
 
-                            if(response.body().getResultCode().equals("PASS")){ //로그인 성공
+                            if(!response.body().getUserId().equals("")){ //로그인 성공
                                 //MainActivity로 화면 이동
                                 Intent intent = new Intent(getApplication(), MainActivity.class);
+                                intent.putExtra("name",response.body().getName());
                                 startActivity(intent);
                                 finish();
                             }else{ //로그인 실패
                                 show("자동로그인 실패하였습니다.");
-                                intent = new Intent(getApplicationContext(), StartActivity.class);
+                                intent = new Intent(SplashActivity.this, StartActivity.class);
                                 startActivity(intent);
                                 finish();
                             }
@@ -69,7 +70,7 @@ public class SplashActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(Call<Message> call, Throwable t) {
+                        public void onFailure(Call<UserDto> call, Throwable t) {
 
                         }
                     });

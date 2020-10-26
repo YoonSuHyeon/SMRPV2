@@ -76,6 +76,10 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
      **/
     private String dgsbjtCd = ""; //진료과목
 
+    /**
+     * Boolean형 변수
+     * **/
+    Boolean toast_state=true;
 
 
     private RetrofitService_Server retrofit;
@@ -401,7 +405,8 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
         return result;
     }
     public void show(String s){
-        Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
+        if(toast_state)
+            Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -496,5 +501,16 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
     }
     protected static HospitalFragment getInstance(){
         return hospitalFragment;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            toast_state = false;
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

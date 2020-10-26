@@ -165,16 +165,18 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void checkId(String id) { //ID 중복확인
 
-        Call<Message> call = RetrofitHelper.getRetrofitService_server().findId(id);
+        Log.d("TAG", "checked_id: "+id);
+        Call<Message> call = RetrofitHelper.getRetrofitService_server().overlapId(id);
         call.enqueue(new Callback<Message>() {
 
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
-                Log.d("gg", response.toString());
+
+                Log.d("TAG", "onResponse2: "+response.body().getResultCode());
                 //중복검사
                 String message = response.body().getResultCode();
 
-                if (message.equals("FAIL")) {
+                if (message.equals("PASS")) {
                     show("사용할 수 있는 ID 입니다.");
                     checkIdStatus = true;
                 } else {

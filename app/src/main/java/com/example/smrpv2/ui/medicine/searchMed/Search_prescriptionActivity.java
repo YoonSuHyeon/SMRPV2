@@ -307,6 +307,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
                     pill_list.remove(pill_list.size() -1);
 
 
+                Log.d("TAG", "onPostExecute list.size(): "+pill_list.size());
                 //서버에서 STring형 배열로 요청을 받기 떄문에 List를 STring배열로 변환
                 String[] result_array = (String[])pill_list.toArray(new String[pill_list.size()]); 
 
@@ -314,7 +315,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
                     Log.d("TAG", "result_array: "+str+"\n");*/
 
                 //서버와 통신을 하기 위한 RetrofitService_Server 객체 생성성
-                retrofitService = RetrofitHelper.getSearch().create(RetrofitService_Server.class);
+                retrofitService = RetrofitHelper.getRetrofitService_server();
                 Call<ArrayList<MedicineInfoRsponDTO>> call= retrofitService.medicinSendList(result_array);
                 call.enqueue(new Callback<ArrayList<MedicineInfoRsponDTO>>() {
                     @Override

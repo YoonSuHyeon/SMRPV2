@@ -97,6 +97,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
         search = intent.getStringExtra("Search");
         listViewItemArrayList = (ArrayList<MedicineItem>) intent.getSerializableExtra("listViewItemArrayList");
 
+        Log.d("TAG", "itemSeq: "+itemSeq);
         display_medicineDetailInform(itemSeq);
 
 
@@ -199,7 +200,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
      */
     void display_medicineDetailInform(String itemSeq){
         Log.d("itemseq:" , itemSeq);
-        RetrofitService_Server retrofitService_server = RetrofitHelper.getSearch().create(RetrofitService_Server.class);
+        RetrofitService_Server retrofitService_server = RetrofitHelper.getRetrofitService_server();
         Call<MedicineInfoRsponDTO> call= retrofitService_server.getMedicine(itemSeq);
         call.enqueue(new Callback<MedicineInfoRsponDTO>() {
             @Override

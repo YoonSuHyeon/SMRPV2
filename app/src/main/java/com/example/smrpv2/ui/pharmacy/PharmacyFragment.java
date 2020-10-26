@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -309,8 +310,10 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         mapView.setCurrentLocationRadius(radiuse);
         //mapView.setHDMapTileEnabled(true);
 
+        Log.d(TAG, "setMapView_longitude: "+longitude);
+        Log.d(TAG, "setMapView_latitude: "+latitude);
         //중심적 변경
-        mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(latitude,longitude),true);// 중심점 변경
+        mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(latitude, longitude),true);// 중심점 변경
         mapCircle = new MapCircle(MapPoint.mapPointWithGeoCoord(latitude, longitude),radiuse, Color.argb(128,95,0,255),Color.argb(128,186,255,255));//MapCircle(MapPoint center, int radius, int strokeColor, int fillColor)
         mapCircle.setTag(2);
         mapView.addCircle(mapCircle);
@@ -335,6 +338,8 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     public void allocateLocation(LocationValue locationValue){
         latitude = locationValue.getLatitude();
         longitude = locationValue.getLongitude();
+        Log.d(TAG, "allocateLocation_latitude: "+locationValue.getLatitude());
+        Log.d(TAG, "allocateLocation_longitude: "+locationValue.getLongitude());
     }
     private void parsingData(double latitude,double longitude,int radiuse){
         /** 경도 위도 반경에 대한 데이터통신을 하는 메소드**/
@@ -513,5 +518,13 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     }
 
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

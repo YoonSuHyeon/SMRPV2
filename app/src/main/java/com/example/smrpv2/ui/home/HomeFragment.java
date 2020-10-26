@@ -80,43 +80,19 @@ public class HomeFragment extends Fragment {
     private double latitude, longitude;
     private int[] images= {R.drawable.home_main_banner3, R.drawable.home_main_banner1,R.drawable.home_main_banner2};
     private int[] bannerImages ={R.drawable.home_small_banner1, R.drawable.home_small_banner2,R.drawable.home_small_banner3};
-    private boolean isRunning = true;
+    public boolean isRunning = true;
     HashMap<String,String> sky_image;
     private ArrayList<HomeMedItem> homeMedItemArrayList=new ArrayList<HomeMedItem>();
-
     private RetrofitService_Server json;
 
-
+    private HomeFragment homeFragment;
+    private View root;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         if(container.getChildCount() > 0)
             container.removeViewAt(0);
-        final View root = inflater.inflate(R.layout.fragment_home, container, false);
+        root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        /* 초기화 작업.... */
-        //서버 통신 영역
-        json = RetrofitHelper.getWeather().create(RetrofitService_Server.class);
-        //Clock영역
-        clock_textView = root.findViewById(R.id.colockTextview);
-
-        // 각 종 viewPager(배너), adapter, 초기화
-        mainViewPager =  root.findViewById(R.id.banner);
-        smallViewPager =  root.findViewById(R.id.banner2);
-        adapter = new ViewPagerAdapter(getActivity(),images,1);
-        bannerAdapter =  new ViewPagerAdapter(getActivity(),bannerImages);
-        CircleIndicator indicator = root.findViewById(R.id.indicator_home); // 인디케이터
-        CircleIndicator indicator2 = root.findViewById(R.id.indicator_home2); // 인디케이터
-
-
-        // 하단 이미지 버튼
-        ic_med_search = root.findViewById(R.id.ic_med_search);
-        ic_prescription_register = root.findViewById(R.id.ic_prescription_register);
-        ic_envelope_register = root.findViewById(R.id.ic_envelope_register);
-        ic_pharmacy_search = root.findViewById(R.id.ic_pharmacy_search);
-        ic_hospital_search = root.findViewById(R.id.ic_hospital_search);
-        ic_register_record = root.findViewById(R.id.ic_register_record);
-        ic_dose_record = root.findViewById(R.id.ic_dose_record);
-        ic_alarm_set = root.findViewById(R.id.ic_alarm_set);
 
         if(navHostFragment==null) {
             navHostFragment =
@@ -126,14 +102,7 @@ public class HomeFragment extends Fragment {
         navController = navHostFragment.getNavController();
 
 
-        /* view 설정 */
-
-        mainViewPager.setAdapter(adapter);
-        smallViewPager.setAdapter(bannerAdapter);
-        mainViewPager.setCurrentItem(1);
-        smallViewPager.setCurrentItem(0);
-        indicator.setViewPager(mainViewPager);
-        indicator2.setViewPager(smallViewPager);
+        init();
 
         // 첫 번째 배너 사이 간격 조정
         resizeBannerPadding();
@@ -279,11 +248,65 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    public HomeFragment getInstance(){
+        return homeFragment;
+    }
+
+    public void init(){
+        /* 초기화 작업.... */
+        //서버 통신 영역
+        json = RetrofitHelper.getWeather().create(RetrofitService_Server.class);
+        //Clock영역
+        clock_textView = root.findViewById(R.id.colockTextview);
+
+        // 각 종 viewPager(배너), adapter, 초기화
+        mainViewPager =  root.findViewById(R.id.banner);
+        smallViewPager =  root.findViewById(R.id.banner2);
+        adapter = new ViewPagerAdapter(getActivity(),images,1);
+        bannerAdapter =  new ViewPagerAdapter(getActivity(),bannerImages);
+        CircleIndicator indicator = root.findViewById(R.id.indicator_home); // 인디케이터
+        CircleIndicator indicator2 = root.findViewById(R.id.indicator_home2); // 인디케이터
+
+
+        // 하단 이미지 버튼
+        ic_med_search = root.findViewById(R.id.ic_med_search);
+        ic_prescription_register = root.findViewById(R.id.ic_prescription_register);
+        ic_envelope_register = root.findViewById(R.id.ic_envelope_register);
+        ic_pharmacy_search = root.findViewById(R.id.ic_pharmacy_search);
+        ic_hospital_search = root.findViewById(R.id.ic_hospital_search);
+        ic_register_record = root.findViewById(R.id.ic_register_record);
+        ic_dose_record = root.findViewById(R.id.ic_dose_record);
+        ic_alarm_set = root.findViewById(R.id.ic_alarm_set);
+
+        homeFragment = this;
+
+        /* view 설정 */
+
+        mainViewPager.setAdapter(adapter);
+        smallViewPager.setAdapter(bannerAdapter);
+        mainViewPager.setCurrentItem(1);
+        smallViewPager.setCurrentItem(0);
+        indicator.setViewPager(mainViewPager);
+        indicator2.setViewPager(smallViewPager);
+    }
+    @Override
+    public void onDestroy() {
+        try {
+            Thread.sleep(500); //시간 스레드 동작 false로 설정후 적용하기 위한 0.5초 스레드 대기 지연
+            isRunning = false;
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        super.onDestroy();
+    }
 
     @Override
     public void onPause() {
         super.onPause();
         isRunning = false;
     }
+
 }
 
