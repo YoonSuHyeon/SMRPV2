@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 public class SharedData {
 
@@ -40,6 +41,7 @@ public class SharedData {
         editor.putBoolean("auto_login",auto_login);
         editor.apply();
 
+
     }
     public String getUser_id() {
         loginInformtaion = activity.getSharedPreferences("user_inform",Context.MODE_PRIVATE);
@@ -62,6 +64,11 @@ public class SharedData {
         loginInformtaion = activity.getSharedPreferences("user_inform",Context.MODE_PRIVATE);
         return loginInformtaion.getBoolean("auto_login",false);
 
+    }
+    public void reset(){
+        loginInformtaion = activity.getSharedPreferences("user_inform", Context.MODE_PRIVATE);
+        editor= loginInformtaion.edit();
+        editor.clear().apply();
     }
 
 }

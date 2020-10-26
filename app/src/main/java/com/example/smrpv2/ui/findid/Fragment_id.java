@@ -80,8 +80,12 @@ public class Fragment_id extends Fragment {
             public void onClick(View v) {
 
                 transaction = fragmentManager.beginTransaction();
-                name = et_name.getText().toString();
-                email = et_email.getText().toString();
+                name = et_name.getText().toString(); //사용자 이름
+                email = et_email.getText().toString(); // 사용자 이메일
+
+                Log.d("TAG", "name: "+name);
+                Log.d("TAG", "email: "+email);
+
 
                 RetrofitService_Server networkService= RetrofitHelper.getRetrofitService_server();
 
@@ -89,32 +93,33 @@ public class Fragment_id extends Fragment {
                  *서버와 통신부분 이름과 이메일을 파라미터로 넘겨야함 현재 서버통신 구현은 userid로 임시 제작되어있음
                  */
                 
-                Call<Message> call = networkService.findId(name);
+                Call<Message> call = networkService.findId(name,email);
                 call.enqueue(new Callback<Message>() {
+
                     @Override
                     public void onResponse(Call<Message> call, Response<Message> response) {
-                       /* Log.d("TAG", "onResponse: "+response.body().getResponse());
-                        id = response.body().getResponse();
-                        if(id.length()>0&&!id.equals("404")){
-                            dialog.setTitle("아이디 찾기 성공");
-                            SpannableStringBuilder sp = new SpannableStringBuilder("귀하의 아이디는 "+id+" 입니다.");
-                            sp.setSpan(new ForegroundColorSpan(Color.RED),9,9+id.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            dialog.setMessage(sp);
 
+                        Log.d("TAG", "onResponse1: " + response.body().getResultCode());
+                        id = response.body().getResultCode();
+                        if (id.length() > 0 && !id.equals("404")) {
+                            dialog.setTitle("아이디 찾기 성공");
+                            SpannableStringBuilder sp = new SpannableStringBuilder("귀하의 아이디는 " + id + " 입니다.");
+                            sp.setSpan(new ForegroundColorSpan(Color.RED), 9, 9 + id.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            dialog.setMessage(sp);
                             dialog.setNegativeButton("비밀번호 찾기", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
 
-                                    Log.d("TAG", "id: "+id);
-                                    Log.d("TAG", "name: "+name);
-                                    Log.d("TAG", "email: "+email);
+                                    Log.d("TAG", "id: " + id);
+                                    Log.d("TAG", "name: " + name);
+                                    Log.d("TAG", "email: " + email);
 
                                     change_password.setEmail(email);
                                     change_password.setName(name);
                                     change_password.setUserId(id);
 
-                                    transaction.replace(R.id.frame_layout,fragment_password).commitAllowingStateLoss();
+                                    transaction.replace(R.id.frame_layout, fragment_password).commitAllowingStateLoss();
                                     findIdActivity.tv_id.setTextColor(Color.parseColor("#666464"));
                                     findIdActivity.ll_id.setBackgroundColor(Color.parseColor("#666464"));
                                     findIdActivity.tv_password.setTextColor(Color.parseColor("#2196F3"));
@@ -123,11 +128,12 @@ public class Fragment_id extends Fragment {
                                     et_name.setText(""); //사용자 이름 초기화
                                     et_email.setText(""); //사용자 비밀 초기화
 
+                                }
                             });
-                        }else{
+                        } else {
                             dialog.setTitle("아이디 찾기 실패");
                             dialog.setMessage("사용자 계정이 없습니다.");
-                        }*/
+                        }
                         dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -140,11 +146,14 @@ public class Fragment_id extends Fragment {
 
                     @Override
                     public void onFailure(Call<Message> call, Throwable t) {
-
+                        Log.d("TAG", "onFailureonFailureonFailure: ");
                     }
                 });
             }
+
+
         });
         return rootview;
     }
+
 }

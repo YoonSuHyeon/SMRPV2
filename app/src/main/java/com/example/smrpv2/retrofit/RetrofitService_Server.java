@@ -12,6 +12,7 @@ import com.example.smrpv2.model.searchMed_model.ConMedicineAskDto;
 import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
 import com.example.smrpv2.model.user_model.LoginUser;
 import com.example.smrpv2.model.home_model.Weather_response;
+import com.example.smrpv2.model.UserDto;
 import com.example.smrpv2.model.user_model.User;
 
 import java.util.ArrayList;
@@ -21,16 +22,17 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
-import retrofit2.http.PATCH;
+
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface RetrofitService_Server {
 
-    @GET("user/findId")
-    Call<Message> findId( //아이디 중복을 위한 메시지..
-                          @Query("userId") String userId
+    @GET("/user/findId")
+    Call<Message> findId( //아이디 찾기
+                          @Query("name") String name,
+                          @Query("email") String email
     );
 
     @POST("/user/join")
@@ -39,8 +41,14 @@ public interface RetrofitService_Server {
                                 User user
     );
 
+    @GET("/user/idCheck")
+    Call<Message> overlapId(//아이디 중복 검사
+                          @Query("userId")String userId
+    );
+
+
     @POST("/user/login")
-    Call<Message> login( //로그인
+    Call<UserDto> login( //로그인
                          @Body LoginUser loginUser
     );
 
@@ -110,7 +118,7 @@ public interface RetrofitService_Server {
     );
     /*병원 찾기 기능에 필요한 요청 메시지*/
     @GET("/B551182/hospInfoService/getHospBasisList?serviceKey=LjJVA0wW%2BvsEsLgyJaBLyTywryRMuelTIYxsWnQTaPpxdZjpuxVCdCtyNxvObDmBJ57VVaSi3%2FerYKQFQmKs8g%3D%3D&_type=json")
-//("/userInfo")
+//("/userInfo")ㅋ
     Call<Response_hos> gethosList(@Query("yPos") double lat, @Query("xPos") double lng, @Query("radius") Integer m, @Query("dgsbjtCd") String dgsbjtCd);
 
     /*약국 찾기 기능에 필요한 요청 메시지*/

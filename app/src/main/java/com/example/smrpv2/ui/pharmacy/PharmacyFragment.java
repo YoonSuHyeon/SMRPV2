@@ -73,6 +73,14 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     private Double longitude = 0.0;
     private Double movelatititue = 0.0;
     private Double movelongitude = 0.0;
+
+
+    /**
+     * Boolean형 변수
+     * **/
+    Boolean toast_state=true;
+
+
     // TODO: Rename and change types of parameters
     private FloatingActionButton locaton_Btn,reLocation_Btn;    // location_Btn: 내 위치 재 검색
                                                                 // reLocation_Btn: 지도에 표시된 곳 재 검색
@@ -412,7 +420,8 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     }
 
     public void show(String s){
-        Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
+        if(toast_state)
+            Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
     }
 
     //////////////////      MapView 객체 이벤트 처리  ////////////////////////////
@@ -522,6 +531,8 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     public void onDestroy() {
         super.onDestroy();
         try {
+
+            toast_state= false;
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
