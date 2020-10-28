@@ -2,6 +2,7 @@ package com.example.smrpv2.ui.report;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,7 +27,7 @@ public class ReportResultActivity extends AppCompatActivity implements ReportRec
     int sym1[] = {24};int sym10[] = {31, 12, 28};int sym11[] = {30, 36, 16};
     int sym2[] = {0};int sym12[] = {4, 37, 39,27, 51};int sym13[] = {15, 43, 19, 40, 27, 24};
     int sym3[] = {8,9};int sym14[] = {44, 20, 12, 31, 47,11,3};int sym15[] = {37, 3, 15};
-    int sym4[] = { 12};int sym16[] = {34};int sym17[] = {44, 37, 33, 51, 18, 7, 49, 45, 22, 32, 13};
+    int sym4[] = {12};int sym16[] = {34};int sym17[] = {44, 37, 33, 51, 18, 7, 49, 45, 22, 32, 13};
     int sym5[] = {37, 33, 20, 38, 44, 7, 28, 49, 3, 45};int sym18[] = {10, 46, 1, 41};int sym19[] = {44, 37, 18, 2, 10, 46};
     int sym6[] = {37, 44, 39, 51, 43, 12, 15, 16, 48, 41, 40, 19, 14};int sym20[] = {7, 15, 19};
     int sym21[] = {35};int sym22[] = {5, 4};int sym23[] = {21};int sym24[] = { 17, 5, 4};int sym25[] = {37, 10, 31};
@@ -64,8 +65,8 @@ public class ReportResultActivity extends AppCompatActivity implements ReportRec
               {
                   symptom_count++;
                   for(int j=0; j < disease_array[i].length; j++){
-                      if(disease_array[i][j]==-1) break;
-                      diagnosis_result[disease_array[i][j]]++;
+                      if(disease_array[i][j]==0) break;
+                      diagnosis_result[disease_array[i][j]-1]++;
                   }
               }
           }
