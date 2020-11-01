@@ -28,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.example.smrpv2.R;
+import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -58,6 +59,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -97,7 +101,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
         assert backImg != null;
         Log.d("gggg",backImg);
         String frontImgDate=backImg.substring(0,frontImg.lastIndexOf("/"))+"/picF.jpg"; //앞면이미지
-        String backImgDate=backImg.substring(0,backImg.lastIndexOf("/"))+"/picF.jpg"; //뒷면이미지
+        String backImgDate=backImg.substring(0,backImg.lastIndexOf("/"))+"/picB.jpg"; //뒷면이미지
 
         Log.d("TAG", "frontImg: "+frontImgDate);
         Log.d("TAG", "backImg: "+backImgDate);
@@ -114,6 +118,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
         try {
             File frontfile = new File(frontImg);
             File backfile = new File(backImg);
+
             Bitmap frontbitmap = MediaStore.Images.Media
                     .getBitmap(getContentResolver(), Uri.fromFile(frontfile));
 
@@ -144,8 +149,11 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
                 }
 
             }
+
+
             targetBitmap_front=Bitmap.createBitmap(rotatedBitmap,rotatedBitmap.getWidth()/2-250,rotatedBitmap.getHeight()/2-250,500,500);
             imageView.setImageBitmap(targetBitmap_front);
+
             if (backbitmap != null) {
                 ExifInterface ei = new ExifInterface(backImg);
                 int back_orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
@@ -170,6 +178,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
                 }
 
             }
+            sendFile(frontfile,backfile);
 
         }catch(Exception err){
             err.printStackTrace();
@@ -217,6 +226,29 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
         );
         //imageFilePath = image.getAbsolutePath();
         return image;
+    }
+    private void sendFile(File frontfile,File backfile){
+
+        ArrayList<MultipartBody.Part> list = new ArrayList<>();
+        RequestBody body = RequestBody.create(MediaType.parse("image/*"),frontfile);
+        RequestBody body2 = RequestBody.create(MediaType.parse("image/*"),backfile);
+        MultipartBody.Part fPart = MultipartBody.Part.createFormData("files","front.jpg",body);
+        MultipartBody.Part bPart = MultipartBody.Part.createFormData("files","back.jpg",body2);
+        list.add(fPart);
+        list.add(bPart);
+
+        Call<Message> call = RetrofitHelper.getRetrofitService_server().uploadImage(list);
+        call.enqueue(new Callback<Message>() {
+            @Override
+            public void onResponse(Call<Message> call, Response<Message> response) {
+                Log.d("sendFile", response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<Message> call, Throwable t) {
+                Log.d("sendFile T:", t.toString());
+            }
+        });
     }
     private void sendTakePhotoIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);// 내장 카메라 켜기

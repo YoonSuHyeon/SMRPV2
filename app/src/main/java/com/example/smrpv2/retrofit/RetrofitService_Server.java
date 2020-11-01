@@ -18,13 +18,16 @@ import com.example.smrpv2.model.user_model.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 public interface RetrofitService_Server {
@@ -43,7 +46,7 @@ public interface RetrofitService_Server {
 
     @GET("/user/idCheck")
     Call<Message> overlapId(//아이디 중복 검사
-                          @Query("userId")String userId
+                            @Query("userId") String userId
     );
 
 
@@ -59,12 +62,12 @@ public interface RetrofitService_Server {
 
     @GET("/medicine/search")
     Call<MedicineInfoRsponDTO> getMedicine( // 아이템 번호로 약 검색하기
-            @Query("itemSeq") String itemSeq
+                                            @Query("itemSeq") String itemSeq
     );
 
     @POST("/medicine/ocr")
     Call<MedicineInfoRsponDTO> medicineOcr(//사진촬영 OCR
-                                            @Body String[] medicineLogo
+                                           @Body String[] medicineLogo
     );
 
     @GET("/medicine/registers")
@@ -73,9 +76,9 @@ public interface RetrofitService_Server {
     );
 
     @POST("/medicine/register/add")
-    Call<Message>medicineAdd(// 약등록하기
-                            @Body RegmedicineAsk regmedicineAsk
-                            );
+    Call<Message> medicineAdd(// 약등록하기
+                              @Body RegmedicineAsk regmedicineAsk
+    );
 
     @POST("/medicine/search")
     Call<ArrayList<MedicineInfoRsponDTO>> medicinSendList(
@@ -83,42 +86,50 @@ public interface RetrofitService_Server {
     );
 
     @DELETE("medicine/register/delete")
-    Call<Message>  delRegMedicine( //약삭제
-            @Query("registerId") long registerId
+    Call<Message> delRegMedicine( //약삭제
+                                  @Query("registerId") long registerId
     );
 
 
     @GET("medicine/alarmAll")
     Call<ArrayList<MedicineAlarmResponDto>> getMedicineAlarmAll( //알람 리스트 가져오기
-            @Query("userId") String userId
+                                                                 @Query("userId") String userId
     );
+
     @GET("medicine/alarm")
     Call<MedicineAlarmResponDto> getMedicineAlarm( // 특정한 알람 가져오기
-            @Query("medicineAlarmId") Long medicineAlarmId
+                                                   @Query("medicineAlarmId") Long medicineAlarmId
     );
 
     @DELETE("medicine/alarm/delete")
-    Call<Message>  deleteMedicineAlarm( //알람삭제
-                                   @Query("medicineAlarmId") long medicineAlarmId
+    Call<Message> deleteMedicineAlarm( //알람삭제
+                                       @Query("medicineAlarmId") long medicineAlarmId
     );
+
     @POST("medicine/alarm/add")
-    Call<Message>  addMedicineAlarm( //알람 등록
-            @Body MedicineAlarmAskDto medicineAlarmAskDto
+    Call<Message> addMedicineAlarm( //알람 등록
+                                    @Body MedicineAlarmAskDto medicineAlarmAskDto
     );
 
     @PUT("medicine/update")
     Call<Message> medicineAlarmUpdate( //알람 수정
-               @Body     MedicineAlarmAskDto medicineAlarmAskDto
+                                       @Body MedicineAlarmAskDto medicineAlarmAskDto
     );
 
 
     @POST("/userInfo/inquiry/add")
     Call<Message> addInquiry( //문의하기
-            @Body InquiryDto inquiry
+                              @Body InquiryDto inquiry
     );
+
+    @Multipart
+    @POST("/medicine/uploadImage") //서버에게 사진전송
+    Call<Message> uploadImage(@Part ArrayList<MultipartBody.Part> files);
+    //Call<Message> uploadImage(MedicineImageDto files);
+
     /*병원 찾기 기능에 필요한 요청 메시지*/
     @GET("/B551182/hospInfoService/getHospBasisList?serviceKey=LjJVA0wW%2BvsEsLgyJaBLyTywryRMuelTIYxsWnQTaPpxdZjpuxVCdCtyNxvObDmBJ57VVaSi3%2FerYKQFQmKs8g%3D%3D&_type=json")
-//("/userInfo")ㅋ
+//("/userInfo")
     Call<Response_hos> gethosList(@Query("yPos") double lat, @Query("xPos") double lng, @Query("radius") Integer m, @Query("dgsbjtCd") String dgsbjtCd);
 
     /*약국 찾기 기능에 필요한 요청 메시지*/
