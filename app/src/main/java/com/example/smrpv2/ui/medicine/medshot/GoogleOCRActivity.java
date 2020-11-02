@@ -241,7 +241,10 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
         call.enqueue(new Callback<Message>() {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
-                Log.d("sendFile", response.body().toString());
+                Log.d("sendFile", "성공");
+                Log.d("sendFile", response.toString());
+
+
             }
 
             @Override
