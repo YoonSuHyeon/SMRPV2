@@ -30,6 +30,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".ui.medicine.searchMed.ErrorMessageActivity"
             android:theme="@android:style/Theme.Dialog"></activity>
+
         <activity android:name=".ui.medicine.medshot.GoogleOCRActivity" />
         <activity android:name=".ui.medicine.medshot.CameraBackActivity" />
         <activity android:name=".ui.medicine.medshot.CameraFrontActivity" />
@@ -67,6 +68,8 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="adc15b958c5d03495cd889d997401566" />
 
+        <receiver android:name=".ui.alarm.AlarmReceiver"
+            android:exported="false"/>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.smrpv2"

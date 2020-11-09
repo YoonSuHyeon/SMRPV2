@@ -2,6 +2,7 @@ package com.example.smrpv2.ui.alarm;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,6 +39,9 @@ import com.example.smrpv2.ui.medicine.ListViewAdapter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -111,7 +115,11 @@ public class AlarmSetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_alarm_set);
 
         this.context = this;
+
+        //알람초기화
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent aIntent = new Intent(this, AlarmReceiver.class);
+        final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, AlarmReceiver.NOTIFICATION_ID, aIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         final Calendar calendar = Calendar.getInstance();
 
@@ -285,6 +293,9 @@ public class AlarmSetActivity extends AppCompatActivity {
                     public void onResponse(Call<Message> call, Response<Message> response) {
                         if (response.body().getResultCode().equals("OK")) {
                             Log.d("등록완료", "등록");
+
+                            //알람등록
+                            setAlarm(pendingIntent);
                             onBackPressed();
                         }
                     }
@@ -306,6 +317,21 @@ public class AlarmSetActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void setAlarm(PendingIntent pendingIntent) {
+        Date currentTime = Calendar.getInstance().getTime();
+        GregorianCalendar cal =  new GregorianCalendar(Locale.KOREA);
+        cal.setTime(currentTime);
+        // cal.add(Calendar.DATE, 1)
+        Log.d("알람","알람등록");
+        cal.set(Calendar.HOUR_OF_DAY, 19);
+        cal.set(Calendar.MINUTE, 37);
+        alarmManager.setExact(
+                AlarmManager.RTC_WAKEUP,
+                cal.getTimeInMillis(),
+                pendingIntent
+        );
     }
 
     private void showAlertDialog() {
