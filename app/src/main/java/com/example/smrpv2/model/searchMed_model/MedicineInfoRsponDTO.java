@@ -112,7 +112,7 @@ public class MedicineInfoRsponDTO {
         this.usage = usage;
    }
 
-    @SerializedName("usage")
+    @SerializedName("usageCapacity")
     @Expose
     private String usage;
 

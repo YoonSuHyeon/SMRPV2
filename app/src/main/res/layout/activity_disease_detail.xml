@@ -134,18 +134,18 @@
                 android:layout_height="1dp"
                 android:background="#989898"
                 />
+
             <TextView
                 android:id="@+id/Txt_department"
-                android:layout_below="@+id/line4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="과"
-                android:textColor="@color/appBaseColor"
-                android:textStyle="bold"
-                android:textSize="22sp"
+                android:layout_below="@+id/line4"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="26dp"
-                />
+                android:text="진료과"
+                android:textColor="@color/appBaseColor"
+                android:textSize="22sp"
+                android:textStyle="bold" />
             <View
                 android:id="@+id/line5"
                 android:layout_below="@+id/Txt_department"

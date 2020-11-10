@@ -9,12 +9,14 @@ import com.example.smrpv2.model.SumMedInfo;
 import com.example.smrpv2.model.hospital_model.Response_hos;
 import com.example.smrpv2.model.pharmcy_model.Response_phy;
 import com.example.smrpv2.model.searchMed_model.ConMedicineAskDto;
+import com.example.smrpv2.model.searchMed_model.KakaoOcrDto;
 import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
 import com.example.smrpv2.model.user_model.LoginUser;
 import com.example.smrpv2.model.home_model.Weather_response;
 import com.example.smrpv2.model.UserDto;
 import com.example.smrpv2.model.user_model.User;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,6 +124,10 @@ public interface RetrofitService_Server {
                               @Body InquiryDto inquiry
     );
 
+    @POST("/v2/vision/text/ocr")
+    Call<KakaoOcrDto> sendOcr( //ocr결과값 가져오기
+            @Body File file
+            );
     @Multipart
     @POST("/medicine/uploadImage") //서버에게 사진전송
     Call<Message> uploadImage(@Part ArrayList<MultipartBody.Part> files);
@@ -136,9 +142,12 @@ public interface RetrofitService_Server {
     @GET("/B551182/pharmacyInfoService/getParmacyBasisList?ServiceKey=LjJVA0wW%2BvsEsLgyJaBLyTywryRMuelTIYxsWnQTaPpxdZjpuxVCdCtyNxvObDmBJ57VVaSi3%2FerYKQFQmKs8g%3D%3D")
     Call<Response_phy> getphyList(@Query("xPos") double lat, @Query("yPos") double lng, @Query("radius") Integer m);
 
+
     /*날씨 찾기 기능에 필요한 요청 메시지*/
     @GET("weather?APPID=49168c2b50d7dfa50b8e7a0054b1b229&lang=kr&units=metric")
 // 날씨 정보를 요청 메시지
     Call<Weather_response> getweatherList(@Query("lat") double lat, @Query("lon") double lon);
+
+
 
 }

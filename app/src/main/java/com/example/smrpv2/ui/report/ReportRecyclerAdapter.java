@@ -2,6 +2,7 @@ package com.example.smrpv2.ui.report;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -120,7 +121,8 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 public void onClick(View v) {
                     int position = getAdapterPosition() ;
                     mListener.onItemClick(v, getAdapterPosition(),rList);
-                    if ( mSelectedItems.get(position, false) ){
+                    if ( mSelectedItems.get(position, false) ){//버튼이 안눌렸을때
+
                         mSelectedItems.put(position, false);
                         Lay_symptom.setBackgroundResource(R.drawable.shadow2);
                         Txt_symptom.setTextColor(Color.parseColor("#2E2E2E"));
@@ -128,7 +130,7 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         ic_check.setImageResource(R.drawable.ic_check_basic);
 
 
-                    } else {
+                    } else { // 버튼이 눌렸을 때
                         mSelectedItems.put(position, true);
                         Lay_symptom.setBackgroundResource(R.drawable.shadow3);
                         Txt_symptom.setTextColor(Color.parseColor("#0022FF"));
@@ -137,15 +139,8 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                     }
 
-
-
-
-
-
                 }
             });
-
-
 
         }
     }
@@ -170,10 +165,7 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 public void onClick(View v) {
                     int pos = getAdapterPosition() ;
                     mListener.onItemClick(v, getAdapterPosition(),rList);
-
-
-
-
+                    Log.d("TAG", "pos: "+pos);
                 }
             });
         }

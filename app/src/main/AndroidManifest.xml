@@ -28,8 +28,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.medicine.searchMed.ErrorMessageActivity"
-            android:theme="@android:style/Theme.Dialog"></activity>
+        <activity android:name=".ui.medicine.medshot.KakaoOcrActivity"></activity>
+        <activity
+            android:name=".ui.medicine.searchMed.ErrorMessageActivity"
+            android:theme="@android:style/Theme.Dialog" />
 
         <activity android:name=".ui.medicine.medshot.GoogleOCRActivity" />
         <activity android:name=".ui.medicine.medshot.CameraBackActivity" />
@@ -40,7 +42,7 @@
             android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".ui.alarm.AlarmEditActivity"
-            android:windowSoftInputMode="adjustNothing"/>
+            android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".ui.report.ReportResultActivity" />
         <activity android:name=".ui.search.SearchActivity" />
         <activity android:name=".ui.tos.ToSActivity" />

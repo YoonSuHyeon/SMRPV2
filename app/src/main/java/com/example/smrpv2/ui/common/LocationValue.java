@@ -6,6 +6,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 
 public class LocationValue {
 
@@ -34,17 +35,26 @@ public class LocationValue {
         try{
             lm_1.requestLocationUpdates(LocationManager.GPS_PROVIDER,minTime,minDistance,gpsListener); // GPS모듈을 이용하여 위치값 얻음
             lm_2.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,minTime,minDistance,gpsListener); //네트워크를 통해서 위치값을 얻음
-            gps_location = lm_1.getLastKnownLocation(LocationManager.NETWORK_PROVIDER); // 네트워크를 통해서 얻는 마지막 위치값
+
+
+            gps_location = lm_1.getLastKnownLocation(LocationManager.GPS_PROVIDER); // 네트워크를 통해서 얻는 마지막 위치값
             network_location = lm_2.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
             if(gps_location != null){ // GPS 모듈을 동해서 값을 갖지 못한다면
                 latitude = gps_location.getLatitude();// GPS 모듈 경도 값 ex) 37.30616958190577
                 longitude = gps_location.getLongitude();//GPS 모듈 위도 값 ex) 127.92099856059595
+                Log.d("TAG", "gps_location_latitude: "+latitude);
+                Log.d("TAG", "gps_location_longitude: "+longitude);
 
             }else{
                 latitude = network_location.getLatitude();// GPS 모듈 경도 값 ex) 37.30616958190577
                 longitude = network_location.getLongitude();//GPS 모듈 위도 값 ex) 127.92099856059595
+                Log.d("TAG", "network_location_latitude: "+latitude);
+                Log.d("TAG", "network_location_longitude: "+longitude);
             }
+
+            Log.d("TAG", "latitude1: "+latitude);
+            Log.d("TAG", "1: "+longitude);
         }catch(SecurityException e){
             e.printStackTrace();
         }
@@ -63,6 +73,8 @@ public class LocationValue {
         public void onLocationChanged(Location location) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
+            Log.d("TAG", "latitude2: "+latitude);
+            Log.d("TAG", "longitude2: "+longitude);
         }
 
         @Override

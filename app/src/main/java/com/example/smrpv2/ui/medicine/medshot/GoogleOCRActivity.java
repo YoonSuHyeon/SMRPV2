@@ -227,7 +227,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
         //imageFilePath = image.getAbsolutePath();
         return image;
     }
-    private void sendFile(File frontfile,File backfile){
+    private void sendFile(File frontfile,File backfile){ //구축서버에 이미지 파일 전송
 
         ArrayList<MultipartBody.Part> list = new ArrayList<>();
         RequestBody body = RequestBody.create(MediaType.parse("image/*"),frontfile);
