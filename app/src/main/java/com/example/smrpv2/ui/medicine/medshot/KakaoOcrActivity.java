@@ -147,9 +147,9 @@ public class KakaoOcrActivity extends AppCompatActivity {
         call.enqueue(new Callback<KakaoOcrDto>() {
             @Override
             public void onResponse(Call<KakaoOcrDto> call, Response<KakaoOcrDto> response) {
-                Log.d("TAG", "onResponse0: "+response.body());
-                Log.d("TAG", "onResponse1: "+response.body().getList().size());
-                Log.d("TAG", "onResponse2: "+response.body().getList().get(0));
+        //        Log.d("TAG", "onResponse0: "+response.body());
+//                Log.d("TAG", "onResponse1: "+response.body().getList().size());
+       //         Log.d("TAG", "onResponse2: "+response.body().getList().get(0));
             }
 
             @Override
