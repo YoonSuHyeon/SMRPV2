@@ -507,7 +507,7 @@ public class CameraBackFragment extends Fragment
 
                     Paint paint = new Paint();
                     paint.setColor(Color.rgb(100, 20, 50));
-                    canvas.drawRect(width/2-250,height/2-250,width/2+250,height/2+250,paint);
+                    canvas.drawRect(width/2-112,height/2-112,width/2+112,height/2+112,paint);
 
                     paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
                     paint.setColor(Color.argb(100,0,0,0));

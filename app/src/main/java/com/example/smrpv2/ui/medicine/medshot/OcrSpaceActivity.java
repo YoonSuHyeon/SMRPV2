@@ -190,6 +190,7 @@ public class OcrSpaceActivity extends AppCompatActivity {
         });
 
 
+
     }
 
     private void sendFile(File frontfile,File backfile){ //구축서버에 이미지 파일 전송
