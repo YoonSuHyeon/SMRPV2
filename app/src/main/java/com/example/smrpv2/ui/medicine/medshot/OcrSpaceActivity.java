@@ -13,15 +13,15 @@ import android.widget.ImageView;
 
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.Message;
-import com.example.smrpv2.model.searchMed_model.KakaoOcrDto;
+import com.example.smrpv2.model.searchMed_model.OcrSpaceDto;
+
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_Server;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -30,8 +30,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class KakaoOcrActivity extends AppCompatActivity {
+public class OcrSpaceActivity extends AppCompatActivity {
     private Bitmap targetBitmap_front,targetBitmap_back;
+    private final String TAG = "TAG";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,47 +118,76 @@ public class KakaoOcrActivity extends AppCompatActivity {
 
             }
             //sendFile(frontfile,backfile);
-
+            Uploading_bitmap_front(frontfile);
         }catch(Exception err){
             err.printStackTrace();
         }
 
 
-        targetBitmap_back = Bitmap.createBitmap(rotatedBitmap,rotatedBitmap.getWidth()/2-250,rotatedBitmap.getHeight()/2-250,500,500);
+        //targetBitmap_back = Bitmap.createBitmap(rotatedBitmap,rotatedBitmap.getWidth()/2-250,rotatedBitmap.getHeight()/2-250,500,500);
 
-        Uploading_bitmap_front(targetBitmap_front);
+
     }
-    private void Uploading_bitmap_front(Bitmap image){
+    private void Uploading_bitmap_front(File file){
 
-        File file = new File(getCacheDir(),"front.jpg");
+        /*File file = new File(getCacheDir(),"front.jpg");
         try {
 
-            file.createNewFile();
-            FileOutputStream fos = new FileOutputStream(file);
+            //file.createNewFile();
+            OutputStream fos = new BufferedOutputStream(new FileOutputStream(file));
             image.compress(Bitmap.CompressFormat.JPEG,100,fos);
             fos.close();
         } catch (FileNotFoundException e1) {
             e1.printStackTrace();
         }catch (IOException e2){
             e2.printStackTrace();
-        }
+        }*/
+        //ArrayList<MultipartBody.Part> list = new ArrayList<>();
+        RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data"),file);
+        MultipartBody.Part fPart = MultipartBody.Part.createFormData("files","front.jpg",body);
+        //list.add(fPart);
+        RetrofitService_Server retrofit = RetrofitHelper.getOcr().create(RetrofitService_Server.class);
 
-        RetrofitService_Server retroft = RetrofitHelper.getOcr().create(RetrofitService_Server.class);
-        Call<KakaoOcrDto> call = retroft.sendOcr(file);
-        call.enqueue(new Callback<KakaoOcrDto>() {
+
+        Map<String,String> map = new HashMap<>();
+        map.put("Host","dapi.kakao.com");
+        map.put("Content-Type","multipart/form-data");
+        map.put("Authorization","KakaoAK 1801da9c015ce87583138632980c2c5a");
+
+        Call<OcrSpaceDto> call = retrofit.sendOcr(fPart,"kor");
+        Log.d("TAG", "request: "+call.request());
+        Log.d("TAG", "headers: "+call.request().headers());
+        Log.d("TAG", "Host: "+call.request().header("Host"));
+        Log.d("TAG", "Authorization: "+call.request().header("Authorization"));
+        Log.d("TAG", "Content-Type: "+call.request().header("Content-Type"));
+        Log.d("TAG", "body: "+call.request().body());
+        Log.d("TAG", "body: "+call.request().method());
+        Log.d("TAG", "body: "+call.request().isHttps());
+        Log.d(TAG, "onCreate: "+call.request().url());
+
+
+
+
+
+        call.enqueue(new Callback<OcrSpaceDto>() {
             @Override
-            public void onResponse(Call<KakaoOcrDto> call, Response<KakaoOcrDto> response) {
-                Log.d("TAG", "onResponse0: "+response.body());
-                Log.d("TAG", "onResponse1: "+response.body().getList().size());
-                Log.d("TAG", "onResponse2: "+response.body().getList().get(0));
+            public void onResponse(Call<OcrSpaceDto> call, Response<OcrSpaceDto> response) {
+                Log.d(TAG, "response.toString(): "+response.toString());
+
+                Log.d(TAG, "response body: "+response.body());
+
+                Log.d(TAG, "response error: "+response.errorBody());
+                if(response.body().getParsedResults().get(0).getParsedText() != null)
+                    Log.d(TAG, "onResponse: "+response.body().getParsedResults().get(0).getParsedText());
+
+
             }
 
             @Override
-            public void onFailure(Call<KakaoOcrDto> call, Throwable t) {
-
+            public void onFailure(Call<OcrSpaceDto> call, Throwable t) {
+                Log.d(TAG, "onFailureonFailure: ");
             }
         });
-
 
 
     }

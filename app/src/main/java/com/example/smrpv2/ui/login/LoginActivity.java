@@ -123,10 +123,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<UserDto> call, Response<UserDto> response) {
 
-                Log.d("login",response.toString());
-                Log.d("ddd", response.body().getUserId());
+                //Log.d("login",response.toString());
+                //Log.d("ddd", response.body().getUserId());
 
-                if(!response.body().getUserId().equals("")){ //로그인 성공
+                if(response.body().getUserId() != null){ //로그인 성공
 
                     checkAutoAndStore();
                     //MainActivity로 화면 이동

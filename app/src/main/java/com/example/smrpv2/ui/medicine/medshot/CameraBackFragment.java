@@ -37,8 +37,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
-import android.graphics.Xfermode;
-import android.graphics.drawable.Drawable;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -51,11 +49,9 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -951,7 +947,7 @@ public class CameraBackFragment extends Fragment
 
 
                     //Intent intent = new Intent(getActivity(),MainActivity.class);
-                    Intent intent = new Intent(getActivity(),KakaoOcrActivity.class);
+                    Intent intent = new Intent(getActivity(), OcrSpaceActivity.class);
                     intent.putExtra("frontImg",frontImg);
                     intent.putExtra("backImg",mFile.getAbsolutePath());
 

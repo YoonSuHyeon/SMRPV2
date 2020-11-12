@@ -9,14 +9,13 @@ import com.example.smrpv2.model.SumMedInfo;
 import com.example.smrpv2.model.hospital_model.Response_hos;
 import com.example.smrpv2.model.pharmcy_model.Response_phy;
 import com.example.smrpv2.model.searchMed_model.ConMedicineAskDto;
-import com.example.smrpv2.model.searchMed_model.KakaoOcrDto;
 import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
+import com.example.smrpv2.model.searchMed_model.OcrSpaceDto;
 import com.example.smrpv2.model.user_model.LoginUser;
 import com.example.smrpv2.model.home_model.Weather_response;
 import com.example.smrpv2.model.UserDto;
 import com.example.smrpv2.model.user_model.User;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +25,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 
+import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -123,19 +123,26 @@ public interface RetrofitService_Server {
     Call<Message> addInquiry( //문의하기
                               @Body InquiryDto inquiry
     );
-
-    @POST("/v2/vision/text/ocr")
-    Call<KakaoOcrDto> sendOcr( //ocr결과값 가져오기
-            @Body File file
-            );
+    @Multipart
+    @POST("/parse/image")
+    //@Headers({"Host: dapi.kakao.com","Authorization: KakaoAK 1801da9c015ce87583138632980c2c5a","Content-Type: multipart/form-data"})
+    @Headers("apikey: 37a618557788957")
+    Call<OcrSpaceDto> sendOcr(//문자인식을 위해 카카오 서버에게 이미지 파일 전송
+                        /* @Header("Host") String header,
+                         @Header("Authorization") String authorization,
+                         @Header("Content-Type") String content_type,*/
+                              //@HeaderMap Map<String,String> map,
+                              @Part MultipartBody.Part file,
+                              @Query("language") String language
+                              //@String language;
+    );
     @Multipart
     @POST("/medicine/uploadImage") //서버에게 사진전송
     Call<Message> uploadImage(@Part ArrayList<MultipartBody.Part> files);
-    //Call<Message> uploadImage(MedicineImageDto files);
+
 
     /*병원 찾기 기능에 필요한 요청 메시지*/
     @GET("/B551182/hospInfoService/getHospBasisList?serviceKey=LjJVA0wW%2BvsEsLgyJaBLyTywryRMuelTIYxsWnQTaPpxdZjpuxVCdCtyNxvObDmBJ57VVaSi3%2FerYKQFQmKs8g%3D%3D&_type=json")
-//("/userInfo")
     Call<Response_hos> gethosList(@Query("yPos") double lat, @Query("xPos") double lng, @Query("radius") Integer m, @Query("dgsbjtCd") String dgsbjtCd);
 
     /*약국 찾기 기능에 필요한 요청 메시지*/

@@ -28,7 +28,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.medicine.medshot.KakaoOcrActivity"></activity>
+        <activity android:name=".ui.medicine.medshot.OcrSpaceActivity"></activity>
         <activity
             android:name=".ui.medicine.searchMed.ErrorMessageActivity"
             android:theme="@android:style/Theme.Dialog" />

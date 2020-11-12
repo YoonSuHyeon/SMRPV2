@@ -45,7 +45,8 @@
             android:text="아이디 찾기"
             android:textStyle="bold"
             android:textSize="18dp"
-            android:textColor="#ffffffff"/>
+
+            android:textColor="#FFFFFF"/>
 
 
 
