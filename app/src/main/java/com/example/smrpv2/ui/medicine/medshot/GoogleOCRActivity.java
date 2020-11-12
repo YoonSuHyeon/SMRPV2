@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -48,7 +49,9 @@ import com.google.api.services.vision.v1.model.Image;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
@@ -80,10 +83,10 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
     private ArrayList<String> itemseq_list;
     private Button add_Btn;
     private HashMap<Integer, String> select_pill_list; //사용자 선택한 약 정보를 담는 hashmap
-    private String id,pillname1="",pillname2="";
+    private String id, pillname1 = "", pillname2 = "";
     private ImageView back_imgView;
     private Uri photoUri;
-    private Bitmap targetBitmap_front,targetBitmap_back;
+    private Bitmap targetBitmap_front, targetBitmap_back;
     private ArrayList<String> pill_list_front;
     TextView textView;
     SharedPreferences sharedPreferences;
@@ -95,24 +98,23 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
         setContentView(R.layout.activity_google_o_c_r);//activity_search_prescription
 
         String frontImg = getIntent().getStringExtra("frontImg");
-        String backImg =getIntent().getStringExtra("backImg");
+        String backImg = getIntent().getStringExtra("backImg");
         assert frontImg != null;
-        Log.d("gggg",frontImg);
+        Log.d("gggg", frontImg);
         assert backImg != null;
-        Log.d("gggg",backImg);
-        String frontImgDate=backImg.substring(0,frontImg.lastIndexOf("/"))+"/picF.jpg"; //앞면이미지
-        String backImgDate=backImg.substring(0,backImg.lastIndexOf("/"))+"/picB.jpg"; //뒷면이미지
+        Log.d("gggg", backImg);
+        String frontImgDate = backImg.substring(0, frontImg.lastIndexOf("/")) + "/picF.jpg"; //앞면이미지
+        String backImgDate = backImg.substring(0, backImg.lastIndexOf("/")) + "/picB.jpg"; //뒷면이미지
 
-        Log.d("TAG", "frontImg: "+frontImgDate);
-        Log.d("TAG", "backImg: "+backImgDate);
-        context=this;
+        Log.d("TAG", "frontImg: " + frontImgDate);
+        Log.d("TAG", "backImg: " + backImgDate);
+        context = this;
 
         Bitmap rotatedBitmap = null;
 
         ImageView imageView = findViewById(R.id.image);
 
         textView = findViewById(R.id.textView);
-
 
 
         try {
@@ -151,8 +153,9 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
             }
 
 
-            targetBitmap_front=Bitmap.createBitmap(rotatedBitmap,rotatedBitmap.getWidth()/2-250,rotatedBitmap.getHeight()/2-250,500,500);
+            targetBitmap_front = Bitmap.createBitmap(rotatedBitmap, rotatedBitmap.getWidth() / 2 - 112, rotatedBitmap.getHeight() / 2 - 112, 224, 224);
             imageView.setImageBitmap(targetBitmap_front);
+
 
             if (backbitmap != null) {
                 ExifInterface ei = new ExifInterface(backImg);
@@ -178,19 +181,52 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
                 }
 
             }
-            sendFile(frontfile,backfile);
+            targetBitmap_back = Bitmap.createBitmap(rotatedBitmap,rotatedBitmap.getWidth()/2-112,rotatedBitmap.getHeight()/2-112,224,224);
+            Log.d("하기전", frontfile.toString());
+            Log.d("하기전", backfile.toString());
+            SaveBitmapToFileCache(targetBitmap_front, frontImgDate);
+            SaveBitmapToFileCache(targetBitmap_back, backImgDate);
+            Log.d("한후", frontfile.toString());
+            Log.d("한후", backfile.toString());
+            sendFile(frontfile, backfile);
 
-        }catch(Exception err){
+        } catch (Exception err) {
             err.printStackTrace();
         }
 
 
-        targetBitmap_back = Bitmap.createBitmap(rotatedBitmap,rotatedBitmap.getWidth()/2-250,rotatedBitmap.getHeight()/2-250,500,500);
 
 
-        Uploading_bitmap_front(targetBitmap_front);
+
+        //  Uploading_bitmap_front(targetBitmap_front);
 
     }
+
+    private void  SaveBitmapToFileCache(Bitmap targetBitmap_front, String frontImgDate) {
+
+        File fileCacheItem = new File(frontImgDate);
+
+        OutputStream out = null;
+
+        try {
+            fileCacheItem.createNewFile();
+            out = new FileOutputStream(fileCacheItem);
+            targetBitmap_front.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+    }
+
+
     public static Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
@@ -198,23 +234,23 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
                 matrix, true);
     }
 
-   /* protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    /* protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 672 && resultCode == RESULT_OK) {
+         super.onActivityResult(requestCode, resultCode, data);
+         if (requestCode == 672 && resultCode == RESULT_OK) {
 
-            try {
+             try {
 
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+             } catch (IOException e) {
+                 e.printStackTrace();
+             }
 
-            Uploading_bitmap(bitmap);
-        }else{
-            onBackPressed();
-        }
-    }*/
+             Uploading_bitmap(bitmap);
+         }else{
+             onBackPressed();
+         }
+     }*/
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "TEST_" + timeStamp + "_";
@@ -227,13 +263,14 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
         //imageFilePath = image.getAbsolutePath();
         return image;
     }
-    private void sendFile(File frontfile,File backfile){
+
+    private void sendFile(File frontfile, File backfile) {
 
         ArrayList<MultipartBody.Part> list = new ArrayList<>();
-        RequestBody body = RequestBody.create(MediaType.parse("image/*"),frontfile);
-        RequestBody body2 = RequestBody.create(MediaType.parse("image/*"),backfile);
-        MultipartBody.Part fPart = MultipartBody.Part.createFormData("files","front.jpg",body);
-        MultipartBody.Part bPart = MultipartBody.Part.createFormData("files","back.jpg",body2);
+        RequestBody body = RequestBody.create(MediaType.parse("image/*"), frontfile);
+        RequestBody body2 = RequestBody.create(MediaType.parse("image/*"), backfile);
+        MultipartBody.Part fPart = MultipartBody.Part.createFormData("files", "front.jpg", body);
+        MultipartBody.Part bPart = MultipartBody.Part.createFormData("files", "back.jpg", body2);
         list.add(fPart);
         list.add(bPart);
 
@@ -253,6 +290,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
             }
         });
     }
+
     private void sendTakePhotoIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);// 내장 카메라 켜기
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -283,37 +321,37 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
     }
 
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (Build.VERSION.SDK_INT >= 23) {
-            if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-                Log.v("TAG","Permission: "+permissions[0]+ "was "+grantResults[0]);
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.v("TAG", "Permission: " + permissions[0] + "was " + grantResults[0]);
                 //resume tasks needing this permission
             }
         }
     }
 
 
-    private void Uploading_bitmap_front(Bitmap bitmap){ //앞면의 이미지를 final로 정의한 상수에 맞게 이미지 처리
-        if(bitmap != null){
+    private void Uploading_bitmap_front(Bitmap bitmap) { //앞면의 이미지를 final로 정의한 상수에 맞게 이미지 처리
+        if (bitmap != null) {
 
-            Log.d("TAG", "bitmap width: "+bitmap.getWidth());
-            Log.d("TAG", "bitmap height: "+bitmap.getHeight());
-            bitmap = scaleBitmapDown(bitmap,MAX_DIMENSION);
+            Log.d("TAG", "bitmap width: " + bitmap.getWidth());
+            Log.d("TAG", "bitmap height: " + bitmap.getHeight());
+            bitmap = scaleBitmapDown(bitmap, MAX_DIMENSION);
 
             //cameraView.setVisibility(View.GONE);
             //imageView.setImageBitmap(bitmap);
             front_callCloudVision(bitmap);
         }
     }
-    private void Uploading_bitmap_back(Bitmap bitmap){//뒷면의 이미지를 final로 정의한 상수에 맞게 이미지 처리
-        if(bitmap != null){
 
-            Log.d("TAG", "bitmap width: "+bitmap.getWidth());
-            Log.d("TAG", "bitmap height: "+bitmap.getHeight());
-            bitmap = scaleBitmapDown(bitmap,MAX_DIMENSION);
+    private void Uploading_bitmap_back(Bitmap bitmap) {//뒷면의 이미지를 final로 정의한 상수에 맞게 이미지 처리
+        if (bitmap != null) {
+
+            Log.d("TAG", "bitmap width: " + bitmap.getWidth());
+            Log.d("TAG", "bitmap height: " + bitmap.getHeight());
+            bitmap = scaleBitmapDown(bitmap, MAX_DIMENSION);
 
             //cameraView.setVisibility(View.GONE);
             //imageView.setImageBitmap(bitmap);
@@ -344,6 +382,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
         private final WeakReference<GoogleOCRActivity> mActivityWeakReference;
         private Vision.Images.Annotate mRequest;
         ProgressDialog progressDialog = new ProgressDialog(GoogleOCRActivity.this);
+
         front_LableDetectionTask(GoogleOCRActivity activity, Vision.Images.Annotate annotate) {
             mActivityWeakReference = new WeakReference<>(activity);
             mRequest = annotate;
@@ -365,6 +404,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
 
             return "Cloud Vision API request failed. Check logs for details.";
         }
+
         @Override
         protected void onPreExecute() {
 
@@ -375,22 +415,23 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
             progressDialog.show();*/
             super.onPreExecute();
         }
+
         protected void onPostExecute(String result) { ///////////////////////////////// 객체에서 문자 추출한 결과: result
             GoogleOCRActivity activity = mActivityWeakReference.get();
 
             progressDialog.dismiss();
             if (activity != null && !activity.isFinishing()) {
                 pill_list_front = new ArrayList<>();
-                result = result.replaceAll("nothing","");
-                StringTokenizer token = new StringTokenizer(result , "\n");
-                while(token.hasMoreTokens()){
+                result = result.replaceAll("nothing", "");
+                StringTokenizer token = new StringTokenizer(result, "\n");
+                while (token.hasMoreTokens()) {
                     String temp = token.nextToken();
-                    if(!pill_list_front.contains(temp))
+                    if (!pill_list_front.contains(temp))
                         pill_list_front.add(temp);
                 }
 
-                for(int i = 0 ; i<pill_list_front.size();i++){
-                    Log.d("TAG", "pil_name: ["+i+"]="+pill_list_front.get(i)+" /length==>"+pill_list_front.get(i).length());
+                for (int i = 0; i < pill_list_front.size(); i++) {
+                    Log.d("TAG", "pil_name: [" + i + "]=" + pill_list_front.get(i) + " /length==>" + pill_list_front.get(i).length());
                     textView.append(pill_list_front.get(i));
                 }
 
@@ -400,10 +441,12 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
             }
         }
     }
+
     private class back_LableDetectionTask extends AsyncTask<Object, Void, String> {
         private final WeakReference<GoogleOCRActivity> mActivityWeakReference;
         private Vision.Images.Annotate mRequest;
         ProgressDialog progressDialog = new ProgressDialog(GoogleOCRActivity.this);
+
         back_LableDetectionTask(GoogleOCRActivity activity, Vision.Images.Annotate annotate) {
             mActivityWeakReference = new WeakReference<>(activity);
             mRequest = annotate;
@@ -425,6 +468,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
 
             return "Cloud Vision API request failed. Check logs for details.";
         }
+
         @Override
         protected void onPreExecute() {
 
@@ -435,55 +479,54 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
             progressDialog.show();*/
             super.onPreExecute();
         }
+
         protected void onPostExecute(String result) { ///////////////////////////////// 객체에서 문자 추출한 결과: result
             GoogleOCRActivity activity = mActivityWeakReference.get();
 
             //progressDialog.dismiss();
             if (activity != null && !activity.isFinishing()) {
                 ArrayList<String> pill_list_back = new ArrayList<String>();
-                result = result.replaceAll("nothing","");
-                StringTokenizer token = new StringTokenizer(result , "\n");
-                while(token.hasMoreTokens()){ //서버에서 보내준 응답에 대해 list에 담겨있는 String과 중복값을 배제
+                result = result.replaceAll("nothing", "");
+                StringTokenizer token = new StringTokenizer(result, "\n");
+                while (token.hasMoreTokens()) { //서버에서 보내준 응답에 대해 list에 담겨있는 String과 중복값을 배제
                     String temp = token.nextToken();
-                    if(!pill_list_back.contains(temp))
+                    if (!pill_list_back.contains(temp))
                         pill_list_back.add(temp);
                 }
 
-                for(int i = 0 ; i<pill_list_back.size();i++){
-                    Log.d("TAG", "pil_name: ["+i+"]="+pill_list_back.get(i)+" /length==>"+pill_list_back.get(i).length());
+                for (int i = 0; i < pill_list_back.size(); i++) {
+                    Log.d("TAG", "pil_name: [" + i + "]=" + pill_list_back.get(i) + " /length==>" + pill_list_back.get(i).length());
                     textView.append(pill_list_back.get(i));
                 }
 
 
-                Log.d("TAG", "pill_list.size(): "+pill_list_back.size());
+                Log.d("TAG", "pill_list.size(): " + pill_list_back.size());
 
 
-
-                if (pill_list_front.size()!=0)
+                if (pill_list_front.size() != 0)
                     pillname1 = pill_list_front.get(0);
 
 
-
-                if (pill_list_back.size()!=0)
+                if (pill_list_back.size() != 0)
                     pillname2 = pill_list_back.get(0);
 
-                Log.d("TAG", "pill_list.get(1): "+pillname1);
-                Log.d("TAG", "pill_list.get(2): "+pillname2);
+                Log.d("TAG", "pill_list.get(1): " + pillname1);
+                Log.d("TAG", "pill_list.get(2): " + pillname2);
                 /**
                  * 의약품 앞, 뒷면을 OCR결과물을 서버에 보냄
                  **/
-                String [] medicineLogo = {pillname1,pillname2};
-                Call<MedicineInfoRsponDTO> call= RetrofitHelper.getRetrofitService_server().medicineOcr(medicineLogo);
+                String[] medicineLogo = {pillname1, pillname2};
+                Call<MedicineInfoRsponDTO> call = RetrofitHelper.getRetrofitService_server().medicineOcr(medicineLogo);
                 call.enqueue(new Callback<MedicineInfoRsponDTO>() {
                     @Override
                     public void onResponse(Call<MedicineInfoRsponDTO> call, Response<MedicineInfoRsponDTO> response) {
 
                         //Log.d("ItenName",response.body().toString());
                         //assert response.body() != null;
-                        if(response.body().getItemName() ==  null){
-                            Toast.makeText(context,"없음",Toast.LENGTH_LONG).show();
-                        }else{
-                            Toast.makeText(context,response.body().getItemName(),Toast.LENGTH_LONG).show();
+                        if (response.body().getItemName() == null) {
+                            Toast.makeText(context, "없음", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(context, response.body().getItemName(), Toast.LENGTH_LONG).show();
                         }
 
                     }
@@ -498,6 +541,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
             }
         }
     }
+
     private Vision.Images.Annotate prepareAnnotationRequest(final Bitmap bitmap) throws IOException {
         HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
@@ -578,6 +622,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
                     e.getMessage());
         }
     }
+
     private void back_callCloudVision(final Bitmap bitmap) {//뒷면 이미지를 구글서버에 요청
         // Switch text to loading
         //mImageDetails.setText(R.string.loading_message);
@@ -596,7 +641,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
         StringBuilder message = new StringBuilder();
 
         List<EntityAnnotation> labels = response.getResponses().get(0).getTextAnnotations();//Texts에 들어있는 값들을 하나씩 꺼내 Text에 대입
-        Log.d("TAG", "convertResponseToString: "+ response.getResponses().get(0).getFullTextAnnotation());
+        Log.d("TAG", "convertResponseToString: " + response.getResponses().get(0).getFullTextAnnotation());
         if (labels != null) {
             for (EntityAnnotation label : labels) {
 

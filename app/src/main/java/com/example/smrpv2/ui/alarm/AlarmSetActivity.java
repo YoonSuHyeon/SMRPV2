@@ -286,7 +286,7 @@ public class AlarmSetActivity extends AppCompatActivity {
                     doseType = "식후";
 
                 }
-                MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(0, "q", registerId, alarmName, dosingPeriod, null, null, doseTime, doseType);
+                final MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(0, "q", registerId, alarmName, dosingPeriod, null, null, doseTime, doseType);
                 Call<Message> call = RetrofitHelper.getRetrofitService_server().addMedicineAlarm(medicineAlarmAskDto);
                 call.enqueue(new Callback<Message>() {
                     @Override
@@ -295,7 +295,7 @@ public class AlarmSetActivity extends AppCompatActivity {
                             Log.d("등록완료", "등록");
 
                             //알람등록
-                            setAlarm(pendingIntent);
+                            setAlarm(pendingIntent, medicineAlarmAskDto);
                             onBackPressed();
                         }
                     }
@@ -319,19 +319,86 @@ public class AlarmSetActivity extends AppCompatActivity {
 
     }
 
-    private void setAlarm(PendingIntent pendingIntent) {
+    private void setAlarm(PendingIntent pendingIntent, MedicineAlarmAskDto medicineAlarmAskDto) {
         Date currentTime = Calendar.getInstance().getTime();
-        GregorianCalendar cal =  new GregorianCalendar(Locale.KOREA);
+        GregorianCalendar cal = new GregorianCalendar(Locale.KOREA);
         cal.setTime(currentTime);
-        // cal.add(Calendar.DATE, 1)
-        Log.d("알람","알람등록");
-        cal.set(Calendar.HOUR_OF_DAY, 19);
-        cal.set(Calendar.MINUTE, 37);
-        alarmManager.setExact(
-                AlarmManager.RTC_WAKEUP,
-                cal.getTimeInMillis(),
-                pendingIntent
-        );
+
+
+        //식전:  아침08:00점심11:40저녁17:00으로 등록하고 약을 복용하는 날만큼 반복 시켜 알람등록
+        //식후: 아침09:00점심12:30저녁18:00으로 등록하고 약을 복용하는 날만큼 반복 시켜 알람등록
+        String doseType = medicineAlarmAskDto.getDoseType();
+        int dosingPeriod = medicineAlarmAskDto.getDosingPeriod();
+        DoseTime doseTime = medicineAlarmAskDto.getDoseTime();
+
+
+        if (doseType.equals("식전")) {//식전
+            for (int i = 0; i < dosingPeriod; i++) {
+                cal.set(Calendar.DATE, i);
+                if (doseTime.getMorning().equals("Y")) {
+                    cal.set(Calendar.HOUR_OF_DAY, 8);
+                    cal.set(Calendar.MINUTE, 0);
+                    alarmManager.setExact(
+                            AlarmManager.RTC_WAKEUP,
+                            cal.getTimeInMillis(),
+                            pendingIntent
+                    );
+                }
+                if (doseTime.getLunch().equals("Y")) {
+                    cal.set(Calendar.HOUR_OF_DAY, 11);
+                    cal.set(Calendar.MINUTE, 40);
+                    alarmManager.setExact(
+                            AlarmManager.RTC_WAKEUP,
+                            cal.getTimeInMillis(),
+                            pendingIntent
+                    );
+                }
+                if (doseTime.getDinner().equals("Y")) {
+                    cal.set(Calendar.HOUR_OF_DAY, 17);
+                    cal.set(Calendar.MINUTE, 0);
+                    alarmManager.setExact(
+                            AlarmManager.RTC_WAKEUP,
+                            cal.getTimeInMillis(),
+                            pendingIntent
+                    );
+                }
+            }
+        } else {//식후
+            for (int i = 0; i < dosingPeriod; i++) {
+                cal.set(Calendar.DATE, i);
+                if (doseTime.getMorning().equals("Y")) {
+                    cal.set(Calendar.HOUR_OF_DAY, 9);
+                    cal.set(Calendar.MINUTE, 0);
+                    alarmManager.setExact(
+                            AlarmManager.RTC_WAKEUP,
+                            cal.getTimeInMillis(),
+                            pendingIntent
+                    );
+                }
+                if (doseTime.getLunch().equals("Y")) {
+                    cal.set(Calendar.HOUR_OF_DAY, 12);
+                    cal.set(Calendar.MINUTE, 30);
+                    alarmManager.setExact(
+                            AlarmManager.RTC_WAKEUP,
+                            cal.getTimeInMillis(),
+                            pendingIntent
+                    );
+                }
+                if (doseTime.getDinner().equals("Y")) {
+                    cal.set(Calendar.HOUR_OF_DAY, 18);
+                    cal.set(Calendar.MINUTE, 0);
+                    alarmManager.setExact(
+                            AlarmManager.RTC_WAKEUP,
+                            cal.getTimeInMillis(),
+                            pendingIntent
+                    );
+                }
+            }
+
+            // cal.add(Calendar.DATE, 1)
+
+        }
+        Log.d("알람", "알람등록");
     }
 
     private void showAlertDialog() {
