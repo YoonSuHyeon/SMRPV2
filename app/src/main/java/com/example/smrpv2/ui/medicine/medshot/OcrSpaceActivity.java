@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.Message;
@@ -129,30 +130,16 @@ public class OcrSpaceActivity extends AppCompatActivity {
 
     }
     private void Uploading_bitmap_front(File file){
-
-        /*File file = new File(getCacheDir(),"front.jpg");
-        try {
-
-            //file.createNewFile();
-            OutputStream fos = new BufferedOutputStream(new FileOutputStream(file));
-            image.compress(Bitmap.CompressFormat.JPEG,100,fos);
-            fos.close();
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
-        }catch (IOException e2){
-            e2.printStackTrace();
-        }*/
-        //ArrayList<MultipartBody.Part> list = new ArrayList<>();
+        
         RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data"),file);
         MultipartBody.Part fPart = MultipartBody.Part.createFormData("files","front.jpg",body);
-        //list.add(fPart);
         RetrofitService_Server retrofit = RetrofitHelper.getOcr().create(RetrofitService_Server.class);
 
 
-        Map<String,String> map = new HashMap<>();
+        /*Map<String,String> map = new HashMap<>();
         map.put("Host","dapi.kakao.com");
         map.put("Content-Type","multipart/form-data");
-        map.put("Authorization","KakaoAK 1801da9c015ce87583138632980c2c5a");
+        map.put("Authorization","KakaoAK 1801da9c015ce87583138632980c2c5a");*/
 
         Call<OcrSpaceDto> call = retrofit.sendOcr(fPart,"kor");
         Log.d("TAG", "request: "+call.request());
@@ -179,13 +166,16 @@ public class OcrSpaceActivity extends AppCompatActivity {
                 Log.d(TAG, "response error: "+response.errorBody());
                 if(response.body().getParsedResults().get(0).getParsedText() != null)
                     Log.d(TAG, "onResponse: "+response.body().getParsedResults().get(0).getParsedText());
-
+                else
+                    Toast.makeText(getApplicationContext(),"인식 불가",Toast.LENGTH_SHORT);
+                
 
             }
 
             @Override
             public void onFailure(Call<OcrSpaceDto> call, Throwable t) {
                 Log.d(TAG, "onFailureonFailure: ");
+                Toast.makeText(getApplicationContext(),"OCR 서버 통신 오류",Toast.LENGTH_SHORT);
             }
         });
 
