@@ -82,7 +82,7 @@ public class AlarmSetActivity extends AppCompatActivity {
     final int AFTERNOON_CHECK = 0;
     final int MORNING_CHECK = 0;
     final int EVENING_CHECK = 0;
-
+    Intent aIntent;
     int oneTimeDoseCount = 0;
     int init_dosingPeriod = -10;
     final int NOT_VALUE = -10;
@@ -118,9 +118,8 @@ public class AlarmSetActivity extends AppCompatActivity {
 
         //알람초기화
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Intent aIntent = new Intent(this, AlarmReceiver.class);
-        final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, AlarmReceiver.NOTIFICATION_ID, aIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+         aIntent = new Intent(this, AlarmReceiver.class);
         final Calendar calendar = Calendar.getInstance();
 
         Intent intent = getIntent();
@@ -294,8 +293,12 @@ public class AlarmSetActivity extends AppCompatActivity {
                         if (response.body().getResultCode().equals("OK")) {
                             Log.d("등록완료", "등록");
 
+
+                            long id =40;
+
+
                             //알람등록
-                            setAlarm(pendingIntent, medicineAlarmAskDto);
+                            setAlarm(medicineAlarmAskDto,id);
                             onBackPressed();
                         }
                     }
@@ -319,11 +322,14 @@ public class AlarmSetActivity extends AppCompatActivity {
 
     }
 
-    private void setAlarm(PendingIntent pendingIntent, MedicineAlarmAskDto medicineAlarmAskDto) {
+    private void setAlarm( MedicineAlarmAskDto medicineAlarmAskDto,long id) {
         Date currentTime = Calendar.getInstance().getTime();
         GregorianCalendar cal = new GregorianCalendar(Locale.KOREA);
         cal.setTime(currentTime);
 
+        PendingIntent pendingIntent1 = PendingIntent.getBroadcast(context, (int)id+10000, aIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, (int)id+20000, aIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent3 = PendingIntent.getBroadcast(context, (int)id+30000, aIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //식전:  아침08:00점심11:40저녁17:00으로 등록하고 약을 복용하는 날만큼 반복 시켜 알람등록
         //식후: 아침09:00점심12:30저녁18:00으로 등록하고 약을 복용하는 날만큼 반복 시켜 알람등록
@@ -341,7 +347,7 @@ public class AlarmSetActivity extends AppCompatActivity {
                     alarmManager.setExact(
                             AlarmManager.RTC_WAKEUP,
                             cal.getTimeInMillis(),
-                            pendingIntent
+                            pendingIntent1
                     );
                 }
                 if (doseTime.getLunch().equals("Y")) {
@@ -350,7 +356,7 @@ public class AlarmSetActivity extends AppCompatActivity {
                     alarmManager.setExact(
                             AlarmManager.RTC_WAKEUP,
                             cal.getTimeInMillis(),
-                            pendingIntent
+                            pendingIntent2
                     );
                 }
                 if (doseTime.getDinner().equals("Y")) {
@@ -359,7 +365,7 @@ public class AlarmSetActivity extends AppCompatActivity {
                     alarmManager.setExact(
                             AlarmManager.RTC_WAKEUP,
                             cal.getTimeInMillis(),
-                            pendingIntent
+                            pendingIntent3
                     );
                 }
             }
@@ -372,7 +378,7 @@ public class AlarmSetActivity extends AppCompatActivity {
                     alarmManager.setExact(
                             AlarmManager.RTC_WAKEUP,
                             cal.getTimeInMillis(),
-                            pendingIntent
+                            pendingIntent1
                     );
                 }
                 if (doseTime.getLunch().equals("Y")) {
@@ -381,7 +387,7 @@ public class AlarmSetActivity extends AppCompatActivity {
                     alarmManager.setExact(
                             AlarmManager.RTC_WAKEUP,
                             cal.getTimeInMillis(),
-                            pendingIntent
+                            pendingIntent2
                     );
                 }
                 if (doseTime.getDinner().equals("Y")) {
@@ -390,7 +396,7 @@ public class AlarmSetActivity extends AppCompatActivity {
                     alarmManager.setExact(
                             AlarmManager.RTC_WAKEUP,
                             cal.getTimeInMillis(),
-                            pendingIntent
+                            pendingIntent3
                     );
                 }
             }

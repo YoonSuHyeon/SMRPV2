@@ -18,8 +18,7 @@ import com.example.smrpv2.ui.main.MainActivity;
 
 public class AlarmReceiver extends BroadcastReceiver {
     static  final String TAG  = "AlarmReceiver";
-    static  final int NOTIFICATION_ID   = 2;
-    static  final String PRIMARY_CHANNEL_ID = "alarm_channel";
+
 
     private NotificationManager notificationManager;
 
@@ -28,36 +27,37 @@ public class AlarmReceiver extends BroadcastReceiver {
         Log.d(TAG, "Received intent : $intent");
         notificationManager = (NotificationManager) context.getSystemService(
                 Context.NOTIFICATION_SERVICE);
-
-        createNotificationChannel();
-        deliverNotification(context);
+        String content = intent.getStringExtra("content");
+        long privateId = intent.getLongExtra("privateId", 0);
+        createNotificationChannel(String.valueOf(privateId));
+        deliverNotification(context,content,privateId);
     }
 
-    private void deliverNotification(Context context) {
+    private void deliverNotification(Context context,String content,long privateId) {
         Intent contentIntent = new Intent(context, LoginActivity.class);
         PendingIntent contentPendingIntent = PendingIntent.getActivity(
                 context,
-                NOTIFICATION_ID,
+                (int)privateId,
                 contentIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
         NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
+                new NotificationCompat.Builder(context, String.valueOf(privateId))
                         .setSmallIcon(R.drawable.ic_alarm_set)//알람 이미지
                         .setContentTitle("Alert")
-                        .setContentText("This is alarm")
+                        .setContentText(content)
                         .setContentIntent(contentPendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
                         .setDefaults(NotificationCompat.DEFAULT_ALL);
 
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
+        notificationManager.notify((int)privateId, builder.build());
     }
 
-    private void createNotificationChannel() {
+    private void createNotificationChannel(String channelId) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(
-                    PRIMARY_CHANNEL_ID,
+                    channelId,
                     "Stand up notification",
                     NotificationManager.IMPORTANCE_HIGH
             );
