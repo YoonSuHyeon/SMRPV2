@@ -13,11 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.example.smrpv2.R;
+import com.example.smrpv2.model.AlarmListDto;
+import com.example.smrpv2.model.MedicineAlarmResponDto;
 import com.example.smrpv2.model.MedicineItem;
 import com.example.smrpv2.model.Message;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,7 +42,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     Context context;
     public static AlarmManager alarmManager=null;
     public static PendingIntent pendingIntent=null;
-
+    MedicineAlarmResponDto tempBefore;
     private LinearLayout Lay_delete;
     private LinearLayout Lay_cancel;
     private long id;// 등록된 약 id
@@ -170,6 +173,14 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
             public void onResponse(Call<Message> call, Response<Message> response) {
                 if(response.body().getResultCode().equals("DELETE")){
                     Toast.makeText(context, "알람이 삭제 되었습니다.", Toast.LENGTH_LONG);
+                    List<AlarmListDto> alarmListList = tempBefore.getAlarmListList();
+                    for(int i =0 ; i<alarmListList.size();i++){
+                        PendingIntent pendingIntent =makePendingIntent(alarmListList.get(i).getId().intValue(),tempBefore.getAlarmName());
+                        alarmManager.cancel(pendingIntent);
+                        pendingIntent.cancel();
+
+                    }
+
                 }
                 Log.d("delete_medicine", id+"이다");
             }
@@ -207,4 +218,14 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         }
     }
 
+    private PendingIntent makePendingIntent(int privateId, String content) {
+        Intent aIntent = new Intent(context, AlarmReceiver.class);
+        aIntent.putExtra("content", content);
+        aIntent.putExtra("privateId", privateId);
+        return PendingIntent.getBroadcast(context, privateId, aIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    }
+    public void setTempBefore(MedicineAlarmResponDto tempBefore) {
+        this.tempBefore=tempBefore;
+    }
 }

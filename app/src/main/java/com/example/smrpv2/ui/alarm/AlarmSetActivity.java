@@ -28,8 +28,10 @@ import com.example.smrpv2.R;
 //import com.example.smrp.RetrofitService;
 //import com.example.smrp.medicine.ListViewItem;
 //import com.example.smrp.reponse_medicine3;
+import com.example.smrpv2.model.AlarmListDto;
 import com.example.smrpv2.model.DoseTime;
 import com.example.smrpv2.model.MedicineAlarmAskDto;
+import com.example.smrpv2.model.MedicineAlarmResponDto;
 import com.example.smrpv2.model.MedicineItem;
 import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.SumMedInfo;
@@ -41,6 +43,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -82,7 +85,7 @@ public class AlarmSetActivity extends AppCompatActivity {
     final int AFTERNOON_CHECK = 0;
     final int MORNING_CHECK = 0;
     final int EVENING_CHECK = 0;
-    Intent aIntent;
+
     int oneTimeDoseCount = 0;
     int init_dosingPeriod = -10;
     final int NOT_VALUE = -10;
@@ -119,7 +122,7 @@ public class AlarmSetActivity extends AppCompatActivity {
         //알람초기화
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-         aIntent = new Intent(this, AlarmReceiver.class);
+
         final Calendar calendar = Calendar.getInstance();
 
         Intent intent = getIntent();
@@ -244,7 +247,7 @@ public class AlarmSetActivity extends AppCompatActivity {
         btn_Set_Alarm.setOnClickListener(new View.OnClickListener() {//알람설정을 누른경우
             @Override
             public void onClick(View v) { // 알람설정
-                ArrayList<Long> registerId = new ArrayList<>();
+                final ArrayList<Long> registerId = new ArrayList<>();
 
                 for (MedicineItem item : alarmMedicineList) {
                     registerId.add(item.getId());
@@ -286,25 +289,22 @@ public class AlarmSetActivity extends AppCompatActivity {
 
                 }
                 final MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(0, "q", registerId, alarmName, dosingPeriod, null, null, doseTime, doseType);
-                Call<Message> call = RetrofitHelper.getRetrofitService_server().addMedicineAlarm(medicineAlarmAskDto);
-                call.enqueue(new Callback<Message>() {
+                Call<MedicineAlarmResponDto> call = RetrofitHelper.getRetrofitService_server().addMedicineAlarm(medicineAlarmAskDto);
+                call.enqueue(new Callback<MedicineAlarmResponDto>() {
                     @Override
-                    public void onResponse(Call<Message> call, Response<Message> response) {
-                        if (response.body().getResultCode().equals("OK")) {
-                            Log.d("등록완료", "등록");
+                    public void onResponse(Call<MedicineAlarmResponDto> call, Response<MedicineAlarmResponDto> response) {
 
+                        MedicineAlarmResponDto medicineAlarmResponDto = response.body();
+                        Log.d("알람설정중에서", response.body().getAlarmName());
 
-                            long id =40;
+                        //알람등록
+                        setAlarm(medicineAlarmResponDto);
+                        onBackPressed();
 
-
-                            //알람등록
-                            setAlarm(medicineAlarmAskDto,id);
-                            onBackPressed();
-                        }
                     }
 
                     @Override
-                    public void onFailure(Call<Message> call, Throwable t) {
+                    public void onFailure(Call<MedicineAlarmResponDto> call, Throwable t) {
 
                     }
                 });
@@ -322,89 +322,152 @@ public class AlarmSetActivity extends AppCompatActivity {
 
     }
 
-    private void setAlarm( MedicineAlarmAskDto medicineAlarmAskDto,long id) {
+    private void setAlarm(MedicineAlarmResponDto medicineAlarmResponDto) {
         Date currentTime = Calendar.getInstance().getTime();
         GregorianCalendar cal = new GregorianCalendar(Locale.KOREA);
         cal.setTime(currentTime);
 
-        PendingIntent pendingIntent1 = PendingIntent.getBroadcast(context, (int)id+10000, aIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, (int)id+20000, aIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent pendingIntent3 = PendingIntent.getBroadcast(context, (int)id+30000, aIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //식전:  아침08:00점심11:40저녁17:00으로 등록하고 약을 복용하는 날만큼 반복 시켜 알람등록
-        //식후: 아침09:00점심12:30저녁18:00으로 등록하고 약을 복용하는 날만큼 반복 시켜 알람등록
-        String doseType = medicineAlarmAskDto.getDoseType();
-        int dosingPeriod = medicineAlarmAskDto.getDosingPeriod();
-        DoseTime doseTime = medicineAlarmAskDto.getDoseTime();
+        //식전 7:30  12:00 18:40
+        //식후 8:00 13:00  19:40
+        String doseType = medicineAlarmResponDto.getDoseType();
+        int dosingPeriod = medicineAlarmResponDto.getDosingPeriod();
+        DoseTime doseTime = medicineAlarmResponDto.getDoseTime();
+        String content = medicineAlarmResponDto.getAlarmName();
+        List<AlarmListDto> alarmListList = medicineAlarmResponDto.getAlarmListList();
 
 
+        int count = 0; //알람PK의 수를 세기위함
         if (doseType.equals("식전")) {//식전
             for (int i = 0; i < dosingPeriod; i++) {
-                cal.set(Calendar.DATE, i);
+                GregorianCalendar temp = cal;
+                temp.add(Calendar.DATE, i);
                 if (doseTime.getMorning().equals("Y")) {
-                    cal.set(Calendar.HOUR_OF_DAY, 8);
-                    cal.set(Calendar.MINUTE, 0);
-                    alarmManager.setExact(
-                            AlarmManager.RTC_WAKEUP,
-                            cal.getTimeInMillis(),
-                            pendingIntent1
-                    );
+                    Long id = alarmListList.get(count).getId();
+                    PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
+                    temp.set(Calendar.HOUR_OF_DAY, 7);
+                    temp.set(Calendar.MINUTE, 30);
+                    Log.d("time", cal.getTime().toString());
+                    Log.d("time2", temp.getTime().toString());
+                    if (!cal.getTime().after(temp.getTime())) {
+                        Log.d("알람등록", "알람등록");
+                        alarmManager.setExact(
+                                AlarmManager.RTC_WAKEUP,
+                                temp.getTimeInMillis(),
+                                pendingIntent
+                        );
+                    }
+                    count++;
                 }
                 if (doseTime.getLunch().equals("Y")) {
-                    cal.set(Calendar.HOUR_OF_DAY, 11);
-                    cal.set(Calendar.MINUTE, 40);
-                    alarmManager.setExact(
-                            AlarmManager.RTC_WAKEUP,
-                            cal.getTimeInMillis(),
-                            pendingIntent2
-                    );
+                    Long id = alarmListList.get(count).getId();
+                    PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
+                    temp.set(Calendar.HOUR_OF_DAY, 12);
+                    temp.set(Calendar.MINUTE, 00);
+                    Log.d("time", cal.getTime().toString());
+                    Log.d("time2", temp.getTime().toString());
+
+                    if (!cal.getTime().after(temp.getTime())) {
+                        Log.d("알람등록", "알람등록");
+                        alarmManager.setExact(
+                                AlarmManager.RTC_WAKEUP,
+                                temp.getTimeInMillis(),
+                                pendingIntent
+                        );
+                    }
+                    count++;
                 }
                 if (doseTime.getDinner().equals("Y")) {
-                    cal.set(Calendar.HOUR_OF_DAY, 17);
-                    cal.set(Calendar.MINUTE, 0);
-                    alarmManager.setExact(
-                            AlarmManager.RTC_WAKEUP,
-                            cal.getTimeInMillis(),
-                            pendingIntent3
-                    );
+                    Long id = alarmListList.get(count).getId();
+
+                    PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
+                    temp.set(Calendar.HOUR_OF_DAY, 18);
+                    temp.set(Calendar.MINUTE, 40);
+                    Log.d("time", cal.getTime().toString());
+                    Log.d("time2", temp.getTime().toString());
+
+                    if (!cal.getTime().after(temp.getTime())) {
+                        Log.d("알람등록", "알람등록");
+                        alarmManager.setExact(
+                                AlarmManager.RTC_WAKEUP,
+                                temp.getTimeInMillis(),
+                                pendingIntent
+                        );
+                    }
+                    count++;
                 }
             }
         } else {//식후
             for (int i = 0; i < dosingPeriod; i++) {
-                cal.set(Calendar.DATE, i);
+                GregorianCalendar temp = (GregorianCalendar)cal.clone() ;
+                temp.add(Calendar.DATE, i);
                 if (doseTime.getMorning().equals("Y")) {
-                    cal.set(Calendar.HOUR_OF_DAY, 9);
-                    cal.set(Calendar.MINUTE, 0);
-                    alarmManager.setExact(
-                            AlarmManager.RTC_WAKEUP,
-                            cal.getTimeInMillis(),
-                            pendingIntent1
-                    );
+                    temp.set(Calendar.HOUR_OF_DAY, 8);
+                    temp.set(Calendar.MINUTE, 0);
+                    Log.d("time", cal.getTime().toString());
+                    Log.d("time2", temp.getTime().toString());
+
+                    if (!cal.getTime().after(temp.getTime())) {
+                        Log.d("알람등록", "알람등록");
+                        Long id = alarmListList.get(count).getId();
+                        PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
+                          alarmManager.setExact(
+                                AlarmManager.RTC_WAKEUP,
+                                temp.getTimeInMillis(),
+                                pendingIntent
+                        );
+                    }
+                    count++;
                 }
                 if (doseTime.getLunch().equals("Y")) {
-                    cal.set(Calendar.HOUR_OF_DAY, 12);
-                    cal.set(Calendar.MINUTE, 30);
-                    alarmManager.setExact(
-                            AlarmManager.RTC_WAKEUP,
-                            cal.getTimeInMillis(),
-                            pendingIntent2
-                    );
+                    temp.set(Calendar.HOUR_OF_DAY, 13);
+                    temp.set(Calendar.MINUTE, 0);
+                    Log.d("time", cal.getTime().toString());
+                    Log.d("time2", temp.getTime().toString());
+
+                    if (!cal.getTime().after(temp.getTime())) {
+                        Log.d("알람등록", "알람등록");
+                        Long id = alarmListList.get(count).getId();
+                        PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
+                        alarmManager.setExact(
+                                AlarmManager.RTC_WAKEUP,
+                                temp.getTimeInMillis(),
+                                pendingIntent
+                        );
+                    }
+                    count++;
+
                 }
                 if (doseTime.getDinner().equals("Y")) {
-                    cal.set(Calendar.HOUR_OF_DAY, 18);
-                    cal.set(Calendar.MINUTE, 0);
-                    alarmManager.setExact(
-                            AlarmManager.RTC_WAKEUP,
-                            cal.getTimeInMillis(),
-                            pendingIntent3
-                    );
+                    temp.set(Calendar.HOUR_OF_DAY, 19);
+                    temp.set(Calendar.MINUTE, 40);
+                    Log.d("time", cal.getTime().toString());
+                    Log.d("time2", temp.getTime().toString());
+
+                    if (!cal.getTime().after(temp.getTime())) {//지난 시간 은 등록안하게하기위함
+                        Long id = alarmListList.get(count).getId();
+                        Log.d("알람등록", "알람등록");
+                        PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
+                        alarmManager.setExact(
+                                AlarmManager.RTC_WAKEUP,
+                                temp.getTimeInMillis(),
+                                pendingIntent
+                        );
+                    }
+                    count++;
+
+
                 }
             }
-
-            // cal.add(Calendar.DATE, 1)
-
         }
         Log.d("알람", "알람등록");
+    }
+
+    private PendingIntent makePendingIntent(int privateId, String content) {
+        Intent aIntent = new Intent(this, AlarmReceiver.class);
+        aIntent.putExtra("content", content);
+        aIntent.putExtra("privateId", privateId);
+        return PendingIntent.getBroadcast(context, privateId, aIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
     }
 
     private void showAlertDialog() {

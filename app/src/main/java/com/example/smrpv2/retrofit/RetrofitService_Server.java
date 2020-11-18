@@ -109,7 +109,7 @@ public interface RetrofitService_Server {
     );
 
     @POST("medicine/alarm/add")
-    Call<Message> addMedicineAlarm( //알람 등록
+    Call<MedicineAlarmResponDto> addMedicineAlarm( //알람 등록
                                     @Body MedicineAlarmAskDto medicineAlarmAskDto
     );
 

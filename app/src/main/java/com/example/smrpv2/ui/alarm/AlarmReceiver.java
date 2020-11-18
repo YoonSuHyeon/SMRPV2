@@ -28,16 +28,16 @@ public class AlarmReceiver extends BroadcastReceiver {
         notificationManager = (NotificationManager) context.getSystemService(
                 Context.NOTIFICATION_SERVICE);
         String content = intent.getStringExtra("content");
-        long privateId = intent.getLongExtra("privateId", 0);
+        int privateId = intent.getIntExtra("privateId", 0);
         createNotificationChannel(String.valueOf(privateId));
         deliverNotification(context,content,privateId);
     }
 
-    private void deliverNotification(Context context,String content,long privateId) {
+    private void deliverNotification(Context context,String content,int privateId) {
         Intent contentIntent = new Intent(context, LoginActivity.class);
         PendingIntent contentPendingIntent = PendingIntent.getActivity(
                 context,
-                (int)privateId,
+                privateId,
                 contentIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
@@ -51,7 +51,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         .setAutoCancel(true)
                         .setDefaults(NotificationCompat.DEFAULT_ALL);
 
-        notificationManager.notify((int)privateId, builder.build());
+        notificationManager.notify(privateId, builder.build());
     }
 
     private void createNotificationChannel(String channelId) {

@@ -1,6 +1,8 @@
 package com.example.smrpv2.ui.alarm;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smrpv2.R;
+import com.example.smrpv2.model.AlarmListDto;
 import com.example.smrpv2.model.DoseTime;
 import com.example.smrpv2.model.MedicineAlarmAskDto;
 import com.example.smrpv2.model.MedicineAlarmResponDto;
@@ -31,6 +34,7 @@ import com.example.smrpv2.ui.medicine.ListViewAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,6 +65,8 @@ public class AlarmEditActivity extends AppCompatActivity  {
     String remainingTime;
     Long groupId;
     String user_id;
+
+    BottomSheetDialog bottomSheetDialog;
     final int ALARM = 1;
     final int BEFORE_MEAL=1;
     final int AFTER_MEAL=0;
@@ -70,6 +76,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
     final int NOT_VALUE = -10;
     int init_dosingPeriod=-10;
     int oneTimeDoseCount=0;
+    AlarmManager alarmManager;
     private SparseBooleanArray mSelectedItems = new SparseBooleanArray(0);
     private static int dosingType=1;
     ArrayList<MedicineItem> alarmMedicineList=new ArrayList<>(); // 약추가한 리스트
@@ -100,7 +107,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
         groupId = intent.getLongExtra("groupId",0);
         remainingTime = intent.getStringExtra("remainingTime");
         iv_back = findViewById(R.id.iv_back);
-
+        bottomSheetDialog = BottomSheetDialog.getInstance();
         Btn_add = findViewById(R.id.Btn_add);
         Lst_medicine=findViewById(R.id.Lst_medicine2);
         ic_dot = findViewById(R.id.ic_dot);
@@ -119,6 +126,8 @@ public class AlarmEditActivity extends AppCompatActivity  {
         alarmListViewAdapter=new ListViewAdapter(alarmMedicineList,this,0);
         Lst_medicine.setAdapter(alarmListViewAdapter);
 
+
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         read_alarm(); // 서버로부터 설정한 알람 정보 읽음
 
 
@@ -190,7 +199,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
         ic_dot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // dialog를 띄울 Activity에서 구현
-                BottomSheetDialog bottomSheetDialog = BottomSheetDialog.getInstance();
+
                 bottomSheetDialog.init(groupId, ALARM);
                 bottomSheetDialog.show(getSupportFragmentManager(),"bottomSheet");
             }
@@ -283,6 +292,18 @@ public class AlarmEditActivity extends AppCompatActivity  {
                             public void onResponse(Call<Message> call, Response<Message> response) {
                                 if(response.body().getResultCode().equals("OK")){
                                     Log.d("변경완료", "변경");
+
+                                    //미리 지정된 알람 삭제
+                                    List<AlarmListDto> alarmListList = tempBefore.getAlarmListList();
+                                    for(int i =0 ; i<alarmListList.size();i++){
+                                        PendingIntent pendingIntent =makePendingIntent(alarmListList.get(i).getId().intValue(),tempBefore.getAlarmName());
+                                        alarmManager.cancel(pendingIntent);
+                                        pendingIntent.cancel();
+
+                                    }
+                                    //서버에게 새로만들어진것을 받아서 알람 재등록
+
+
                                 }
                             }
 
@@ -300,6 +321,14 @@ public class AlarmEditActivity extends AppCompatActivity  {
 
             }
         });
+    }
+
+    private PendingIntent makePendingIntent(int privateId, String content) {
+        Intent aIntent = new Intent(this, AlarmReceiver.class);
+        aIntent.putExtra("content", content);
+        aIntent.putExtra("privateId", privateId);
+        return PendingIntent.getBroadcast(context, privateId, aIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
     }
     private void showAlertDialog() {
 
@@ -378,6 +407,8 @@ public class AlarmEditActivity extends AppCompatActivity  {
             @Override
             public void onResponse(Call<MedicineAlarmResponDto> call, Response<MedicineAlarmResponDto> response) {
                 tempBefore=response.body();
+
+                bottomSheetDialog.setTempBefore(tempBefore);
 
                 et_alramName.setText(response.body().getAlarmName());
                 String doseType = response.body().getDoseType();

@@ -1,19 +1,35 @@
 package com.example.smrpv2.model;
 
 import com.example.smrpv2.model.SumMedInfo;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
+
 //유저가 등록란 알람 정보
 public class MedicineAlarmResponDto {
     private Long id;
+
     private String userInfo;
+
     private ArrayList<SumMedInfo> regMedicineArrayList;
+
+
     private String alarmName;
     private int dosingPeriod;
     private String startAlarm;
     private String finishAlarm;
     private DoseTime doseTime;
     private String doseType;
+    private List<AlarmListDto> alarmListList;
+
+    public List<AlarmListDto> getAlarmListList() {
+        return alarmListList;
+    }
+
+    public void setAlarmListList(List<AlarmListDto> alarmListList) {
+        this.alarmListList = alarmListList;
+    }
 
     public Long getId() {
         return id;
