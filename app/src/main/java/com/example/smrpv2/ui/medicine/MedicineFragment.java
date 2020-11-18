@@ -20,6 +20,7 @@ import com.example.smrpv2.R;
 import com.example.smrpv2.model.MedicineItem;
 import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.SumMedInfo;
+import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.main.MainActivity;
 import com.example.smrpv2.ui.start.AutoSlide;
@@ -96,7 +97,7 @@ public class MedicineFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        Call<ArrayList<SumMedInfo>> call= RetrofitHelper.getRetrofitService_server().medicineRegs("q");
+        Call<ArrayList<SumMedInfo>> call= RetrofitHelper.getRetrofitService_server().medicineRegs(UserInform.getUserId());
         call.enqueue(new Callback<ArrayList<SumMedInfo>>() {
             @Override
             public void onResponse(Call<ArrayList<SumMedInfo>> call, Response<ArrayList<SumMedInfo>> response) {

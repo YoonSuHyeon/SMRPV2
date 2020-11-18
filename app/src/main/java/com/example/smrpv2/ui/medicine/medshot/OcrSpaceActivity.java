@@ -135,35 +135,13 @@ public class OcrSpaceActivity extends AppCompatActivity {
         MultipartBody.Part fPart = MultipartBody.Part.createFormData("files","front.jpg",body);
         RetrofitService_Server retrofit = RetrofitHelper.getOcr().create(RetrofitService_Server.class);
 
-
-        /*Map<String,String> map = new HashMap<>();
-        map.put("Host","dapi.kakao.com");
-        map.put("Content-Type","multipart/form-data");
-        map.put("Authorization","KakaoAK 1801da9c015ce87583138632980c2c5a");*/
-
         Call<OcrSpaceDto> call = retrofit.sendOcr(fPart,"kor");
-        Log.d("TAG", "request: "+call.request());
-        Log.d("TAG", "headers: "+call.request().headers());
-        Log.d("TAG", "Host: "+call.request().header("Host"));
-        Log.d("TAG", "Authorization: "+call.request().header("Authorization"));
-        Log.d("TAG", "Content-Type: "+call.request().header("Content-Type"));
-        Log.d("TAG", "body: "+call.request().body());
-        Log.d("TAG", "body: "+call.request().method());
-        Log.d("TAG", "body: "+call.request().isHttps());
-        Log.d(TAG, "onCreate: "+call.request().url());
-
-
-
 
 
         call.enqueue(new Callback<OcrSpaceDto>() {
             @Override
             public void onResponse(Call<OcrSpaceDto> call, Response<OcrSpaceDto> response) {
-                Log.d(TAG, "response.toString(): "+response.toString());
 
-                Log.d(TAG, "response body: "+response.body());
-
-                Log.d(TAG, "response error: "+response.errorBody());
                 if(response.body().getParsedResults().get(0).getParsedText() != null)
                     Log.d(TAG, "onResponse: "+response.body().getParsedResults().get(0).getParsedText());
                 else

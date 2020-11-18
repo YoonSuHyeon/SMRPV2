@@ -29,6 +29,7 @@ import com.example.smrpv2.model.MedicineAlarmResponDto;
 import com.example.smrpv2.model.MedicineItem;
 import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.SumMedInfo;
+import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.medicine.ListViewAdapter;
 
@@ -285,7 +286,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
 
 
 
-                        MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(tempBefore.getId(),"q",registerId,alarmName,dosingPeriod,tempBefore.getStartAlarm(),tempBefore.getFinishAlarm(),doseTime,doseType);
+                        MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(tempBefore.getId(),UserInform.getUserId(),registerId,alarmName,dosingPeriod,tempBefore.getStartAlarm(),tempBefore.getFinishAlarm(),doseTime,doseType);
                         Call<Message> call = RetrofitHelper.getRetrofitService_server().medicineAlarmUpdate(medicineAlarmAskDto);
                         call.enqueue(new Callback<Message>() {
                             @Override
@@ -378,7 +379,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
                 dialog.dismiss();
             }
         });
-        Call<ArrayList<SumMedInfo>> call= RetrofitHelper.getRetrofitService_server().medicineRegs("q");
+        Call<ArrayList<SumMedInfo>> call= RetrofitHelper.getRetrofitService_server().medicineRegs(UserInform.getUserId());
         call.enqueue(new Callback<ArrayList<SumMedInfo>>() {
             @Override
             public void onResponse(Call<ArrayList<SumMedInfo>> call, Response<ArrayList<SumMedInfo>> response) {

@@ -20,6 +20,7 @@ import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.RegmedicineAsk;
 import com.example.smrpv2.model.SumMedInfo;
 import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
+import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_Server;
 import com.example.smrpv2.ui.alarm.AlarmSetActivity;
@@ -135,7 +136,7 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
             @Override
             public void onClick(View v) { //추가하
                 Log.e("C","click");
-                RegmedicineAsk regmedicineAsk = new RegmedicineAsk("q",itemSeq);
+                RegmedicineAsk regmedicineAsk = new RegmedicineAsk(UserInform.getUserId(),itemSeq);
                 Call<Message> call= RetrofitHelper.getRetrofitService_server().medicineAdd(regmedicineAsk);
                 call.enqueue(new Callback<Message>() {
                     @Override

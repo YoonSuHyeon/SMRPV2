@@ -1,9 +1,12 @@
 package com.example.smrpv2.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class UserDto {
-  
+
+
+
 
     @SerializedName("userId")//사용자 아이디
     String userId;
@@ -17,10 +20,13 @@ public class UserDto {
     String birth;
     @SerializedName("createdAt")//계정 생성 날짜
     String createdAt;
+
     /*@SerializedName("regMedicineList")
     <L>
     @SerializedName("medicineAlarms")
     String email;*/
+
+
 
 
 
@@ -47,4 +53,8 @@ public class UserDto {
     public String getCreatedAt() {
         return createdAt;
     }
+
+   /* public UserDto getInstance(){
+        return userDto;
+    }*/
 }

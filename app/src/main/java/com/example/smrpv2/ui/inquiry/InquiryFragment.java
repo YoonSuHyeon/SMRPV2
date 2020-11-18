@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.InquiryDto;
 import com.example.smrpv2.model.Message;
+import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 
 import retrofit2.Call;
@@ -46,7 +47,7 @@ public class InquiryFragment extends Fragment {
         diaglog.setCancelable(false);
         content = root.findViewById(R.id.content); //사용자가 입력한 내용
         login_inform = getActivity().getSharedPreferences("setting", 0);
-        userid = login_inform.getString("id", "q");
+        userid = UserInform.getUserId();
 
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override

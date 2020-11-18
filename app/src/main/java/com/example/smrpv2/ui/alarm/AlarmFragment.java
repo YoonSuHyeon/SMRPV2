@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.MedicineAlarmResponDto;
 import com.example.smrpv2.model.alarm_model.AlarmItem;
+import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.start.AutoSlide;
 import com.example.smrpv2.ui.start.ViewPagerAdapter;
@@ -102,7 +103,7 @@ public class AlarmFragment extends Fragment {
     }
     public void onStart() {
         super.onStart();
-        Call<ArrayList<MedicineAlarmResponDto>> call = RetrofitHelper.getRetrofitService_server().getMedicineAlarmAll("q");
+        Call<ArrayList<MedicineAlarmResponDto>> call = RetrofitHelper.getRetrofitService_server().getMedicineAlarmAll(UserInform.getUserId());
         call.enqueue(new Callback<ArrayList<MedicineAlarmResponDto>>() {
             @Override
             public void onResponse(Call<ArrayList<MedicineAlarmResponDto>> call, Response<ArrayList<MedicineAlarmResponDto>> response) {

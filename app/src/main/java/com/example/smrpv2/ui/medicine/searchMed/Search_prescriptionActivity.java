@@ -27,6 +27,7 @@ import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.RegmedicineAsk;
 import com.example.smrpv2.model.medicine_model.Prescriptionitem;
 import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
+import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_Server;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -110,7 +111,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
                      * 서버 : 검색된 약 추가하기
                      */
 
-                    RegmedicineAsk regmedicineAsk = new RegmedicineAsk("id","아이템 번호 --> 배열로 바꿔야함");
+                    RegmedicineAsk regmedicineAsk = new RegmedicineAsk(UserInform.getUserId(),"아이템 번호 --> 배열로 바꿔야함");
                     Call<Message> call = RetrofitHelper.getRetrofitService_server().medicineAdd(regmedicineAsk);
 
                     call.enqueue(new Callback<Message>() {
@@ -196,7 +197,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
     private void sendTakePhotoIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);// 내장 카메라 켜기
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/com.example.smrp/files/Pictures");//Android/data/com.raonstudio.cameratest/files
+            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/com.example.smrpv2/files/Pictures");//Android/data/com.raonstudio.cameratest/files
 
             if (!file.exists()) {
                 file.mkdir();
@@ -232,7 +233,8 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
     private void Uploading_bitmap(Bitmap bitmap){
         if(bitmap != null){
             bitmap = scaleBitmapDown(bitmap,MAX_DIMENSION);
-            callCloudVision(bitmap);
+
+           // callCloudVision(bitmap);
         }
     }
     private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
@@ -254,7 +256,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
         return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
     }
 
-    private class LableDetectionTask extends AsyncTask<Object, Void, String> {
+    /*private class LableDetectionTask extends AsyncTask<Object, Void, String> {
         private final WeakReference<Search_prescriptionActivity> mActivityWeakReference;
         private Vision.Images.Annotate mRequest;
         ProgressDialog progressDialog = new ProgressDialog(Search_prescriptionActivity.this);
@@ -309,13 +311,13 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
 
                 Log.d("TAG", "onPostExecute list.size(): "+pill_list.size());
                 //서버에서 STring형 배열로 요청을 받기 떄문에 List를 STring배열로 변환
-                String[] result_array = (String[])pill_list.toArray(new String[pill_list.size()]); 
+                String[] result_array = (String[])pill_list.toArray(new String[pill_list.size()]);
 
                 /*for(String str : result_array)
                     Log.d("TAG", "result_array: "+str+"\n");*/
 
                 //서버와 통신을 하기 위한 RetrofitService_Server 객체 생성성
-                retrofitService = RetrofitHelper.getRetrofitService_server();
+                /*retrofitService = RetrofitHelper.getRetrofitService_server();
                 Call<ArrayList<MedicineInfoRsponDTO>> call= retrofitService.medicinSendList(result_array);
                 call.enqueue(new Callback<ArrayList<MedicineInfoRsponDTO>>() {
                     @Override
@@ -335,7 +337,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
                     public void onFailure(Call<ArrayList<MedicineInfoRsponDTO>> call, Throwable t) {
                         finish();
                     }
-                });
+                });*/
                 /**
                  *
                  * 서버 : 약품명을 서버에게 요청하기 위한 코드가 들어가야함
@@ -343,12 +345,12 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
                  */
 
 
-                bool_end = true;
+               /* bool_end = true;
 
             }
         }
-    }
-    private Vision.Images.Annotate prepareAnnotationRequest(final Bitmap bitmap) throws IOException {
+    }*/
+    /*private Vision.Images.Annotate prepareAnnotationRequest(final Bitmap bitmap) throws IOException {
         HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
@@ -398,8 +400,8 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
 
         annotateRequest.setDisableGZipContent(true);
         return annotateRequest;
-    }
-    private void callCloudVision(final Bitmap bitmap) {
+    }*/
+    /*private void callCloudVision(final Bitmap bitmap) {
         try {
             AsyncTask<Object, Void, String> labelDetectionTask = new LableDetectionTask(this, prepareAnnotationRequest(bitmap));
             labelDetectionTask.execute();
@@ -407,7 +409,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
             Log.d("TAG", "failed to make API request because of other IOException " +
                     e.getMessage());
         }
-    }
+    }*/
     private String convertResponseToString(BatchAnnotateImagesResponse response) {
         StringBuilder message = new StringBuilder();
 

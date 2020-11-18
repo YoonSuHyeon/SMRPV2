@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +26,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import com.example.smrpv2.R;
+import com.example.smrpv2.model.UserDto;
 import com.example.smrpv2.model.home_model.HomeMedItem;
 import com.example.smrpv2.model.home_model.Weather_response;
+import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_Server;
 import com.example.smrpv2.ui.common.LocationValue;
@@ -211,7 +214,7 @@ public class HomeFragment extends Fragment {
                     long now = System.currentTimeMillis();
                     Date date = new Date(now);
                     @SuppressLint("SimpleDateFormat")
-                    SimpleDateFormat format = new SimpleDateFormat("YYYY년 MM월 dd일\r\n HH시 mm분");
+                    SimpleDateFormat format = new SimpleDateFormat("YYYY년 MM월 dd일\n\r HH시 mm분");
                     final String formatDate = format.format(date);
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {

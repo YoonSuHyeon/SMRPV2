@@ -26,6 +26,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.user_model.User;
+import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.ui.common.SharedData;
 import com.example.smrpv2.ui.home.HomeFragment;
 import com.example.smrpv2.ui.login.LoginActivity;
@@ -56,9 +57,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"자동로그인이 되었습니다.",Toast.LENGTH_LONG).show();
 
 
-        name = getIntent().getStringExtra("name");
-        Log.d("TAG", "namenamename: "+name);
-
+        //name = getIntent().getStringExtra("name");
+        name = UserInform.getName();
         drawer = findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.nav_view); //navigationView을 사용하기 위한 객체 선언

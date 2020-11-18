@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.user_model.LoginUser;
 import com.example.smrpv2.model.UserDto;
+import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.common.SharedData;
 import com.example.smrpv2.ui.findid.FindIdActivity;
@@ -115,23 +116,20 @@ public class LoginActivity extends AppCompatActivity {
 
         LoginUser loginUser = new LoginUser(id,passwd);
 
-        Log.d("TAG", "login_id: "+id);
-        Log.d("TAG", "login_passwd: "+passwd);
         //로그인 시도
         Call<UserDto> call=RetrofitHelper.getRetrofitService_server().login(loginUser);
         call.enqueue(new Callback<UserDto>() {
             @Override
             public void onResponse(Call<UserDto> call, Response<UserDto> response) {
 
-                //Log.d("login",response.toString());
-                //Log.d("ddd", response.body().getUserId());
-
                 if(response.body().getUserId() != null){ //로그인 성공
 
                     checkAutoAndStore();
                     //MainActivity로 화면 이동
+                    UserInform user = new UserInform(response.body().getUserId(),response.body().getEmail(),response.body().getName(),
+                            response.body().getGender(),response.body().getBirth(),response.body().getCreatedAt());
                     Intent intent = new Intent(getApplication(), MainActivity.class);
-                    intent.putExtra("name",response.body().getName());
+                    //intent.putExtra("name",response.body().getName());
                     startActivity(intent);
                     finish();
                 }else{ //로그인 실패
