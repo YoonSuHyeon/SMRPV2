@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawer;
     String name;
     Toolbar toolbar;
+    
     private final long FINISH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
     private Dialog enddialog;
