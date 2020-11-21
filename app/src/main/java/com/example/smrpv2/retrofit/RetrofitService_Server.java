@@ -145,8 +145,7 @@ public interface RetrofitService_Server {
 
 
     @Multipart
-    @Headers("Authorization: KakaoAK 54c2a8378374c5dfdafc6e85dc03a3fa"
-    )
+    @Headers("Authorization: KakaoAK 54c2a8378374c5dfdafc6e85dc03a3fa")
     @POST("/v2/vision/text/ocr")// 카카오 OCR API
     Call<KakaoDto> sendKakaoOcr(
                                 @Part MultipartBody.Part image);
