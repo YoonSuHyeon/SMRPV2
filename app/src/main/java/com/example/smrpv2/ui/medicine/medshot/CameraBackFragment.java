@@ -947,7 +947,8 @@ public class CameraBackFragment extends Fragment
 
 
                     //Intent intent = new Intent(getActivity(),MainActivity.class);
-                    Intent intent = new Intent(getActivity(), OcrSpaceActivity.class);
+                    //Intent intent = new Intent(getActivity(), OcrSpaceActivity.class);
+                    Intent intent = new Intent(getActivity(), KakaoOCRActivity.class);
                     intent.putExtra("frontImg",frontImg);
                     intent.putExtra("backImg",mFile.getAbsolutePath());
 

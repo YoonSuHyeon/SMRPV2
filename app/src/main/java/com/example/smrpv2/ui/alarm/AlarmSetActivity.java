@@ -439,8 +439,8 @@ public class AlarmSetActivity extends AppCompatActivity {
 
                 }
                 if (doseTime.getDinner().equals("Y")) {
-                    temp.set(Calendar.HOUR_OF_DAY, 19);
-                    temp.set(Calendar.MINUTE, 40);
+                    temp.set(Calendar.HOUR_OF_DAY, 14);
+                    temp.set(Calendar.MINUTE, 11);
                     Log.d("time", cal.getTime().toString());
                     Log.d("time2", temp.getTime().toString());
 

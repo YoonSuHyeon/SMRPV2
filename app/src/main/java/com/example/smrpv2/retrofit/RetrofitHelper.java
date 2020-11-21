@@ -53,12 +53,12 @@ public class RetrofitHelper {
                 .addConverterFactory(GsonConverterFactory.create()).build();
     }
 
-    /*static public Retrofit getOcr(){
-        return new Retrofit.Builder().client(client)
+    static public Retrofit getKaKaoOcr(){
+        return new Retrofit.Builder()
                 .baseUrl("https://dapi.kakao.com")
                 .addConverterFactory(GsonConverterFactory.create()).build();
     }
-    public static OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
+    /*public static OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request().newBuilder()
@@ -69,8 +69,8 @@ public class RetrofitHelper {
 
             return chain.proceed(request);
         }
-    }).build();*/
-
+    }).build();
+*/
     static public Retrofit getOcr(){
         return new Retrofit.Builder()
                 .baseUrl("https://api.ocr.space")

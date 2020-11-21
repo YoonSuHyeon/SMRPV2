@@ -44,9 +44,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, String.valueOf(privateId))
                         .setSmallIcon(R.drawable.ic_alarm_set)//알람 이미지
-                        .setContentTitle("Alert")
+                        .setContentTitle("약드실 시간입니다.")
                         .setContentText(content)
                         .setContentIntent(contentPendingIntent)
+                        .setColor(Color.argb(50,100,10,10))
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
                         .setDefaults(NotificationCompat.DEFAULT_ALL);

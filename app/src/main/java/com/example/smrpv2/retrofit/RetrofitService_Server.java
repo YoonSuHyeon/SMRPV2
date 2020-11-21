@@ -15,6 +15,7 @@ import com.example.smrpv2.model.user_model.LoginUser;
 import com.example.smrpv2.model.home_model.Weather_response;
 import com.example.smrpv2.model.UserDto;
 import com.example.smrpv2.model.user_model.User;
+import com.example.smrpv2.model.KakaoDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +24,10 @@ import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -123,6 +126,8 @@ public interface RetrofitService_Server {
     Call<Message> addInquiry( //문의하기
                               @Body InquiryDto inquiry
     );
+
+
     @Multipart
     @POST("/parse/image")
     //@Headers({"Host: dapi.kakao.com","Authorization: KakaoAK 1801da9c015ce87583138632980c2c5a","Content-Type: multipart/form-data"})
@@ -136,6 +141,17 @@ public interface RetrofitService_Server {
                               @Query("language") String language
                               //@String language;
     );
+
+
+
+    @Multipart
+    @Headers("Authorization: KakaoAK 54c2a8378374c5dfdafc6e85dc03a3fa"
+    )
+    @POST("/v2/vision/text/ocr")// 카카오 OCR API
+    Call<KakaoDto> sendKakaoOcr(
+                                @Part MultipartBody.Part image);
+
+
     @Multipart
     @POST("/medicine/uploadImage") //서버에게 사진전송
     Call<Message> uploadImage(@Part ArrayList<MultipartBody.Part> files);

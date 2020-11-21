@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.smrpv2">
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -29,11 +29,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.medicine.medshot.OcrSpaceActivity"></activity>
+        <activity android:name=".ui.medicine.medshot.KakaoOCRActivity"></activity>
+        <activity android:name=".ui.medicine.medshot.OcrSpaceActivity" />
         <activity
             android:name=".ui.medicine.searchMed.ErrorMessageActivity"
             android:theme="@android:style/Theme.Dialog" />
-
         <activity android:name=".ui.medicine.medshot.GoogleOCRActivity" />
         <activity android:name=".ui.medicine.medshot.CameraBackActivity" />
         <activity android:name=".ui.medicine.medshot.CameraFrontActivity" />
@@ -71,14 +71,15 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="adc15b958c5d03495cd889d997401566" />
 
-        <receiver android:name=".ui.alarm.BootReceiver"
-            >
+        <receiver android:name=".ui.alarm.BootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".ui.alarm.AlarmReceiver"
-            android:exported="false"/>
+        <receiver
+            android:name=".ui.alarm.AlarmReceiver"
+            android:exported="false" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.smrpv2"
