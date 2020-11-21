@@ -35,7 +35,11 @@ import com.example.smrpv2.ui.medicine.ListViewAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,36 +57,37 @@ import retrofit2.Response;
  * - 근데 알람fragment의 알람 리스트에는 oneTimeDose가 숫자로 표기됨. 그래서 임시로 oneTimeDoseCount변수를 만들어 클릭된 거 개수 서버로 보내줌ㅈ => 이것도 바꿀 필요 있어 보임.
  */
 
-public class AlarmEditActivity extends AppCompatActivity  {
+public class AlarmEditActivity extends AppCompatActivity {
     Context context;
     MedicineAlarmResponDto tempBefore; //이전에 정보
     ListView Lst_medicine;
     ListViewAdapter alarmListViewAdapter; //알람에 약을 추가한 어댑터
     ImageView ic_dot;
     ImageView iv_back;
-    Button Btn_add,Btn_edit,btn_before,btn_after;
+    Button Btn_add, Btn_edit, btn_before, btn_after;
     Button Btn_morning, Btn_afternoon, Btn_evening, Btn_addDate, Btn_init;
-    EditText et_alramName,et_dosingPeriod;
+    EditText et_alramName, et_dosingPeriod;
     String remainingTime;
     Long groupId;
     String user_id;
 
     BottomSheetDialog bottomSheetDialog;
     final int ALARM = 1;
-    final int BEFORE_MEAL=1;
-    final int AFTER_MEAL=0;
-    final int AFTERNOON_CHECK=0;
-    final int MORNING_CHECK=0;
-    final int EVENING_CHECK=0;
+    final int BEFORE_MEAL = 1;
+    final int AFTER_MEAL = 0;
+    final int AFTERNOON_CHECK = 0;
+    final int MORNING_CHECK = 0;
+    final int EVENING_CHECK = 0;
     final int NOT_VALUE = -10;
-    int init_dosingPeriod=-10;
-    int oneTimeDoseCount=0;
+    int init_dosingPeriod = -10;
+    int oneTimeDoseCount = 0;
     AlarmManager alarmManager;
     private SparseBooleanArray mSelectedItems = new SparseBooleanArray(0);
-    private static int dosingType=1;
-    ArrayList<MedicineItem> alarmMedicineList=new ArrayList<>(); // 약추가한 리스트
-    ArrayList<String> array_oneTimeDose = new ArrayList<String>(Arrays.asList("아침","점심","저녁"));
-    ArrayList<String> selectedOneTimeDose= new ArrayList<String>();
+    private static int dosingType = 1;
+    ArrayList<MedicineItem> alarmMedicineList = new ArrayList<>(); // 약추가한 리스트
+    ArrayList<String> array_oneTimeDose = new ArrayList<String>(Arrays.asList("아침", "점심", "저녁"));
+    ArrayList<String> selectedOneTimeDose = new ArrayList<String>();
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -101,30 +106,30 @@ public class AlarmEditActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_edit);
-        context=this;
+        context = this;
         Intent intent = getIntent();
-        SharedPreferences loginInfromation = getSharedPreferences("setting",0);
-        user_id = loginInfromation.getString("id","");
-        groupId = intent.getLongExtra("groupId",0);
+        SharedPreferences loginInfromation = getSharedPreferences("setting", 0);
+        user_id = loginInfromation.getString("id", "");
+        groupId = intent.getLongExtra("groupId", 0);
         remainingTime = intent.getStringExtra("remainingTime");
         iv_back = findViewById(R.id.iv_back);
         bottomSheetDialog = BottomSheetDialog.getInstance();
         Btn_add = findViewById(R.id.Btn_add);
-        Lst_medicine=findViewById(R.id.Lst_medicine2);
+        Lst_medicine = findViewById(R.id.Lst_medicine2);
         ic_dot = findViewById(R.id.ic_dot);
-        Btn_edit= findViewById(R.id.Btn_edit);
-        btn_before=findViewById(R.id.btn_before);
-        btn_after=findViewById(R.id.btn_after);
-        et_alramName=findViewById(R.id.et_alramName);
-        et_dosingPeriod=findViewById(R.id.et_dosingPeriod);
-     //   et_oneTimeDose=findViewById(R.id.et_oneTimeDose);
+        Btn_edit = findViewById(R.id.Btn_edit);
+        btn_before = findViewById(R.id.btn_before);
+        btn_after = findViewById(R.id.btn_after);
+        et_alramName = findViewById(R.id.et_alramName);
+        et_dosingPeriod = findViewById(R.id.et_dosingPeriod);
+        //   et_oneTimeDose=findViewById(R.id.et_oneTimeDose);
         Btn_addDate = findViewById(R.id.btn_addDate);
         Btn_init = findViewById(R.id.btn_init);
         Btn_morning = findViewById(R.id.btn_morning);
         Btn_afternoon = findViewById(R.id.btn_afternoon);
         Btn_evening = findViewById(R.id.btn_evening);
         et_dosingPeriod.setEnabled(false);
-        alarmListViewAdapter=new ListViewAdapter(alarmMedicineList,this,0);
+        alarmListViewAdapter = new ListViewAdapter(alarmMedicineList, this, 0);
         Lst_medicine.setAdapter(alarmListViewAdapter);
 
 
@@ -157,27 +162,27 @@ public class AlarmEditActivity extends AppCompatActivity  {
         Btn_evening.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkSelectedOneTimeDose(2,selectedOneTimeDose,Btn_evening);
+                checkSelectedOneTimeDose(2, selectedOneTimeDose, Btn_evening);
 
             }
         });
         Btn_afternoon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkSelectedOneTimeDose(1,selectedOneTimeDose,Btn_afternoon);
+                checkSelectedOneTimeDose(1, selectedOneTimeDose, Btn_afternoon);
             }
         });
 
         Btn_morning.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkSelectedOneTimeDose(0,selectedOneTimeDose,Btn_morning);
+                checkSelectedOneTimeDose(0, selectedOneTimeDose, Btn_morning);
             }
         });
         Btn_init.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(init_dosingPeriod ==NOT_VALUE)
+                if (init_dosingPeriod == NOT_VALUE)
                     et_dosingPeriod.setText(String.valueOf(0));
                 else
                     et_dosingPeriod.setText(String.valueOf(init_dosingPeriod));
@@ -188,10 +193,11 @@ public class AlarmEditActivity extends AppCompatActivity  {
             public void onClick(View view) {
                 int dosingPeriod;
 
-                if(init_dosingPeriod ==NOT_VALUE) {dosingPeriod = 0;init_dosingPeriod=dosingPeriod;}
-                else dosingPeriod = Integer.parseInt(et_dosingPeriod.getText().toString())+1;
+                if (init_dosingPeriod == NOT_VALUE) {
+                    dosingPeriod = 0;
+                    init_dosingPeriod = dosingPeriod;
+                } else dosingPeriod = Integer.parseInt(et_dosingPeriod.getText().toString()) + 1;
                 et_dosingPeriod.setText(String.valueOf(dosingPeriod));
-
 
 
             }
@@ -202,7 +208,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
             public void onClick(View v) { // dialog를 띄울 Activity에서 구현
 
                 bottomSheetDialog.init(groupId, ALARM);
-                bottomSheetDialog.show(getSupportFragmentManager(),"bottomSheet");
+                bottomSheetDialog.show(getSupportFragmentManager(), "bottomSheet");
             }
         });
         iv_back.setOnClickListener(new View.OnClickListener() {
@@ -220,19 +226,19 @@ public class AlarmEditActivity extends AppCompatActivity  {
         Btn_edit.setOnClickListener(new View.OnClickListener() {//알람설정을 누른경우
             @Override
             public void onClick(View v) {
-              //수정 누르면 수정하기 작업
+                //수정 누르면 수정하기 작업
 
-                if ( et_alramName.getText().toString().equals("") || et_dosingPeriod.getText().toString().equals("")
-                       ) {
+                if (et_alramName.getText().toString().equals("") || et_dosingPeriod.getText().toString().equals("")
+                ) {
                     Toast.makeText(context, "모두 입력해 주세요 .", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     ArrayList<String> temp = new ArrayList<String>(); //일련번호 리스트를 만드는과정
-                    for(MedicineItem i :alarmMedicineList){
+                    for (MedicineItem i : alarmMedicineList) {
                         temp.add(i.getItemSeq());
                     }
                     if (temp.size() == 0) {
                         Toast.makeText(context, "약을 등록해 주세요.", Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
 
                         /**
                          * 서버
@@ -240,16 +246,16 @@ public class AlarmEditActivity extends AppCompatActivity  {
 
                         ArrayList<Long> registerId = new ArrayList<>();
 
-                        for(MedicineItem item :alarmMedicineList){
+                        for (MedicineItem item : alarmMedicineList) {
                             registerId.add(item.getId());
                         }
-                        String alarmName =et_alramName.getText().toString();
-                        int dosingPeriod =Integer.parseInt(et_dosingPeriod.getText().toString());
+                        String alarmName = et_alramName.getText().toString();
+                        int dosingPeriod = Integer.parseInt(et_dosingPeriod.getText().toString());
 
-                        String doseType ;
-                        if(dosingType==1){
-                            doseType="식전";
-                        }else{
+                        String doseType;
+                        if (dosingType == 1) {
+                            doseType = "식전";
+                        } else {
                             doseType = "식후";
 
                         }
@@ -277,39 +283,39 @@ public class AlarmEditActivity extends AppCompatActivity  {
                         }
 
                         //이전의 값을 넣어준다 .  현재는  startAlarm과 finishAlarm은 못바꾸게함 따라서 dosingPeriod를 변경 불가능함.
-                        Log.d("변경하기전", tempBefore.getFinishAlarm()+"");
-                        Log.d("변경하기전남은시간", remainingTime+"");
+                        Log.d("변경하기전", tempBefore.getFinishAlarm() + "");
+                        Log.d("변경하기전남은시간", remainingTime + "");
 
                         //예외처리 남은 기간보다 더적은  기간을 입력하게되면 입력 하지 못하게 막음..
                         String[] split = remainingTime.split("/");  // [0] =  진행된 일수  [1] 총 진행해야하는  일수
-                        
 
 
 
-                        MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(tempBefore.getId(),UserInform.getUserId(),registerId,alarmName,dosingPeriod,tempBefore.getStartAlarm(),tempBefore.getFinishAlarm(),doseTime,doseType);
-                        Call<Message> call = RetrofitHelper.getRetrofitService_server().medicineAlarmUpdate(medicineAlarmAskDto);
-                        call.enqueue(new Callback<Message>() {
+
+                        MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(tempBefore.getId(), UserInform.getUserId(), registerId, alarmName, dosingPeriod, tempBefore.getStartAlarm(), tempBefore.getFinishAlarm(), doseTime, doseType);
+                        Call<MedicineAlarmResponDto> call = RetrofitHelper.getRetrofitService_server().medicineAlarmUpdate(medicineAlarmAskDto);
+
+                        call.enqueue(new Callback<MedicineAlarmResponDto>() {
                             @Override
-                            public void onResponse(Call<Message> call, Response<Message> response) {
-                                if(response.body().getResultCode().equals("OK")){
-                                    Log.d("변경완료", "변경");
+                            public void onResponse(Call<MedicineAlarmResponDto> call, Response<MedicineAlarmResponDto> response) {
+                                Log.d("변경완료", "변경");
 
-                                    //미리 지정된 알람 삭제
-                                    List<AlarmListDto> alarmListList = tempBefore.getAlarmListList();
-                                    for(int i =0 ; i<alarmListList.size();i++){
-                                        PendingIntent pendingIntent =makePendingIntent(alarmListList.get(i).getId().intValue(),tempBefore.getAlarmName());
-                                        alarmManager.cancel(pendingIntent);
-                                        pendingIntent.cancel();
-
-                                    }
-                                    //서버에게 새로만들어진것을 받아서 알람 재등록
-
+                                MedicineAlarmResponDto medicineAlarmResponDto = response.body();
+                                //미리 지정된 알람 삭제
+                                List<AlarmListDto> alarmListList = tempBefore.getAlarmListList();
+                                for (int i = 0; i < alarmListList.size(); i++) {
+                                    PendingIntent pendingIntent = makePendingIntent(alarmListList.get(i).getId().intValue(), tempBefore.getAlarmName());
+                                    alarmManager.cancel(pendingIntent);
+                                    pendingIntent.cancel();
 
                                 }
+                                //서버에게 새로만들어진것을 받아서 알람 재등록
+                                setAlarm(medicineAlarmResponDto);
+
                             }
 
                             @Override
-                            public void onFailure(Call<Message> call, Throwable t) {
+                            public void onFailure(Call<MedicineAlarmResponDto> call, Throwable t) {
                                 Log.d("변경 불가능", t.toString());
                             }
                         });
@@ -323,7 +329,145 @@ public class AlarmEditActivity extends AppCompatActivity  {
             }
         });
     }
+    private void setAlarm(MedicineAlarmResponDto medicineAlarmResponDto) {
+        Date currentTime = Calendar.getInstance().getTime();
+        GregorianCalendar cal = new GregorianCalendar(Locale.KOREA);
+        cal.setTime(currentTime);
 
+        //식전 7:30  12:00 18:40
+        //식후 8:00 13:00  19:40
+        String doseType = medicineAlarmResponDto.getDoseType();
+        int dosingPeriod = medicineAlarmResponDto.getDosingPeriod();
+        DoseTime doseTime = medicineAlarmResponDto.getDoseTime();
+        String content = medicineAlarmResponDto.getAlarmName();
+        List<AlarmListDto> alarmListList = medicineAlarmResponDto.getAlarmListList();
+
+
+        int count = 0; //알람PK의 수를 세기위함
+        if (doseType.equals("식전")) {//식전
+            for (int i = 0; i < dosingPeriod; i++) {
+                GregorianCalendar temp = cal;
+                temp.add(Calendar.DATE, i);
+                if (doseTime.getMorning().equals("Y")) {
+                    Long id = alarmListList.get(count).getId();
+                    PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
+                    temp.set(Calendar.HOUR_OF_DAY, 7);
+                    temp.set(Calendar.MINUTE, 30);
+                    Log.d("time", cal.getTime().toString());
+                    Log.d("time2", temp.getTime().toString());
+                    if (!cal.getTime().after(temp.getTime())) {
+                        Log.d("알람등록", "알람등록");
+                        alarmManager.setExact(
+                                AlarmManager.RTC_WAKEUP,
+                                temp.getTimeInMillis(),
+                                pendingIntent
+                        );
+                    }
+                    count++;
+                }
+                if (doseTime.getLunch().equals("Y")) {
+                    Long id = alarmListList.get(count).getId();
+                    PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
+                    temp.set(Calendar.HOUR_OF_DAY, 12);
+                    temp.set(Calendar.MINUTE, 00);
+                    Log.d("time", cal.getTime().toString());
+                    Log.d("time2", temp.getTime().toString());
+
+                    if (!cal.getTime().after(temp.getTime())) {
+                        Log.d("알람등록", "알람등록");
+                        alarmManager.setExact(
+                                AlarmManager.RTC_WAKEUP,
+                                temp.getTimeInMillis(),
+                                pendingIntent
+                        );
+                    }
+                    count++;
+                }
+                if (doseTime.getDinner().equals("Y")) {
+                    Long id = alarmListList.get(count).getId();
+
+                    PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
+                    temp.set(Calendar.HOUR_OF_DAY, 18);
+                    temp.set(Calendar.MINUTE, 40);
+                    Log.d("time", cal.getTime().toString());
+                    Log.d("time2", temp.getTime().toString());
+
+                    if (!cal.getTime().after(temp.getTime())) {
+                        Log.d("알람등록", "알람등록");
+                        alarmManager.setExact(
+                                AlarmManager.RTC_WAKEUP,
+                                temp.getTimeInMillis(),
+                                pendingIntent
+                        );
+                    }
+                    count++;
+                }
+            }
+        } else {//식후
+            for (int i = 0; i < dosingPeriod; i++) {
+                GregorianCalendar temp = (GregorianCalendar)cal.clone() ;
+                temp.add(Calendar.DATE, i);
+                if (doseTime.getMorning().equals("Y")) {
+                    temp.set(Calendar.HOUR_OF_DAY, 8);
+                    temp.set(Calendar.MINUTE, 0);
+                    Log.d("time", cal.getTime().toString());
+                    Log.d("time2", temp.getTime().toString());
+
+                    if (!cal.getTime().after(temp.getTime())) {
+                        Log.d("알람등록", "알람등록");
+                        Long id = alarmListList.get(count).getId();
+                        PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
+                        alarmManager.setExact(
+                                AlarmManager.RTC_WAKEUP,
+                                temp.getTimeInMillis(),
+                                pendingIntent
+                        );
+                    }
+                    count++;
+                }
+                if (doseTime.getLunch().equals("Y")) {
+                    temp.set(Calendar.HOUR_OF_DAY, 13);
+                    temp.set(Calendar.MINUTE, 0);
+                    Log.d("time", cal.getTime().toString());
+                    Log.d("time2", temp.getTime().toString());
+
+                    if (!cal.getTime().after(temp.getTime())) {
+                        Log.d("알람등록", "알람등록");
+                        Long id = alarmListList.get(count).getId();
+                        PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
+                        alarmManager.setExact(
+                                AlarmManager.RTC_WAKEUP,
+                                temp.getTimeInMillis(),
+                                pendingIntent
+                        );
+                    }
+                    count++;
+
+                }
+                if (doseTime.getDinner().equals("Y")) {
+                    temp.set(Calendar.HOUR_OF_DAY, 17);
+                    temp.set(Calendar.MINUTE, 20);
+                    Log.d("time", cal.getTime().toString());
+                    Log.d("time2", temp.getTime().toString());
+
+                    if (!cal.getTime().after(temp.getTime())) {//지난 시간 은 등록안하게하기위함
+                        Long id = alarmListList.get(count).getId();
+                        Log.d("알람등록", "알람등록");
+                        PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
+                        alarmManager.setExact(
+                                AlarmManager.RTC_WAKEUP,
+                                temp.getTimeInMillis(),
+                                pendingIntent
+                        );
+                    }
+                    count++;
+
+
+                }
+            }
+        }
+        Log.d("알람", "알람등록");
+    }
     private PendingIntent makePendingIntent(int privateId, String content) {
         Intent aIntent = new Intent(this, AlarmReceiver.class);
         aIntent.putExtra("content", content);
@@ -331,6 +475,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
         return PendingIntent.getBroadcast(context, privateId, aIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
     }
+
     private void showAlertDialog() {
 
 
@@ -343,7 +488,7 @@ public class AlarmEditActivity extends AppCompatActivity  {
 
         final Button Btn_ok = view.findViewById(R.id.Btn_ok);
         ListView Lst_medicine = view.findViewById(R.id.Lst_medicine);
-        final ListViewAdapter adapter = new ListViewAdapter(items, this,-1);
+        final ListViewAdapter adapter = new ListViewAdapter(items, this, -1);
 
         Lst_medicine.setAdapter(adapter);
         Btn_ok.setOnClickListener(new View.OnClickListener() {
@@ -379,16 +524,15 @@ public class AlarmEditActivity extends AppCompatActivity  {
                 dialog.dismiss();
             }
         });
-        Call<ArrayList<SumMedInfo>> call= RetrofitHelper.getRetrofitService_server().medicineRegs(UserInform.getUserId());
+        Call<ArrayList<SumMedInfo>> call = RetrofitHelper.getRetrofitService_server().medicineRegs(UserInform.getUserId());
         call.enqueue(new Callback<ArrayList<SumMedInfo>>() {
             @Override
             public void onResponse(Call<ArrayList<SumMedInfo>> call, Response<ArrayList<SumMedInfo>> response) {
                 ArrayList<SumMedInfo> med_items = response.body();
 
                 items.clear();
-                for(int i = 0; i<  med_items.size(); i++)
-                {
-                    items.add(new MedicineItem(med_items.get(i).getId(),med_items.get(i).getImageUrl(),med_items.get(i).getItemName(),med_items.get(i).getItemSeq(),med_items.get(i).getCreatedAt(),med_items.get(i).getEntpName()));
+                for (int i = 0; i < med_items.size(); i++) {
+                    items.add(new MedicineItem(med_items.get(i).getId(), med_items.get(i).getImageUrl(), med_items.get(i).getItemName(), med_items.get(i).getItemSeq(), med_items.get(i).getCreatedAt(), med_items.get(i).getEntpName()));
 
 
                 }
@@ -402,25 +546,26 @@ public class AlarmEditActivity extends AppCompatActivity  {
         });
         dialog.show();
     }
-    void read_alarm(){
+
+    void read_alarm() {
         Call<MedicineAlarmResponDto> call = RetrofitHelper.getRetrofitService_server().getMedicineAlarm(groupId);
         call.enqueue(new Callback<MedicineAlarmResponDto>() {
             @Override
             public void onResponse(Call<MedicineAlarmResponDto> call, Response<MedicineAlarmResponDto> response) {
-                tempBefore=response.body();
+                tempBefore = response.body();
 
                 bottomSheetDialog.setTempBefore(tempBefore);
 
                 et_alramName.setText(response.body().getAlarmName());
                 String doseType = response.body().getDoseType();
-                if(doseType.equals("식전")){
-                    dosingType=BEFORE_MEAL;
+                if (doseType.equals("식전")) {
+                    dosingType = BEFORE_MEAL;
                     btn_before.setBackgroundResource(R.drawable.setbtnclick);
                     btn_before.setTextColor(Color.WHITE);
                     btn_after.setTextColor(Color.BLACK);
                     btn_after.setBackgroundResource(R.drawable.setbtn);
-                }else{
-                    dosingType=AFTER_MEAL;
+                } else {
+                    dosingType = AFTER_MEAL;
                     btn_after.setTextColor(Color.WHITE);
                     btn_before.setTextColor(Color.BLACK);
                     btn_before.setBackgroundResource(R.drawable.setbtn);
@@ -429,14 +574,14 @@ public class AlarmEditActivity extends AppCompatActivity  {
                 //et_oneTimeDose.setText(String.valueOf(response.body().getOneTimeCapacity()));
                 DoseTime doseTime = tempBefore.getDoseTime();
                 int[] doseTimes = doseTime.getDoseTime();
-                if(doseTimes[0]==1){
-                    checkSelectedOneTimeDose(0,selectedOneTimeDose,Btn_morning);
+                if (doseTimes[0] == 1) {
+                    checkSelectedOneTimeDose(0, selectedOneTimeDose, Btn_morning);
                 }
-                if(doseTimes[1]==1){
-                    checkSelectedOneTimeDose(1,selectedOneTimeDose,Btn_afternoon);
+                if (doseTimes[1] == 1) {
+                    checkSelectedOneTimeDose(1, selectedOneTimeDose, Btn_afternoon);
                 }
-                if(doseTimes[2] ==1){
-                    checkSelectedOneTimeDose(2,selectedOneTimeDose,Btn_evening);
+                if (doseTimes[2] == 1) {
+                    checkSelectedOneTimeDose(2, selectedOneTimeDose, Btn_evening);
                 }
 
                 et_dosingPeriod.setText(String.valueOf(response.body().getDosingPeriod()));
@@ -445,8 +590,8 @@ public class AlarmEditActivity extends AppCompatActivity  {
                 ArrayList<SumMedInfo> regMedicineArrayList = response.body().getRegMedicineArrayList();
 
                 for (SumMedInfo sumMedInfo : regMedicineArrayList) {
-                    alarmMedicineList.add(new MedicineItem(sumMedInfo.getId(),sumMedInfo.getImageUrl(),sumMedInfo.getItemName(),sumMedInfo.getItemSeq()
-                    ,sumMedInfo.getCreatedAt(),sumMedInfo.getEntpName()));
+                    alarmMedicineList.add(new MedicineItem(sumMedInfo.getId(), sumMedInfo.getImageUrl(), sumMedInfo.getItemName(), sumMedInfo.getItemSeq()
+                            , sumMedInfo.getCreatedAt(), sumMedInfo.getEntpName()));
                 }
                 alarmListViewAdapter.notifyDataSetChanged();
 
@@ -466,21 +611,24 @@ public class AlarmEditActivity extends AppCompatActivity  {
          */
 
     }
-    void checkSelectedOneTimeDose(int position, ArrayList<String> item, Button bt){
-        if (mSelectedItems.get(position, false) ){
+
+    void checkSelectedOneTimeDose(int position, ArrayList<String> item, Button bt) {
+        if (mSelectedItems.get(position, false)) {
             mSelectedItems.put(position, false);
             bt.setBackgroundResource(R.drawable.setbtn);
             bt.setTextColor(Color.BLACK);
 
-        }
-        else {
+        } else {
             mSelectedItems.put(position, true);
             bt.setBackgroundResource(R.drawable.setbtnclick);
             bt.setTextColor(Color.WHITE);
         }
 
-        for(int i =0; i<3; i++) {
-            if(i==0){item.clear(); oneTimeDoseCount=0;}
+        for (int i = 0; i < 3; i++) {
+            if (i == 0) {
+                item.clear();
+                oneTimeDoseCount = 0;
+            }
             if (mSelectedItems.get(i, false)) {
                 item.add(array_oneTimeDose.get(i));
                 Log.e("fff", array_oneTimeDose.get(i));
