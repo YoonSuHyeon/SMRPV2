@@ -248,73 +248,88 @@ public class AlarmSetActivity extends AppCompatActivity {
         btn_Set_Alarm.setOnClickListener(new View.OnClickListener() {//알람설정을 누른경우
             @Override
             public void onClick(View v) { // 알람설정
-                final ArrayList<Long> registerId = new ArrayList<>();
 
-                for (MedicineItem item : alarmMedicineList) {
-                    registerId.add(item.getId());
-                }
-                String alarmName = et_alramName.getText().toString();
-                int dosingPeriod = Integer.parseInt(et_dosingPeriod.getText().toString());
-                //int oneTimeCapacity =oneTimeDoseCount;//Integer.parseInt(et_oneTimeDose.getText().toString());
-                //DosTime 아침 점심 저녁 어떤것인지 판단 하는 로직  DoseTime 에는 Y OR N 가 들어간다.
-                DoseTime doseTime = new DoseTime("N", "N", "N");
 
-                for (String dose : selectedOneTimeDose) {
-                    switch (dose) {
-                        case "아침": {
-                            doseTime.setMorning("Y");
-                            break;
-                        }
-                        case "점심": {
-                            doseTime.setLunch("Y");
-                            break;
-                        }
-                        case "저녁": {
-                            doseTime.setDinner("Y");
-                            break;
-                        }
-                        default: {
-                            break;
-                        }
-                    }
-                }
-                Log.d("dose", "아침" + doseTime.getMorning());
-                Log.d("dose", "점심" + doseTime.getLunch());
-                Log.d("dose", "저녁" + doseTime.getDinner());
 
-                String doseType;
-                if (dosingType == 1) {
-                    doseType = "식전";
+                if (et_alramName.getText().toString().equals("") || et_dosingPeriod.getText().toString().equals("")
+                ) {
+                    Toast.makeText(context, "모두 입력해 주세요 .", Toast.LENGTH_SHORT).show();
                 } else {
-                    doseType = "식후";
+                    ArrayList<String> temp = new ArrayList<String>(); //일련번호 리스트를 만드는과정
+                    for (MedicineItem i : alarmMedicineList) {
+                        temp.add(i.getItemSeq());
+                    }
+                    if (temp.size() == 0) {
+                        Toast.makeText(context, "약을 등록해 주세요.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        final ArrayList<Long> registerId = new ArrayList<>();
 
+                        for (MedicineItem item : alarmMedicineList) {
+                            registerId.add(item.getId());
+                        }
+                        String alarmName = et_alramName.getText().toString();
+                        int dosingPeriod = Integer.parseInt(et_dosingPeriod.getText().toString());
+                        //int oneTimeCapacity =oneTimeDoseCount;//Integer.parseInt(et_oneTimeDose.getText().toString());
+                        //DosTime 아침 점심 저녁 어떤것인지 판단 하는 로직  DoseTime 에는 Y OR N 가 들어간다.
+                        DoseTime doseTime = new DoseTime("N", "N", "N");
+
+                        for (String dose : selectedOneTimeDose) {
+                            switch (dose) {
+                                case "아침": {
+                                    doseTime.setMorning("Y");
+                                    break;
+                                }
+                                case "점심": {
+                                    doseTime.setLunch("Y");
+                                    break;
+                                }
+                                case "저녁": {
+                                    doseTime.setDinner("Y");
+                                    break;
+                                }
+                                default: {
+                                    break;
+                                }
+                            }
+                        }
+                        Log.d("dose", "아침" + doseTime.getMorning());
+                        Log.d("dose", "점심" + doseTime.getLunch());
+                        Log.d("dose", "저녁" + doseTime.getDinner());
+
+                        String doseType;
+                        if (dosingType == 1) {
+                            doseType = "식전";
+                        } else {
+                            doseType = "식후";
+
+                        }
+                        final MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(0, UserInform.getUserId(), registerId, alarmName, dosingPeriod, null, null, doseTime, doseType);
+                        Call<MedicineAlarmResponDto> call = RetrofitHelper.getRetrofitService_server().addMedicineAlarm(medicineAlarmAskDto);
+                        call.enqueue(new Callback<MedicineAlarmResponDto>() {
+                            @Override
+                            public void onResponse(Call<MedicineAlarmResponDto> call, Response<MedicineAlarmResponDto> response) {
+
+                                MedicineAlarmResponDto medicineAlarmResponDto = response.body();
+                                Log.d("알람설정중에서", response.body().getAlarmName());
+
+                                //알람등록
+                                setAlarm(medicineAlarmResponDto);
+                                onBackPressed();
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<MedicineAlarmResponDto> call, Throwable t) {
+
+                            }
+                        });
+
+
+                        /**
+                         * 서버
+                         */
+                    }
                 }
-                final MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(0, UserInform.getUserId(), registerId, alarmName, dosingPeriod, null, null, doseTime, doseType);
-                Call<MedicineAlarmResponDto> call = RetrofitHelper.getRetrofitService_server().addMedicineAlarm(medicineAlarmAskDto);
-                call.enqueue(new Callback<MedicineAlarmResponDto>() {
-                    @Override
-                    public void onResponse(Call<MedicineAlarmResponDto> call, Response<MedicineAlarmResponDto> response) {
-
-                        MedicineAlarmResponDto medicineAlarmResponDto = response.body();
-                        Log.d("알람설정중에서", response.body().getAlarmName());
-
-                        //알람등록
-                        setAlarm(medicineAlarmResponDto);
-                        onBackPressed();
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<MedicineAlarmResponDto> call, Throwable t) {
-
-                    }
-                });
-
-
-                /**
-                 * 서버
-                 */
-
             }
 
 
@@ -439,8 +454,8 @@ public class AlarmSetActivity extends AppCompatActivity {
 
                 }
                 if (doseTime.getDinner().equals("Y")) {
-                    temp.set(Calendar.HOUR_OF_DAY, 14);
-                    temp.set(Calendar.MINUTE, 11);
+                    temp.set(Calendar.HOUR_OF_DAY, 17);
+                    temp.set(Calendar.MINUTE, 19);
                     Log.d("time", cal.getTime().toString());
                     Log.d("time2", temp.getTime().toString());
 

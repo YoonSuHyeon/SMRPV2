@@ -117,7 +117,7 @@ public interface RetrofitService_Server {
     );
 
     @PUT("medicine/update")
-    Call<Message> medicineAlarmUpdate( //알람 수정
+    Call<MedicineAlarmResponDto> medicineAlarmUpdate( //알람 수정
                                        @Body MedicineAlarmAskDto medicineAlarmAskDto
     );
 
