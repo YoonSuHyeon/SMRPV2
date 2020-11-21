@@ -57,6 +57,10 @@ import retrofit2.Response;
 
             Log.d("TAG", "frontImg: " + frontImgDate);
             Log.d("TAG", "backImg: " + backImgDate);
+          /*  D/gggg: /storage/emulated/0/Android/data/com.example.smrpv2/files/picF.jpg
+            D/gggg: /storage/emulated/0/Android/data/com.example.smrpv2/files/picB.jpg
+            D/TAG: frontImg: /storage/emulated/0/Android/data/com.example.smrpv2/files/picF.jpg
+            backImg: /storage/emulated/0/Android/data/com.example.smrpv2/files/picB.jpg*/
             context = this;
 
             Bitmap rotatedBitmap = null;
@@ -152,6 +156,8 @@ import retrofit2.Response;
         }
 
         private void sendKakaoOcr(File frontfile, File backfile) {
+            Log.d("TAG", "frontfile.getAbsolutePath(): "+frontfile.getAbsolutePath());
+            ///storage/emulated/0/Android/data/com.example.smrpv2/files/picF.jpg
             RequestBody body = RequestBody.create(MediaType.parse("image/*"), frontfile);
             MultipartBody.Part fPart = MultipartBody.Part.createFormData("image", "front.jpg", body);
 

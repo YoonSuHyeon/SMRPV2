@@ -104,8 +104,11 @@ public class MedicineFragment extends Fragment {
                 ArrayList<SumMedInfo> med_items = response.body();
 
                 items.clear();
-                for(int i = 0; i<  med_items.size(); i++) {
-                    items.add(new MedicineItem(med_items.get(i).getId(),med_items.get(i).getImageUrl(), med_items.get(i).getItemName(), med_items.get(i).getItemSeq(), med_items.get(i).getCreatedAt(), med_items.get(i).getEntpName()));
+                if (med_items != null) {
+                    for(int i = 0; i<  med_items.size(); i++) {
+                        items.add(new MedicineItem(med_items.get(i).getId(),med_items.get(i).getImageUrl(), med_items.get(i).getItemName(), med_items.get(i).getItemSeq(), med_items.get(i).getCreatedAt(), med_items.get(i).getEntpName()));
+
+                    }
 
                 }
                 listViewAdapter.notifyDataSetChanged();
