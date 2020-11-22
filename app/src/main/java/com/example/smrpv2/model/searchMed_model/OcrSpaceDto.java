@@ -5,7 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class OcrSpaceDto {
-
+/**
+ * 카카오 ocr 구현시 삭제 관련 파일 다 삭제
+ * **/
 
 
 

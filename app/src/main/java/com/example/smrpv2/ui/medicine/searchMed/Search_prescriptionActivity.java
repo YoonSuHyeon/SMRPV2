@@ -31,6 +31,7 @@ import com.example.smrpv2.model.common.KakaoDto;
 import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.RegmedicineAsk;
 import com.example.smrpv2.model.medicine_model.Prescriptionitem;
+import com.example.smrpv2.model.prescription_model.RegMedicineList;
 import com.example.smrpv2.model.prescription_model.User_Select;
 import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
 import com.example.smrpv2.model.user_model.UserInform;
@@ -92,7 +93,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
         Btn_add.setOnClickListener(new View.OnClickListener() { //추가하기 버튼 누를시
             @Override
             public void onClick(View v) { //추가하기
-                if(select_pill_list.size()==0){
+                if(select_pill_list.size()==0){ //선택한 약이 없을 경우
                     Toast.makeText(getApplicationContext(),"약을 선택해 주세요.", Toast.LENGTH_SHORT).show();
                 }else{
                     for(Map.Entry<Integer, String>elem : select_pill_list.entrySet())
@@ -102,14 +103,17 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
                      * 서버 : 검색된 약 추가하기
                      */
 
-                    RegmedicineAsk regmedicineAsk = new RegmedicineAsk(UserInform.getUserId(),"아이템 번호 --> 배열로 바꿔야함");
-                    Call<Message> call = RetrofitHelper.getRetrofitService_server().medicineAdd(regmedicineAsk);
-
+                    RegMedicineList regMedicineList = new RegMedicineList(UserInform.getUserId(),itemseq_list);
+                    Log.d("TAG", "itemseq_list.size: "+itemseq_list.size());
+                    Call<Message> call = RetrofitHelper.getRetrofitService_server().medicineListAdd(regMedicineList);
                     call.enqueue(new Callback<Message>() {
                         @Override
                         public void onResponse(Call<Message> call, Response<Message> response) {
-                            if(response.body().getResultCode().equals("Ok")){
+                            Log.d("onResponse", "onResponse: "+response.body().getResultCode());
+                            if(response.body().getResultCode().equals("OK")){
                                 //정상적으로 반영
+                                Toast.makeText(getApplicationContext(), itemseq_list.size()+"건을 등록하였습니다.", Toast.LENGTH_SHORT).show();
+                                finish();
                             }
                         }
 

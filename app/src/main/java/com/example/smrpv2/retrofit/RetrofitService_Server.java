@@ -8,6 +8,7 @@ import com.example.smrpv2.model.RegmedicineAsk;
 import com.example.smrpv2.model.SumMedInfo;
 import com.example.smrpv2.model.hospital_model.Response_hos;
 import com.example.smrpv2.model.pharmcy_model.Response_phy;
+import com.example.smrpv2.model.prescription_model.RegMedicineList;
 import com.example.smrpv2.model.prescription_model.User_Select;
 import com.example.smrpv2.model.searchMed_model.ConMedicineAskDto;
 import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
@@ -85,9 +86,9 @@ public interface RetrofitService_Server {
     );
 
     @POST("/medicine/register/addList")
-    Call<Message> medicineListAdd(
-
-    );
+    Call<Message> medicineListAdd( // 사용자가 선택한 약리스트 등록하기
+            @Body RegMedicineList regMedicineList
+            );
     @POST("/medicine/search")
     Call<ArrayList<MedicineInfoRsponDTO>> medicinSendList(
             @Body String[] ocrList
