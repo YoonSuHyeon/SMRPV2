@@ -484,25 +484,11 @@ public class CameraBackFragment extends Fragment
                     canvas.drawRect(100, 100, 200, 200, myPaint);*/
 
 
-
-
-
-
-
-
-
-
-
-
                     Display display =  getActivity().getWindowManager().getDefaultDisplay() ;
                     Point size = new Point();
                     display.getRealSize(size); // or getSize(size)
                     width = size.x;
                     height = size.y;
-
-
-
-
 
 
                     Paint paint = new Paint();

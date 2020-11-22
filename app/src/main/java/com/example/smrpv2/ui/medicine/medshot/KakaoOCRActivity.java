@@ -14,15 +14,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.smrpv2.R;
-import com.example.smrpv2.model.KaKaoResult;
-import com.example.smrpv2.model.KakaoDto;
+import com.example.smrpv2.model.common.KaKaoResult;
+import com.example.smrpv2.model.common.KakaoDto;
 import com.example.smrpv2.model.Message;
-import com.example.smrpv2.model.pharmcy_model.Header;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_Server;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;

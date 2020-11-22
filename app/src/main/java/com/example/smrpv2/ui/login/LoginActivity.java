@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -20,7 +19,7 @@ import android.widget.Toast;
 
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.user_model.LoginUser;
-import com.example.smrpv2.model.UserDto;
+import com.example.smrpv2.model.user_model.UserDto;
 import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.common.SharedData;

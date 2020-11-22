@@ -22,14 +22,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.smrpv2.R;
-import com.example.smrpv2.model.KaKaoResult;
-import com.example.smrpv2.model.KakaoDto;
+import com.example.smrpv2.model.common.KaKaoResult;
+import com.example.smrpv2.model.common.KakaoDto;
 import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.RegmedicineAsk;
 import com.example.smrpv2.model.medicine_model.Prescriptionitem;
+import com.example.smrpv2.model.prescription_model.User_Select;
+import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
 import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_Server;
@@ -42,6 +45,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,7 +67,7 @@ import retrofit2.Response;
 public class Search_prescriptionActivity extends AppCompatActivity implements Serializable {
     private static final int MAX_DIMENSION = 1080;//1080 //이미지 크기
     private String imageFilePath,imageFileName; //저장된 사진경로 및 저장된 사진 이름
-    private ArrayList<Prescriptionitem> list;
+    private ArrayList<Prescriptionitem> list; //구축 서버로 부터 받은 의약품 리스트
     private ArrayList<String> itemseq_list;
     private Button Btn_add;
     private ImageView iv_back;
@@ -77,8 +81,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
 
 
     private boolean bool_end = false;
-    private RetrofitService_Server retrofitService;
-
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +129,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
                 onBackPressed();
             }
         });//뒤로가기
+
         prescriptionAdapter.setOnClickListener(new PrescriptionAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(PrescriptionAdapter.ViewHolder holder, View v, int position) { //리스트 이벤트 처리
@@ -234,7 +238,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
         }
     }
 
-    private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
+    private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) { //카카오에서 승인한 2048 픽셀 내에 이미지 크기를 만들기위한 메소드
 
         int originalWidth = bitmap.getWidth();
         int originalHeight = bitmap.getHeight();
@@ -260,7 +264,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
 
             }
         }
-    }
+    } //퍼미션 접근 권한
 
     private void callKakaoVision(Bitmap bitmap){//카카오 ocr 통신
         File file = new File(imageFilePath);
@@ -296,18 +300,30 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
 
 
         Call<KakaoDto> call = RetrofitHelper.getKaKaoOcr().create(RetrofitService_Server.class).sendKakaoOcr(Part);
-
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("분석중입니다.\n잠시만 기다려 주십시오.");
+        progressDialog.show();
         call.enqueue(new Callback<KakaoDto>() {
             @Override
             public void onResponse(Call<KakaoDto> call, Response<KakaoDto> response) {
+                assert response.body() != null;
+                String[] word_array = new String[response.body().getResult().size()];
+                int count = 0;
+                if(response.body()!=null){
+                    for (int i = 0; i <response.body().getResult().size() ; i++) {
+                        KaKaoResult kaKaoResult = response.body().getResult().get(i);
+                        for( int j = 0 ; j <kaKaoResult.getRecognition_words().length;j++){
+                            word_array[count++] = kaKaoResult.getRecognition_words()[j];
+                        }
 
-                for (int i = 0; i <response.body().getResult().size() ; i++) {
-                    KaKaoResult kaKaoResult = response.body().getResult().get(i);
-                    for( int j = 0 ; j <kaKaoResult.getRecognition_words().length;j++){
-                        Log.d("OCR",kaKaoResult.getRecognition_words()[j]);
                     }
-
+                    SendOcrdata(word_array);
+                }else{ //인식된 글자가 없을경우
+                    Toast.makeText(getApplicationContext(),"인식된 문자가 없습니다. 이전 페이지로 이동합니다.",Toast.LENGTH_SHORT).show();
+                    onBackPressed();
+                    finish();
                 }
+
 
 
             }
@@ -319,6 +335,32 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
         });
     }
 
+    private void SendOcrdata(String[] array){
+
+
+        Call<ArrayList<MedicineInfoRsponDTO>> call = RetrofitHelper.getRetrofitService_server().sendWords(array);
+        call.enqueue(new Callback<ArrayList<MedicineInfoRsponDTO>>() {
+            @Override
+            public void onResponse(Call<ArrayList<MedicineInfoRsponDTO>> call, Response<ArrayList<MedicineInfoRsponDTO>> response) {
+
+                for(int i = 0 ; i < response.body().size();i++){
+                    MedicineInfoRsponDTO dto = response.body().get(i);
+                    list.add(new Prescriptionitem(dto.getItemSeq(),dto.getItemImage(),dto.getItemName(),dto.getEntpName(),dto.getEtcOtcName()));//약 식별번호 / 약 이미지 / 약 이름 / 약 제조사 / 약 포장 /약 의약품정보(일반, 전문)
+                    prescriptionAdapter.notifyDataSetChanged();
+                }
+                LinearLayoutManager mlinearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), mlinearLayoutManager.getOrientation());//구분선을 넣기 위함
+                recyclerView.addItemDecoration(dividerItemDecoration);
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<MedicineInfoRsponDTO>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"분석 결과가 없습니다. 이전 페이지로 이동합니다.",Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        });
+    }
     private class Dialog extends AsyncTask<Void, Void, Void> {
         ProgressDialog progressDialog1 = new ProgressDialog(Search_prescriptionActivity.this);
         @Override
@@ -358,6 +400,6 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
         recyclerView = findViewById(R.id.recycler_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setAdapter(prescriptionAdapter);
-
+        progressDialog = new ProgressDialog(this);
     }
 }

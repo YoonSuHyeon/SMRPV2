@@ -2,7 +2,6 @@ package com.example.smrpv2.ui.splash;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -15,7 +14,7 @@ import android.widget.Toast;
 
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.user_model.LoginUser;
-import com.example.smrpv2.model.UserDto;
+import com.example.smrpv2.model.user_model.UserDto;
 import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.common.SharedData;

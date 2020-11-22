@@ -1,4 +1,4 @@
-package com.example.smrpv2.model;
+package com.example.smrpv2.model.hospital_model;
 
 public class Hospital implements Comparable<Hospital> {
 

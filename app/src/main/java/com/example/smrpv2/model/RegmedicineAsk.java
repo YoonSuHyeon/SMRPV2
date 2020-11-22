@@ -6,8 +6,8 @@ public class RegmedicineAsk {
 
 
     public RegmedicineAsk(String userId, String itemSeq) {
-        this.userId = userId;
-        this.itemSeq = itemSeq;
+        this.userId = userId; //사용자 id
+        this.itemSeq = itemSeq;//등록할 약 번호
     }
     public String getUserId() {
         return userId;

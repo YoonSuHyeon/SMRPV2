@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.smrpv2.R;
-import com.example.smrpv2.model.MedicineItem;
 import com.example.smrpv2.model.medicine_model.Prescriptionitem;
 
 import java.util.ArrayList;
@@ -53,9 +52,11 @@ public class PrescriptionAdapter extends RecyclerView.Adapter<PrescriptionAdapte
 
         String stringURL = list.get(position).getStringURL(); //의약품 이미지 url
         String name = list.get(position).getName();//의약품 이름
-        String type = list.get(position).getType();//의약품 타입
+        String entpName = list.get(position).getEntpName();//의약품 제조사
+        String etcOtcName = list.get(position).getEtcOtcName();// 의약품정보(일반, 전문)
         holder.Txt_name.setText(name);
-        holder.Txt_type.setText(type);
+        holder.Txt_entpname.setText(entpName);
+        holder.Txt_etcname.setText(etcOtcName);
         Glide.with(context).load(stringURL).override(500,150).fitCenter().into(holder.img);
 
     }
@@ -75,14 +76,15 @@ public class PrescriptionAdapter extends RecyclerView.Adapter<PrescriptionAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView img;
-        TextView Txt_name, Txt_type;
+        TextView Txt_name, Txt_entpname,Txt_etcname;
         int pos;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            img = itemView.findViewById(R.id.medicine_search_img); //의약품 이미지
-            Txt_name = itemView.findViewById(R.id.medicine_search_name); //의약품 이름
-            Txt_type = itemView.findViewById(R.id.medicine_search_attirbute); //이약품 성분
-
+            img = itemView.findViewById(R.id.medicine_image); //의약품 이미지
+            Txt_name = itemView.findViewById(R.id.medicine_name); //의약품 이름
+            Txt_entpname = itemView.findViewById(R.id.medicine_entpName); //의약품 제조사
+            Txt_etcname = itemView.findViewById(R.id.medicine_etcName); //의약품 정보(일반, 전문)
+            
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -8,14 +8,15 @@ import com.example.smrpv2.model.RegmedicineAsk;
 import com.example.smrpv2.model.SumMedInfo;
 import com.example.smrpv2.model.hospital_model.Response_hos;
 import com.example.smrpv2.model.pharmcy_model.Response_phy;
+import com.example.smrpv2.model.prescription_model.User_Select;
 import com.example.smrpv2.model.searchMed_model.ConMedicineAskDto;
 import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
 import com.example.smrpv2.model.searchMed_model.OcrSpaceDto;
 import com.example.smrpv2.model.user_model.LoginUser;
 import com.example.smrpv2.model.home_model.Weather_response;
-import com.example.smrpv2.model.UserDto;
+import com.example.smrpv2.model.user_model.UserDto;
 import com.example.smrpv2.model.user_model.User;
-import com.example.smrpv2.model.KakaoDto;
+import com.example.smrpv2.model.common.KakaoDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,8 @@ import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 
-import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -85,6 +84,10 @@ public interface RetrofitService_Server {
                               @Body RegmedicineAsk regmedicineAsk
     );
 
+    @POST("/medicine/register/addList")
+    Call<Message> medicineListAdd(
+
+    );
     @POST("/medicine/search")
     Call<ArrayList<MedicineInfoRsponDTO>> medicinSendList(
             @Body String[] ocrList
@@ -126,21 +129,24 @@ public interface RetrofitService_Server {
     Call<Message> addInquiry( //문의하기
                               @Body InquiryDto inquiry
     );
+    @POST("medicine/searchOCR")
+    Call<ArrayList<MedicineInfoRsponDTO>> sendWords(
+            @Body String[] s
+    );
 
-
-    @Multipart
+    /*@Multipart
     @POST("/parse/image")
     //@Headers({"Host: dapi.kakao.com","Authorization: KakaoAK 1801da9c015ce87583138632980c2c5a","Content-Type: multipart/form-data"})
     @Headers("apikey: 37a618557788957")
     Call<OcrSpaceDto> sendOcr(//문자인식을 위해 카카오 서버에게 이미지 파일 전송
-                        /* @Header("Host") String header,
+                         @Header("Host") String header,
                          @Header("Authorization") String authorization,
-                         @Header("Content-Type") String content_type,*/
+                         @Header("Content-Type") String content_type,
                               //@HeaderMap Map<String,String> map,
                               @Part MultipartBody.Part file,
                               @Query("language") String language
                               //@String language;
-    );
+    );*/
 
 
 

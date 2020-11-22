@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smrpv2.R;
-import com.example.smrpv2.model.Hospital;
 import com.example.smrpv2.model.hospital_model.Item;
 
 import java.util.ArrayList;

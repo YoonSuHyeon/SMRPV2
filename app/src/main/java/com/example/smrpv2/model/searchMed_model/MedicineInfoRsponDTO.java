@@ -34,7 +34,7 @@ public class MedicineInfoRsponDTO {
     @Expose
     private String chart;
 
-    @SerializedName("itemImage")
+    @SerializedName("itemImage") //의약품 이미지
     @Expose
     private String itemImage;
 
@@ -81,6 +81,9 @@ public class MedicineInfoRsponDTO {
     @Expose
     private String effect;
 
+    @SerializedName("usageCapacity")
+    @Expose
+    private String usage;
     public Long getId() {
         return id;
     }
@@ -112,9 +115,7 @@ public class MedicineInfoRsponDTO {
         this.usage = usage;
    }
 
-    @SerializedName("usageCapacity")
-    @Expose
-    private String usage;
+
 
     public String getItemSeq() {
         return itemSeq;
