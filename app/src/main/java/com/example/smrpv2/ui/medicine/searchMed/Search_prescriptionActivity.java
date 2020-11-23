@@ -29,10 +29,10 @@ import com.example.smrpv2.R;
 import com.example.smrpv2.model.common.KaKaoResult;
 import com.example.smrpv2.model.common.KakaoDto;
 import com.example.smrpv2.model.Message;
-import com.example.smrpv2.model.RegmedicineAsk;
+
 import com.example.smrpv2.model.medicine_model.Prescriptionitem;
 import com.example.smrpv2.model.prescription_model.RegMedicineList;
-import com.example.smrpv2.model.prescription_model.User_Select;
+
 import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
 import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.retrofit.RetrofitHelper;
@@ -152,6 +152,8 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
             }
 
         });
+
+
 
 
         sendTakePhotoIntent();
@@ -365,6 +367,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
             }
         });
     }
+
     private class Dialog extends AsyncTask<Void, Void, Void> {
         ProgressDialog progressDialog1 = new ProgressDialog(Search_prescriptionActivity.this);
         @Override

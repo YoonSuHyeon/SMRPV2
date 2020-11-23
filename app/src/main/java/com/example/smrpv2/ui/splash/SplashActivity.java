@@ -46,44 +46,50 @@ public class SplashActivity extends AppCompatActivity {
         //getHashKey();// 각 클라이언트의 디바이스 해시키를 알야하기에 이 메소드를 구현
 
         Log.d("TAG", "auto_login: "+auto_login);
-        if(auto_login){
-            String id = sharedData.getUser_id();
-            String passwd = sharedData.getUser_password();
-            LoginUser loginUser = new LoginUser(id,passwd);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(auto_login){
+                    String id = sharedData.getUser_id();
+                    String passwd = sharedData.getUser_password();
+                    LoginUser loginUser = new LoginUser(id,passwd);
 
-            //로그인 시도
-            Call<UserDto> call= RetrofitHelper.getRetrofitService_server().login(loginUser);
-            call.enqueue(new Callback<UserDto>() {
-                @Override
-                public void onResponse(Call<UserDto> call, Response<UserDto> response) {
+                    //로그인 시도
+                    Call<UserDto> call= RetrofitHelper.getRetrofitService_server().login(loginUser);
+                    call.enqueue(new Callback<UserDto>() {
+                        @Override
+                        public void onResponse(Call<UserDto> call, Response<UserDto> response) {
 
-                    if(!response.body().getUserId().equals("")){ //로그인 성공
-                        //MainActivity로 화면 이동
+                            if(!response.body().getUserId().equals("")){ //로그인 성공
+                                //MainActivity로 화면 이동
 
-                        UserInform user = new UserInform(response.body().getUserId(),response.body().getEmail(),response.body().getName(),
-                                response.body().getGender(),response.body().getBirth(),response.body().getCreatedAt());
-                        Intent intent = new Intent(getApplication(), MainActivity.class);
-                        //intent.putExtra("name",response.body().getName());
-                        startActivity(intent);
-                        finish();
-                    }else{ //로그인 실패
-                        show("자동로그인 실패하였습니다.");
-                        intent = new Intent(SplashActivity.this, StartActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
+                                UserInform user = new UserInform(response.body().getUserId(),response.body().getEmail(),response.body().getName(),
+                                        response.body().getGender(),response.body().getBirth(),response.body().getCreatedAt());
+                                Intent intent = new Intent(getApplication(), MainActivity.class);
+                                //intent.putExtra("name",response.body().getName());
+                                startActivity(intent);
+                                finish();
+                            }else{ //로그인 실패
+                                show("자동로그인 실패하였습니다.");
+                                intent = new Intent(SplashActivity.this, StartActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<UserDto> call, Throwable t) {
+                            Log.d("TAG", "failfail: ");
+
+                        }
+                    });
+                }else{
+                    intent = new Intent(getApplicationContext(), StartActivity.class);
+                    startActivity(intent);
+                    finish();//SplashActivity.this.
                 }
-                @Override
-                public void onFailure(Call<UserDto> call, Throwable t) {
-                    Log.d("TAG", "failfail: ");
+            }
+        },1000);
 
-                }
-            });
-        }else{
-            intent = new Intent(getApplicationContext(), StartActivity.class);
-            startActivity(intent);
-            finish();//SplashActivity.this.
-        }
 
     }
     private void show(String s){
