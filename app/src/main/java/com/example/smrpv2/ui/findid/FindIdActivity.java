@@ -60,8 +60,8 @@ public class FindIdActivity extends AppCompatActivity {
                     case R.id.ll_fragment_id:{ //아이디찾기 내용을 표시할 레이아웃
 
                         transaction.replace(R.id.frame_layout,fragment_id).commitAllowingStateLoss();  // fragment_id => Fragment_id 클래스 객체
-                        tv_id.setTextColor(Color.parseColor("#2196F3"));                     // frame_layout : 아이디, 비밀번호 찾기의 디자인을 표실할 구역
-                        ll_id.setBackgroundColor(Color.parseColor("#2196F3"));
+                        tv_id.setTextColor(Color.parseColor("#2658FB"));                     // frame_layout : 아이디, 비밀번호 찾기의 디자인을 표실할 구역
+                        ll_id.setBackgroundColor(Color.parseColor("#2658FB"));
                         tv_password.setTextColor(Color.parseColor("#666464"));
                         ll_password.setBackgroundColor(Color.parseColor("#666464"));
                         break;
@@ -71,8 +71,8 @@ public class FindIdActivity extends AppCompatActivity {
                         transaction.replace(R.id.frame_layout,fragment_password).commitAllowingStateLoss();  // frame_layout : 아이디, 비밀번호 찾기의 디자인을 표실할 구역
                         tv_id.setTextColor(Color.parseColor("#666464"));
                         ll_id.setBackgroundColor(Color.parseColor("#666464"));
-                        tv_password.setTextColor(Color.parseColor("#2196F3"));
-                        ll_password.setBackgroundColor(Color.parseColor("#2196F3"));
+                        tv_password.setTextColor(Color.parseColor("#2658FB"));
+                        ll_password.setBackgroundColor(Color.parseColor("#2658FB"));
                         break;
                     }
 

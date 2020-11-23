@@ -63,7 +63,7 @@ public class HomeFragment extends Fragment {
     ImageView ic_register_record;
     ImageView ic_dose_record;
     ImageView ic_alarm_set;
-    private static TextView clock_textView;
+    private static TextView clock_textView,clock_textView2;
 
 
     AutoSlide autoSlide;
@@ -203,12 +203,18 @@ public class HomeFragment extends Fragment {
                     }
                     long now = System.currentTimeMillis();
                     Date date = new Date(now);
+
                     @SuppressLint("SimpleDateFormat")
-                    SimpleDateFormat format = new SimpleDateFormat("YYYY년 MM월 dd일\n\r HH시 mm분");
+                    SimpleDateFormat format = new SimpleDateFormat("YYYY년 MM월 dd일");
+                    SimpleDateFormat format2 = new SimpleDateFormat("HH시 mm분");
                     final String formatDate = format.format(date);
+                    final String formatDate2 = format2.format(date);
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
                             clock_textView.setText(formatDate);
+                            clock_textView2.setText(formatDate2);
+                            clock_textView.setTextSize(14);
+                            clock_textView2.setTextSize(20);
                         }
                     });
                 }
@@ -251,6 +257,7 @@ public class HomeFragment extends Fragment {
         json = RetrofitHelper.getWeather().create(RetrofitService_Server.class);
         //Clock영역
         clock_textView = root.findViewById(R.id.colockTextview);
+        clock_textView2 = root.findViewById(R.id.colockTextview2);
 
         // 각 종 viewPager(배너), adapter, 초기화
         mainViewPager =  root.findViewById(R.id.banner);

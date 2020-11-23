@@ -16,7 +16,7 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
-                android:background="#6497FF"
+                android:background="#295BFC"
 
                 android:textColor="@color/colorWhite"
                 android:textStyle="bold"
