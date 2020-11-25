@@ -399,14 +399,17 @@ public class AlarmSetActivity extends AppCompatActivity {
                     Long id = alarmListList.get(count).getId();
 
                     PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
-                    long now = System.currentTimeMillis();
+                    /*long now = System.currentTimeMillis();
                     Date date = new Date(now);
                     SimpleDateFormat hh_format = new SimpleDateFormat("hh");
                     SimpleDateFormat mm_format = new SimpleDateFormat("mm");
                     Log.d("TAG", "setAlarm: "+hh_format.format(date));
                     Log.d("TAG", "setAlarm: "+mm_format.format(date));
                     temp.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hh_format.format(date)));
-                    temp.set(Calendar.MINUTE, Integer.parseInt(mm_format.format(date))+1);
+                    temp.set(Calendar.MINUTE, Integer.parseInt(mm_format.format(date))+1);*/
+
+                    temp.set(Calendar.HOUR_OF_DAY,18);
+                    temp.set(Calendar.MINUTE, 40);
                     Log.d("time", cal.getTime().toString());
                     Log.d("time2", temp.getTime().toString());
 
