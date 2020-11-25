@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.viewpager.widget.ViewPager;
 import com.example.smrpv2.R;
+import com.example.smrpv2.model.home_model.Covid19_item;
+import com.example.smrpv2.model.home_model.Covid19_response;
 import com.example.smrpv2.model.home_model.HomeMedItem;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_Server;
@@ -28,17 +31,26 @@ import com.example.smrpv2.ui.common.LocationValue;
 import com.example.smrpv2.ui.search.SearchActivity;
 import com.example.smrpv2.ui.start.AutoSlide;
 import com.example.smrpv2.ui.start.ViewPagerAdapter;
+import com.google.common.net.InternetDomainName;
+
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
 import me.relex.circleindicator.CircleIndicator;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * HomeFragment : 메인 화면
@@ -63,7 +75,9 @@ public class HomeFragment extends Fragment {
     ImageView ic_register_record;
     ImageView ic_dose_record;
     ImageView ic_alarm_set;
-    private static TextView clock_textView,clock_textView2;
+
+    TextView covidresult1,covidresult2,covidresult3,covidresult4; //금일 코로나 현황 수를 보여주는 텍스트뷰
+    TextView gapresult1,gapresult2,gapresult3,gapresult4; //전날 금일 현황 수의 차이를 보여주는 텍스트뷰
 
 
     AutoSlide autoSlide;
@@ -109,12 +123,14 @@ public class HomeFragment extends Fragment {
         autoSlide = new AutoSlide(smallViewPager, DELAY_MS, PERIOD_MS);
         autoSlide.startSlide();
 
-        LocationValue location = new LocationValue(getActivity());
-      // location.startMoule();
+        /*LocationValue location = new LocationValue(getActivity());
+        location.startMoule();
         double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
+        double longitude = location.getLongitude();*/
+        show_Covid();
 
-        current_time(); // 시간표시
+
+        //current_time(); // 시간표시
         //하단 이미지 버튼 이동
         ic_med_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,7 +206,87 @@ public class HomeFragment extends Fragment {
 
 
 
-    void current_time(){//현재 시간을 표시하는 메소드
+    void show_Covid(){
+        RetrofitService_Server parsing = RetrofitHelper.getCovid().create(RetrofitService_Server.class);
+        long time = System.currentTimeMillis();
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        String string_date = format.format(new Date(time));
+        Log.d("date", "string_date: "+string_date);
+        int int_date = Integer.parseInt(string_date);
+        Log.d("date", "int_date: "+int_date);
+        final Call<Covid19_response> call = parsing.getCovid(int_date - 2,int_date); //2일전부터 ~ 지금 날짜 까지 데이터 가져오기
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                call.enqueue(new Callback<Covid19_response>() {
+                    @Override
+                    public void onResponse(Call<Covid19_response> call, Response<Covid19_response> response) { //리스트 0~n-1(오늘부터 과거순으로)
+                        Log.d("TAG", "onResponse: "+response.body().getBody().toString());
+                        Log.d("TAG", "onResponse: "+response.body().getBody().getItems().getItemsList().size());
+                        Log.d("TAG", "onResponse: "+response.body().getBody().getItems().getItemsList().get(0).getCreateDt());//
+                        Log.d("TAG", "onResponse: "+response.body().getBody().getItems().getItemsList().get(1).getCreateDt());
+                        int size = response.body().getBody().getItems().getItemsList().size();
+
+                        if(size>=2){
+                            Covid19_item item1 = response.body().getBody().getItems().getItemsList().get(0);
+                            Covid19_item item2 = response.body().getBody().getItems().getItemsList().get(1);
+                            showCovidType1(item1);//오늘 현황
+                            showCovidType2(item1,item2); //어제 현황과 오늘 현황 변동
+                        }else{
+                            Covid19_item item1 = response.body().getBody().getItems().getItemsList().get(0);
+                            showCovidType1(item1);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Covid19_response> call, Throwable t) {
+
+                    }
+                });
+            }
+        }).start();
+    }
+    public static String toNumFormat(int num) { //숫자 콤마 생성
+        DecimalFormat df = new DecimalFormat("#,###");
+        return df.format(num);
+    }
+    void showCovidType1(Covid19_item item){
+        /**
+         * 금일 코로나 현황을 보여줌
+         * */
+        covidresult1.setText(toNumFormat(convertInteger(item.getDecideCnt()))); //확진환자 수
+        covidresult2.setText(toNumFormat(convertInteger(item.getExamCnt()))); // 누적 검사수
+        covidresult3.setText(toNumFormat(convertInteger(item.getClearCnt()))); // 격리 해제수
+        covidresult4.setText(toNumFormat(convertInteger(item.getDeathCnt()))); // 사망자 수
+    }
+    void showCovidType2(Covid19_item today_item,Covid19_item yesterday_item) {
+        /**
+         * 격차를 보여줌
+         * */
+        int decideCnt = convertInteger(today_item.getDecideCnt()) - convertInteger(yesterday_item.getDecideCnt()); //전날과 오늘날의 누적 확진환자 수 차이
+        int examCnt = convertInteger(today_item.getExamCnt()) - convertInteger(yesterday_item.getExamCnt()); //전날과 오늘날의 누적 검사수 차이
+        int clearCnt = convertInteger(today_item.getClearCnt()) - convertInteger(yesterday_item.getClearCnt()); //전날과 오늘날의 격리 해제수 차이
+        int deathCnt = convertInteger(today_item.getDeathCnt()) - convertInteger(yesterday_item.getDeathCnt()); //전날과 오늘날의 사망자 수 차이
+
+
+        showGapTextview(gapresult1, decideCnt);//변동된 확진환자 수를 보여주기 위함
+        showGapTextview(gapresult2, examCnt);//변동된 누적검사 수를 보여주기 위함
+        showGapTextview(gapresult3, clearCnt);//변동된 격리해제 수를 보여주기 위함
+        showGapTextview(gapresult4, deathCnt);//변동된 사망자 수를 보여주기 위함
+    }
+    int convertInteger(String num){
+       return Integer.parseInt(num);
+    }
+    void showGapTextview(TextView textView , int result){
+        Log.d("TAG", "showGapTextview: "+result);
+        if(result>=0){
+            textView.setText(result+"▲");
+        }else{
+            int abs_num = Math.abs(result);
+            textView.setText(abs_num+"▼");
+        }
+    }
+    /*void current_time(){//현재 시간을 표시하는 메소드
 
         new Thread(new Runnable() {
             @Override
@@ -220,7 +316,8 @@ public class HomeFragment extends Fragment {
                 }
             }
         }).start();
-    }
+    }*/
+
 
     private class Url_Connection extends AsyncTask<String,Void,String>{
         @Override
@@ -255,9 +352,25 @@ public class HomeFragment extends Fragment {
         /* 초기화 작업.... */
         //서버 통신 영역
         json = RetrofitHelper.getWeather().create(RetrofitService_Server.class);
-        //Clock영역
+        /*//Clock영역
         clock_textView = root.findViewById(R.id.colockTextview);
-        clock_textView2 = root.findViewById(R.id.colockTextview2);
+        clock_textView2 = root.findViewById(R.id.colockTextview2);*/
+
+
+
+        //금일 코로나 결과 텍스트뷰
+        covidresult1 = root.findViewById(R.id.covidresult_TextView1);
+        covidresult2 = root.findViewById(R.id.covidresult_TextView2);
+        covidresult3 = root.findViewById(R.id.covidresult_TextView3);
+        covidresult4 = root.findViewById(R.id.covidresult_TextView4);
+
+        //전날과 금일 코로나 변동 결과 텍스트뷰
+        gapresult1 = root.findViewById(R.id.gap_TextView1);
+        gapresult2 = root.findViewById(R.id.gap_TextView2);
+        gapresult3 = root.findViewById(R.id.gap_TextView3);
+        gapresult4 = root.findViewById(R.id.gap_TextView4);
+
+
 
         // 각 종 viewPager(배너), adapter, 초기화
         mainViewPager =  root.findViewById(R.id.banner);

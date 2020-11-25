@@ -48,6 +48,11 @@ public class RetrofitHelper {
                 addConverterFactory(GsonConverterFactory.create()).build();
     }
 
+    static public Retrofit getCovid(){ //코로나
+        return new Retrofit.Builder().baseUrl("http://openapi.data.go.kr").
+                addConverterFactory(SimpleXmlConverterFactory.createNonStrict()).build();
+    }
+
     static public Retrofit getWeather(){
         return new Retrofit.Builder().baseUrl("http://api.openweathermap.org/data/2.5/")
                 .addConverterFactory(GsonConverterFactory.create()).build();

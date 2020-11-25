@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -27,6 +28,7 @@ import com.example.smrpv2.ui.common.SharedData;
 import com.example.smrpv2.ui.findid.FindIdActivity;
 
 import com.example.smrpv2.ui.main.MainActivity;
+import com.example.smrpv2.ui.start.StartActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -130,6 +132,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<UserDto> call, Response<UserDto> response) {
 
+                Log.d("TAG", "response.body().getUserId(): "+response.body().getUserId());
                 if(response.body().getUserId() != null){ //로그인 성공
 
                     checkAutoAndStore();
@@ -139,6 +142,8 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplication(), MainActivity.class);
                     //intent.putExtra("name",response.body().getName());
                     startActivity(intent);
+                    StartActivity startActivity = StartActivity.getInstance();
+                    startActivity.finish();
                     finish();
                 }else{ //로그인 실패
                     show("아이디 및 비밀번호를 확인하고 다시 입력하세요.");

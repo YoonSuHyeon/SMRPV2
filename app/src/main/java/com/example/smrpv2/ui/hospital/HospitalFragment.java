@@ -506,11 +506,5 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        try {
-            toast_state = false;
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }

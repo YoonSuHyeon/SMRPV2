@@ -27,6 +27,7 @@ public class StartActivity extends AppCompatActivity {
     AutoSlide autoSlide;
     final long DELAY_MS = 1000;
     final long PERIOD_MS = 6000;
+    static StartActivity startActivity;
     private int[] images = {R.drawable.start_slide1, R.drawable.start_slide2,R.drawable.start_slide3};
     SharedData sharedData;
     @Override
@@ -46,8 +47,7 @@ public class StartActivity extends AppCompatActivity {
         indicator.setViewPager(startViewPager);
         autoSlide = new AutoSlide(startViewPager, DELAY_MS, PERIOD_MS);
         autoSlide.startSlide();
-
-
+        startActivity = this;
 
         PermissionAllocate p = new PermissionAllocate(this);
         p.getPermission();
@@ -73,6 +73,8 @@ public class StartActivity extends AppCompatActivity {
 
 
     }
-
+    public static StartActivity getInstance(){
+        return startActivity;
+    }
 
 }
