@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
@@ -26,6 +28,7 @@ import com.example.smrpv2.ui.common.SharedData;
 import com.example.smrpv2.ui.findid.FindIdActivity;
 
 import com.example.smrpv2.ui.main.MainActivity;
+import com.example.smrpv2.ui.start.StartActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText Txt_id,Txt_password;
     Button Btn_login;
     CheckBox Chk_autoLogin,Chk_storeId;
+    ImageView iv_back;
 
     boolean bool_store_login = false; //자동로그인 유무
     boolean bool_store_id = false; //아이디 저장 유무
@@ -61,6 +65,13 @@ public class LoginActivity extends AppCompatActivity {
        // autoLogin(); //자동로그인 기능이 설정되어있는지 확인
 
 
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+                finish();
+            }
+        });
         //자동 로그인 체크박스...
         Chk_autoLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -121,6 +132,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<UserDto> call, Response<UserDto> response) {
 
+                Log.d("TAG", "response.body().getUserId(): "+response.body().getUserId());
                 if(response.body().getUserId() != null){ //로그인 성공
 
                     checkAutoAndStore();
@@ -130,6 +142,8 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplication(), MainActivity.class);
                     //intent.putExtra("name",response.body().getName());
                     startActivity(intent);
+                    StartActivity startActivity = StartActivity.getInstance();
+                    startActivity.finish();
                     finish();
                 }else{ //로그인 실패
                     show("아이디 및 비밀번호를 확인하고 다시 입력하세요.");
@@ -152,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
         Txt_password = findViewById(R.id.Txt_password);
         Chk_autoLogin = findViewById(R.id.auto_login);
         Chk_storeId = findViewById(R.id.store_id);
-
+        iv_back = findViewById(R.id.iv_back);
     }
 
     /**

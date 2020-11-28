@@ -60,6 +60,15 @@
         android:text="진단 결과입니다.\n자세히 보고 싶으면 클릭해주세요"
         android:background="#E2E2E2"
         />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10sp"
+        android:gravity="center"
+        android:text="본 결과는 사실과 다를 수 있습니다."
+        android:textColor="#FF0000" />
+
     <View
         android:layout_marginBottom="8dp"
         android:layout_width="match_parent"

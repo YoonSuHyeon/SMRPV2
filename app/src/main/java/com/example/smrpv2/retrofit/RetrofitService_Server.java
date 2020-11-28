@@ -6,6 +6,7 @@ import com.example.smrpv2.model.MedicineAlarmResponDto;
 import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.RegmedicineAsk;
 import com.example.smrpv2.model.SumMedInfo;
+import com.example.smrpv2.model.home_model.Covid19_response;
 import com.example.smrpv2.model.hospital_model.Response_hos;
 import com.example.smrpv2.model.pharmcy_model.Response_phy;
 import com.example.smrpv2.model.prescription_model.RegMedicineList;
@@ -177,6 +178,10 @@ public interface RetrofitService_Server {
 // 날씨 정보를 요청 메시지
     Call<Weather_response> getweatherList(@Query("lat") double lat, @Query("lon") double lon);
 
-
+    @GET("/openapi/service/rest/Covid19/getCovid19InfStateJson?ServiceKey=LjJVA0wW%2BvsEsLgyJaBLyTywryRMuelTIYxsWnQTaPpxdZjpuxVCdCtyNxvObDmBJ57VVaSi3%2FerYKQFQmKs8g%3D%3D")
+    Call<Covid19_response> getCovid(
+            @Query("startCreateDt") int startCreateDt,
+            @Query("endCreateDt") int endCreateDt
+    );
 
 }

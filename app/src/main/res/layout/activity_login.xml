@@ -63,7 +63,7 @@
                 android:drawableLeft="@drawable/ic_login"
                 android:drawablePadding="8dp"
                 android:hint=" 아이디"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionGo"
                 android:paddingLeft="5dp"
                 android:privateImeOptions="defaultInputmode=english"
                 android:textColor="#898989"

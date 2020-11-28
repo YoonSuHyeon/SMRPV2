@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class SignUpActivity extends AppCompatActivity {
     EditText Txt_sua_id, Txt_sua_email, Txt_sua_password, Txt_sua_passwordCheck, Txt_sua_name, Txt_birth;
     Button Btn_duplicate, Btn_sua_signUp;
     RadioButton Rdb_man, Rdn_woman;
+    ImageView iv_back;
     boolean checkIdStatus = false; // 중복확인검사 상태확인을 위한 변수
     final private static String check_id = "^[a-zA-Z0-9]*$";
     final private static String check_email = "^[0-9a-zA-Z@\\.\\_\\-]+$";
@@ -48,6 +50,13 @@ public class SignUpActivity extends AppCompatActivity {
         initView(); //findViewById 초기화
         inputFilter();
 
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+                finish();
+            }
+        });
         Btn_duplicate.setOnClickListener(new View.OnClickListener() {//중복확인 버튼 클릭시
             @Override
             public void onClick(View view) {
@@ -206,7 +215,7 @@ public class SignUpActivity extends AppCompatActivity {
         Btn_sua_signUp = findViewById(R.id.Btn_sua_signUp);
         Rdb_man = findViewById(R.id.Rdb_man);
         Rdn_woman = findViewById(R.id.Rdn_woman);
-
+        iv_back = findViewById(R.id.iv_back);
     }
 
     /**

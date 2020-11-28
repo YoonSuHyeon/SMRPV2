@@ -135,15 +135,12 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     void delete_medicine(){
-
-        Toast.makeText(getContext(), "delete_medicine", Toast.LENGTH_SHORT).show();
-
         Call<Message> call = RetrofitHelper.getRetrofitService_server().delRegMedicine(id);
         call.enqueue(new Callback<Message>() {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
                     if(response.body().getResultCode().equals("OK")){
-                        Toast.makeText(context, "약이 삭제 되었습니다.", Toast.LENGTH_LONG);
+                        Toast.makeText(context, "약이 삭제 되었습니다.", Toast.LENGTH_LONG).show();
                     }
                 Log.d("delete_medicine", id+"이다");
             }
@@ -165,14 +162,13 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         getActivity().onBackPressed();
     }
     void delete_alarm(){
-        Toast.makeText(getContext(), "delete_alarm", Toast.LENGTH_SHORT).show();
 
         Call<Message> call = RetrofitHelper.getRetrofitService_server().deleteMedicineAlarm(groupId);
         call.enqueue(new Callback<Message>() {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
                 if(response.body().getResultCode().equals("DELETE")){
-                    Toast.makeText(context, "알람이 삭제 되었습니다.", Toast.LENGTH_LONG);
+                    Toast.makeText(context, "알람이 삭제 되었습니다.", Toast.LENGTH_LONG).show();
                     List<AlarmListDto> alarmListList = tempBefore.getAlarmListList();
                     for(int i =0 ; i<alarmListList.size();i++){
                         PendingIntent pendingIntent =makePendingIntent(alarmListList.get(i).getId().intValue(),tempBefore.getAlarmName());

@@ -39,6 +39,7 @@ import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.ui.medicine.ListViewAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -46,6 +47,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.SimpleFormatter;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -360,6 +362,7 @@ public class AlarmSetActivity extends AppCompatActivity {
                 if (doseTime.getMorning().equals("Y")) {
                     Long id = alarmListList.get(count).getId();
                     PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
+
                     temp.set(Calendar.HOUR_OF_DAY, 7);
                     temp.set(Calendar.MINUTE, 30);
                     Log.d("time", cal.getTime().toString());
@@ -396,7 +399,16 @@ public class AlarmSetActivity extends AppCompatActivity {
                     Long id = alarmListList.get(count).getId();
 
                     PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
-                    temp.set(Calendar.HOUR_OF_DAY, 18);
+                    /*long now = System.currentTimeMillis();
+                    Date date = new Date(now);
+                    SimpleDateFormat hh_format = new SimpleDateFormat("hh");
+                    SimpleDateFormat mm_format = new SimpleDateFormat("mm");
+                    Log.d("TAG", "setAlarm: "+hh_format.format(date));
+                    Log.d("TAG", "setAlarm: "+mm_format.format(date));
+                    temp.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hh_format.format(date)));
+                    temp.set(Calendar.MINUTE, Integer.parseInt(mm_format.format(date))+1);*/
+
+                    temp.set(Calendar.HOUR_OF_DAY,18);
                     temp.set(Calendar.MINUTE, 40);
                     Log.d("time", cal.getTime().toString());
                     Log.d("time2", temp.getTime().toString());
