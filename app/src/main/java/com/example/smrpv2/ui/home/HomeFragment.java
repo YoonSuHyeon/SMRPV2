@@ -209,12 +209,22 @@ public class HomeFragment extends Fragment {
     void show_Covid(){
         RetrofitService_Server parsing = RetrofitHelper.getCovid().create(RetrofitService_Server.class);
         long time = System.currentTimeMillis();
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-        String string_date = format.format(new Date(time));
-        Log.d("date", "string_date: "+string_date);
-        int int_date = Integer.parseInt(string_date);
-        Log.d("date", "int_date: "+int_date);
-        final Call<Covid19_response> call = parsing.getCovid(int_date - 2,int_date); //2일전부터 ~ 지금 날짜 까지 데이터 가져오기
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat yyyyformat = new SimpleDateFormat("yyyy");
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat mmformat = new SimpleDateFormat("MM");
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat ddformat = new SimpleDateFormat("dd");
+        String String_yyyy = yyyyformat.format(new Date(time)); //년(String형)
+        String string_mm = mmformat.format(new Date(time)); //월(String형)
+        String string_dd = ddformat.format(new Date(time)); //일(String형)
+
+        int today__dd = Integer.parseInt(string_dd);
+        int before__dd = Integer.parseInt(string_dd);
+        //Log.d("date", "string_date: "+string_date);
+        //int int_date = Integer.parseInt(string_date); //문자열를 int형으로 변환
+        //Log.d("date", "int_date: "+int_date);
+        final Call<Covid19_response> call = parsing.getCovid(2,2); //2일전부터 ~ 지금 날짜 까지 데이터 가져오기
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -223,7 +233,7 @@ public class HomeFragment extends Fragment {
                     public void onResponse(Call<Covid19_response> call, Response<Covid19_response> response) { //리스트 0~n-1(오늘부터 과거순으로)
                         Log.d("TAG", "onResponse: "+response.body().getBody().toString());
                         Log.d("TAG", "onResponse: "+response.body().getBody().getItems().getItemsList().size());
-                        Log.d("TAG", "onResponse: "+response.body().getBody().getItems().getItemsList().get(0).getCreateDt());//
+                        //Log.d("TAG", "onResponse: "+response.body().getBody().getItems().getItemsList().get(0).getCreateDt());//
                         Log.d("TAG", "onResponse: "+response.body().getBody().getItems().getItemsList().get(1).getCreateDt());
                         int size = response.body().getBody().getItems().getItemsList().size();
 

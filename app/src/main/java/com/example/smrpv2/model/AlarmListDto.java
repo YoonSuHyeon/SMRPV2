@@ -1,9 +1,9 @@
 package com.example.smrpv2.model;
 
 public class AlarmListDto {
-    Long id;
-    String time;
-    Bool checkDose;
+    Long id; //알람 id
+    String time; //알람 설정시간
+    Bool checkDose; // 지났는지 안지났는지 확인
 
     public Long getId() {
         return id;
