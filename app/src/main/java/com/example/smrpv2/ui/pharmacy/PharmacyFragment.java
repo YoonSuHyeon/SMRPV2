@@ -53,22 +53,22 @@ import java.util.List;
 public class PharmacyFragment extends Fragment implements MapView.MapViewEventListener, MapView.POIItemEventListener, MapView.CurrentLocationEventListener {
 
     private static String TAG ="TAG";
-    // TODO: Rename parameter arguments, choose names that match
+
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+
     private String mParam1;
     private String mParam2;
 
-    // TODO: Rename and change types of parameters
+
     private int radiuse = 500;
     private int select_zoomLevel = 1;
     private int zoomLevel = 3;
     private int defalut_zoomLevel = 3;
     int count = 1;
-    // TODO: Rename and change types of parameters
+
     private Double latitude = 0.0;
     private Double longitude = 0.0;
     private Double movelatititue = 0.0;
@@ -81,14 +81,14 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     Boolean toast_state=true;
 
 
-    // TODO: Rename and change types of parameters
+
     private FloatingActionButton locaton_Btn,reLocation_Btn;    // location_Btn: 내 위치 재 검색
                                                                 // reLocation_Btn: 지도에 표시된 곳 재 검색
 
-    // TODO: Rename and change types of parameters
+
     private List<PharmacyItem> list;
     private ArrayList<PharmacyItem> list_inform;
-    // TODO: Rename and change types of parameters
+
 
     private LocationValue locationValue;
     private PharmacyItems pharmacyItems;
@@ -116,7 +116,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
      * @param param2 Parameter 2.
      * @return A new instance of fragment PharmacyFragment.
      */
-    // TODO: Rename and change types and number of parameters
+
     public static PharmacyFragment newInstance(String param1, String param2) {
         PharmacyFragment fragment = new PharmacyFragment();
         Bundle args = new Bundle();

@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -92,11 +93,11 @@ public class HomeFragment extends Fragment {
     HashMap<String,String> sky_image;
     private ArrayList<HomeMedItem> homeMedItemArrayList=new ArrayList<HomeMedItem>();
     private RetrofitService_Server json;
-
     private HomeFragment homeFragment;
     private View root;
-
     private String beforeeDate, todayDate;
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         if(container.getChildCount() > 0)

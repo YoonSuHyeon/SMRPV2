@@ -16,7 +16,7 @@ public class PermissionAllocate {
         if (Build.VERSION.SDK_INT >= 23) {      //퍼미션 권한 부여
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.INTERNET,Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.CALL_PHONE,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.CAMERA}, PERMISSION);
+                    Manifest.permission.CAMERA,Manifest.permission.FOREGROUND_SERVICE}, PERMISSION);
         }//퍼미션접근 권한
     }
 

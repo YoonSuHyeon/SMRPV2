@@ -2,6 +2,7 @@ package com.example.smrpv2.ui.main;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +28,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.smrpv2.R;
 import com.example.smrpv2.model.user_model.User;
 import com.example.smrpv2.model.user_model.UserInform;
+import com.example.smrpv2.ui.alarm.BootReceiver;
 import com.example.smrpv2.ui.common.SharedData;
 import com.example.smrpv2.ui.home.HomeFragment;
 import com.example.smrpv2.ui.login.LoginActivity;
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         toolbar= findViewById(R.id.appbar);
         toolbar.setTitle(R.string.app_bar_title);
@@ -203,6 +206,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
 
+        //Intent intent = new Intent(getApplicationContext(), BootReceiver.class);
+        //PendingIntent sender = PendingIntent.getBroadcast(this,0,intent,0);
+
+       // startActivity(intent);
+        //sendBroadcast(new Intent("dadas"));
         super.onDestroy();
     }
 }

@@ -693,7 +693,7 @@ public class GoogleOCRActivity extends AppCompatActivity implements Serializable
         }
         @Override
         protected void onCancelled() {
-            // TODO 작업이 취소된후에 호출된다.
+
             super.onCancelled();
         }
     }*/

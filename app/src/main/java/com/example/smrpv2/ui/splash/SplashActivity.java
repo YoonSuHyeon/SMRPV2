@@ -54,6 +54,7 @@ public class SplashActivity extends AppCompatActivity {
                     String passwd = sharedData.getUser_password();
                     LoginUser loginUser = new LoginUser(id,passwd);
 
+                    Log.d("SplashActivity", "id: "+id);
                     //로그인 시도
                     Call<UserDto> call= RetrofitHelper.getRetrofitService_server().login(loginUser);
                     call.enqueue(new Callback<UserDto>() {

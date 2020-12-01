@@ -374,7 +374,7 @@ IgE 항체에 의한 알레르기 반응이 여러 기관에 동시에 일어나
 
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string-array name="disease_depart">
         <!-- 0~9-->
         <item>내과</item>
