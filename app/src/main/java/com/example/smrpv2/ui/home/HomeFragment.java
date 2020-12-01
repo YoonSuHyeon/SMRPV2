@@ -43,6 +43,7 @@ import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -94,6 +95,8 @@ public class HomeFragment extends Fragment {
 
     private HomeFragment homeFragment;
     private View root;
+
+    private String beforeeDate, todayDate;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         if(container.getChildCount() > 0)
@@ -208,23 +211,37 @@ public class HomeFragment extends Fragment {
 
     void show_Covid(){
         RetrofitService_Server parsing = RetrofitHelper.getCovid().create(RetrofitService_Server.class);
-        long time = System.currentTimeMillis();
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat yyyyformat = new SimpleDateFormat("yyyy");
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat mmformat = new SimpleDateFormat("MM");
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat ddformat = new SimpleDateFormat("dd");
-        String String_yyyy = yyyyformat.format(new Date(time)); //년(String형)
-        String string_mm = mmformat.format(new Date(time)); //월(String형)
-        String string_dd = ddformat.format(new Date(time)); //일(String형)
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH)+1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        int today__dd = Integer.parseInt(string_dd);
-        int before__dd = Integer.parseInt(string_dd);
-        //Log.d("date", "string_date: "+string_date);
-        //int int_date = Integer.parseInt(string_date); //문자열를 int형으로 변환
-        //Log.d("date", "int_date: "+int_date);
-        final Call<Covid19_response> call = parsing.getCovid(2,2); //2일전부터 ~ 지금 날짜 까지 데이터 가져오기
+        Log.d("show_Covid", "year: "+year);
+        Log.d("show_Covid", "month: "+month);
+        Log.d("show_Covid", "day: "+day);
+        String str_year = covert_int(year);
+        String str_month = covert_int(month);
+        String str_day = covert_int(day);
+
+        int temp_day = day -2; //이틀전이 전월인지 현재 월이랑 같은지 판별
+
+
+        todayDate = str_year+str_month+str_day;//오늘 년월일
+        Log.d("show_Covid", "todayDate = str_year: "+todayDate);
+        
+        if(temp_day<=0){//이틀전에 저번달일시
+            Calendar before_monthCalendar = Calendar.getInstance(); //이틀전의 월를 설정하기 위함
+            int mon = month -1; //저번달
+            before_monthCalendar.set(Calendar.YEAR,mon,1);//저번달을 기준으로 설정
+            int mon_maxDay = before_monthCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+            int before_day = mon_maxDay + temp_day; //이틀전의 날짜
+            beforeeDate = covert_int(before_monthCalendar.get(Calendar.MONTH)+1) + covert_int(mon_maxDay)+covert_int(before_day);
+        }else{
+            beforeeDate = str_year+str_month+covert_int(temp_day);
+        }
+        Log.d("show_Covid", "beforeeDate: "+beforeeDate);
+
+        final Call<Covid19_response> call = parsing.getCovid(beforeeDate,todayDate); //2일전부터 ~ 지금 날짜 까지 데이터 가져오기
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -255,6 +272,12 @@ public class HomeFragment extends Fragment {
                 });
             }
         }).start();
+    }
+    String covert_int(int num){
+       String temp = String.valueOf(num);
+       if(temp.length() == 1)
+           temp = "0"+temp;
+       return temp;
     }
     public static String toNumFormat(int num) { //숫자 콤마 생성
         DecimalFormat df = new DecimalFormat("#,###");
@@ -290,10 +313,10 @@ public class HomeFragment extends Fragment {
     void showGapTextview(TextView textView , int result){
         Log.d("TAG", "showGapTextview: "+result);
         if(result>=0){
-            textView.setText(result+"▲");
-        }else{
+            textView.setText(toNumFormat(result)+"▲");
+        }else if(result<0){
             int abs_num = Math.abs(result);
-            textView.setText(abs_num+"▼");
+            textView.setText(toNumFormat(abs_num)+"▼");
         }
     }
     /*void current_time(){//현재 시간을 표시하는 메소드
@@ -329,7 +352,7 @@ public class HomeFragment extends Fragment {
     }*/
 
 
-    private class Url_Connection extends AsyncTask<String,Void,String>{
+    /*private class Url_Connection extends AsyncTask<String,Void,String>{
         @Override
         protected String doInBackground(String... str_url) {
             try {
@@ -352,7 +375,7 @@ public class HomeFragment extends Fragment {
             //weather_imageview.setImageBitmap(bitmap);
 
         }
-    }
+    }*/
 
     public HomeFragment getInstance(){
         return homeFragment;

@@ -114,6 +114,7 @@ public class AlarmFragment extends Fragment {
                             medicineAlarmResponDto.getDoseTime(), medicineAlarmResponDto.getId(), medicineAlarmResponDto.getDoseType(),
                             String.valueOf(medicineAlarmResponDto.getDosingPeriod())));
                     Log.d("넣을때", medicineAlarmResponDto.getId() + "");
+                    Log.d("넣을때", medicineAlarmResponDto.getAlarmName() + "");
                 }
                 listViewAdapter.notifyDataSetChanged();
             }

@@ -252,7 +252,6 @@ public class AlarmSetActivity extends AppCompatActivity {
             public void onClick(View v) { // 알람설정
 
 
-
                 if (et_alramName.getText().toString().equals("") || et_dosingPeriod.getText().toString().equals("")
                 ) {
                     Toast.makeText(context, "모두 입력해 주세요 .", Toast.LENGTH_SHORT).show();
@@ -266,8 +265,8 @@ public class AlarmSetActivity extends AppCompatActivity {
                     } else {
                         final ArrayList<Long> registerId = new ArrayList<>();
 
-                        for (MedicineItem item : alarmMedicineList) {
-                            registerId.add(item.getId());
+                        for (MedicineItem item : alarmMedicineList) {//사용자가 선택한 알람 등록할 약리스트를 다시 list에 담는과정
+                            registerId.add(item.getId()); //사용자가 선택한 알람 등록할 약리스트
                         }
                         String alarmName = et_alramName.getText().toString();
                         int dosingPeriod = Integer.parseInt(et_dosingPeriod.getText().toString());
@@ -399,17 +398,18 @@ public class AlarmSetActivity extends AppCompatActivity {
                     Long id = alarmListList.get(count).getId();
 
                     PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
-                    /*long now = System.currentTimeMillis();
+                    long now = System.currentTimeMillis();
                     Date date = new Date(now);
                     SimpleDateFormat hh_format = new SimpleDateFormat("hh");
                     SimpleDateFormat mm_format = new SimpleDateFormat("mm");
                     Log.d("TAG", "setAlarm: "+hh_format.format(date));
-                    Log.d("TAG", "setAlarm: "+mm_format.format(date));
-                    temp.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hh_format.format(date)));
-                    temp.set(Calendar.MINUTE, Integer.parseInt(mm_format.format(date))+1);*/
+                    Log.d("TAG", "setAlarm: "+Integer.parseInt(mm_format.format(date)));
+                    Log.d("TAG", "setAlarm: "+ Integer.parseInt(mm_format.format(date))+5);
+                    temp.set(Calendar.HOUR_OF_DAY,22);
+                    temp.set(Calendar.MINUTE, 50);
 
-                    temp.set(Calendar.HOUR_OF_DAY,18);
-                    temp.set(Calendar.MINUTE, 40);
+                   /* temp.set(Calendar.HOUR_OF_DAY,18);
+                    temp.set(Calendar.MINUTE, 40);*/
                     Log.d("time", cal.getTime().toString());
                     Log.d("time2", temp.getTime().toString());
 

@@ -180,8 +180,8 @@ public interface RetrofitService_Server {
 
     @GET("/openapi/service/rest/Covid19/getCovid19InfStateJson?ServiceKey=LjJVA0wW%2BvsEsLgyJaBLyTywryRMuelTIYxsWnQTaPpxdZjpuxVCdCtyNxvObDmBJ57VVaSi3%2FerYKQFQmKs8g%3D%3D")
     Call<Covid19_response> getCovid(
-            @Query("startCreateDt") int startCreateDt,
-            @Query("endCreateDt") int endCreateDt
+            @Query("startCreateDt") String startCreateDt,
+            @Query("endCreateDt") String endCreateDt
     );
 
 }

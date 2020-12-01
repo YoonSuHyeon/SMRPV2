@@ -15,7 +15,7 @@ public class MedicineAlarmResponDto {
     private ArrayList<SumMedInfo> regMedicineArrayList;
 
 
-    private String alarmName;
+    private String alarmName; //약이름
     private int dosingPeriod;
     private String startAlarm;
     private String finishAlarm;

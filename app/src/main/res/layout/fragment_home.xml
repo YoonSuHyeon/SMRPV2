@@ -42,21 +42,25 @@
                             android:text="확진환자"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:layout_gravity="center"
+                            android:textSize="12sp"
                             android:textColor="#FF0404" />
                         <TextView
                             android:text="검사중"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:layout_gravity="center"
+                            android:textSize="12sp"
                             android:textColor="#FF9800" />
                         <TextView
                             android:text="격리해제"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:layout_gravity="center"
+                            android:textSize="12sp"
                             android:textColor="#0021F8" />
                         <TextView
                             android:text="사망자"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:layout_gravity="center"
+                            android:textSize="12sp"
                             android:textColor="#000000" />
                     </TableRow>
                     <TableRow>
@@ -76,7 +80,7 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:textColor="#FF0404" />
                         <TextView
                             android:id="@+id/covidresult_TextView2"
@@ -84,7 +88,7 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:textColor="#FF9800" />
                         <TextView
                             android:id="@+id/covidresult_TextView3"
@@ -92,7 +96,7 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:textColor="#0021F8" />
                         <TextView
                             android:id="@+id/covidresult_TextView4"
@@ -100,7 +104,7 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:textColor="#000000" />
                     </TableRow>
                     <TableRow>
@@ -111,7 +115,7 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:textSize="11sp"
+                            android:textSize="8sp"
                             android:textColor="#FF0404" />
                         <TextView
                             android:id="@+id/gap_TextView2"
@@ -119,7 +123,7 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:textSize="11sp"
+                            android:textSize="8sp"
                             android:textColor="#FF9800" />
                         <TextView
                             android:id="@+id/gap_TextView3"
@@ -127,7 +131,7 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:textSize="11sp"
+                            android:textSize="8sp"
                             android:textColor="#0021F8" />
                         <TextView
                             android:id="@+id/gap_TextView4"
@@ -135,7 +139,7 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:textSize="11sp"
+                            android:textSize="8sp"
                             android:textColor="#000000" />
                     </TableRow>
 
