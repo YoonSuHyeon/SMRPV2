@@ -28,7 +28,7 @@ public class PrescriptionAdapter extends RecyclerView.Adapter<PrescriptionAdapte
     private SparseBooleanArray mSelectedItems = new SparseBooleanArray(0);
     Context context;
 
-    PrescriptionAdapter(ArrayList<Prescriptionitem> list){
+    public PrescriptionAdapter(ArrayList<Prescriptionitem> list){
         this.list = list;
     }
 
