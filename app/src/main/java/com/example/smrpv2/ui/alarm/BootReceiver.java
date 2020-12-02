@@ -17,7 +17,7 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.d("TAG", "onReceive: "+intent.getAction());
         if("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())){
-            Toast.makeText(context, "bootCompleted", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "bootCompleted", Toast.LENGTH_SHORT).show();
             Intent bootIntent = new Intent(context,AlarmAllAdd.class);
             if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
                 context.startForegroundService(bootIntent);

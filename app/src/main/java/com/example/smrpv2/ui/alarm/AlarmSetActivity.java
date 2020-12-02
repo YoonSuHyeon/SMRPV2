@@ -305,7 +305,7 @@ public class AlarmSetActivity extends AppCompatActivity {
 
                         }
                         final MedicineAlarmAskDto medicineAlarmAskDto = new MedicineAlarmAskDto(0, UserInform.getUserId(), registerId, alarmName, dosingPeriod, null, null, doseTime, doseType);
-                        Call<MedicineAlarmResponDto> call = RetrofitHelper.getRetrofitService_server().addMedicineAlarm(medicineAlarmAskDto);
+                        Call<MedicineAlarmResponDto> call = RetrofitHelper.getRetrofitService_server().addMedicineAlarm(medicineAlarmAskDto); //서버에 알람등록
                         call.enqueue(new Callback<MedicineAlarmResponDto>() {
                             @Override
                             public void onResponse(Call<MedicineAlarmResponDto> call, Response<MedicineAlarmResponDto> response) {

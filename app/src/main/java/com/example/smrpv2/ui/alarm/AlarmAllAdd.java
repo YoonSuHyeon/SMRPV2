@@ -34,13 +34,13 @@ public class AlarmAllAdd extends Service {
 
     @Override
     public ComponentName startService(Intent service) {
-        Toast.makeText(this, "startService", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "startService", Toast.LENGTH_SHORT).show();
         return super.startService(service);
     }
 
     @Override
     public ComponentName startForegroundService(Intent service) {
-        Toast.makeText(this, "startForegroundService", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "startForegroundService", Toast.LENGTH_SHORT).show();
         return super.startForegroundService(service);
     }
 
@@ -56,7 +56,11 @@ public class AlarmAllAdd extends Service {
                 @Override
                 public void onResponse(Call<ArrayList<MedicineAlarmResponDto>> call, Response<ArrayList<MedicineAlarmResponDto>> response) {
                     Log.d("AlarmAllAdd", "onResponse: "+response.body().size());
-                    Toast.makeText(AlarmAllAdd.this, "size=====>"+response.body().size(), Toast.LENGTH_SHORT).show();
+                    for(int i = 0 ; i < response.body().size();i++){
+                        MedicineAlarmResponDto item = response.body().get(i);
+
+                    }
+
                 }
 
                 @Override

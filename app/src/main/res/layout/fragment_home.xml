@@ -170,7 +170,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_below="@+id/date"
-                android:background="#F9F9F9"
+                android:background="#C7C7C7"
 
                 >
 

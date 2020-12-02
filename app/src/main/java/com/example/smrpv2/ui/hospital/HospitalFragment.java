@@ -139,7 +139,15 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
 
         locationValue = new LocationValue(getActivity());//위치 값을 가져오기 위해 현재 Activity값을 매개 인자로 넘겨준다
         locationValue.startMoule();//GPS나 네트워크를 통한 위치정보값을 가져온다
-        allocateLocation(locationValue);// 모듈을 통해 위치정보값을 가져와서 변수값에 저장
+
+        Handler getGpshandler = new Handler();
+        getGpshandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                allocateLocation(locationValue);// 모듈을 통해 위치정보값을 가져와서 변수값에 저장
+            }
+        },500);
+
 
 
         Handler handler = new Handler();
@@ -148,7 +156,7 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
             public void run() {
                 createMapView();//지도 생성
             }
-        },500);
+        },600);
 
 
 
