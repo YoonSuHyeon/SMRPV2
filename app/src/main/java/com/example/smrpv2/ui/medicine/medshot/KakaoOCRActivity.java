@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.smrpv2.R;
 
@@ -236,16 +237,28 @@ import retrofit2.Response;
 
                 @NonNull float[] floatArray = probabilityBuffer.getFloatArray();
 
-                float temp =0;
-                int idx=0;
+                float tempA =0;
+                int idxA=0;
+
+                float tempB =0;
+                int idxB=0;
+
+                float tempC =0;
+                int idxC=0;
                 for (int i = 0; i < floatArray.length; i++) {
-                    if(floatArray[i]> temp){
-                        temp=floatArray[i];
-                        idx=i;
+                    if(floatArray[i]> tempA){
+                        tempA=floatArray[i];
+                        idxA=i;
+                    }else if(floatArray[i]> tempB) {
+                        tempB = floatArray[i];
+                        idxB = i;
+                    }else if(floatArray[i]> tempC) {
+                        tempC = floatArray[i];
+                        idxC = i;
                     }
                 }
 
-                Log.d("idx:", idx + "   " + temp);
+                Log.d("idx처음 :", idxA + "   " + tempA);
                 final String ASSOCIATED_AXIS_LABELS = "label.txt";
                 List<String> associatedAxisLabels = null;
 
@@ -254,7 +267,12 @@ import retrofit2.Response;
                 } catch (IOException e) {
                     Log.e("tfliteSupport", "Error reading label file", e);
                 }
-                Log.d("gg:", associatedAxisLabels.get(idx) );
+
+                String ttt=associatedAxisLabels.get(idxA)+tempA+associatedAxisLabels.get(idxB)+tempB+associatedAxisLabels.get(idxC)+tempC;
+                textView.setText(ttt);
+
+
+                Log.d("gg:", associatedAxisLabels.get(idxA) );
                 // Releases model resources if no longer used.
 
 
