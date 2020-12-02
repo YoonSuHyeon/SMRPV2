@@ -3,6 +3,7 @@ package com.example.smrpv2.ui.medicine.medshot;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,6 +13,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +28,7 @@ import com.example.smrpv2.model.common.KakaoDto;
 import com.example.smrpv2.model.Message;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_Server;
+import com.example.smrpv2.ui.start.StartActivity;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.tensorflow.lite.DataType;
@@ -61,11 +66,13 @@ public class KakaoOCRActivity extends AppCompatActivity {
 
     Call<KakaoDto> call;
     StringBuilder ocr_result = new StringBuilder();
-
+    private EditText frontEditText,backEditText,shaEditText;
+    Button btn_confirm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kakao_ocr);//activity_search_prescription
+
 
         String frontImg = getIntent().getStringExtra("frontImg");
         String backImg = getIntent().getStringExtra("backImg");
@@ -82,6 +89,8 @@ public class KakaoOCRActivity extends AppCompatActivity {
             D/gggg: /storage/emulated/0/Android/data/com.example.smrpv2/files/picB.jpg
             D/TAG: frontImg: /storage/emulated/0/Android/data/com.example.smrpv2/files/picF.jpg
             backImg: /storage/emulated/0/Android/data/com.example.smrpv2/files/picB.jpg*/
+
+        init();
         context = this;
 
         Bitmap rotatedBitmap = null;
@@ -263,6 +272,7 @@ public class KakaoOCRActivity extends AppCompatActivity {
 
 
 
+            shaEditText.setText(associatedAxisLabels.get(idxA));
             Log.d("gg:", associatedAxisLabels.get(idxA));
             // Releases model resources if no longer used.
 
@@ -298,93 +308,118 @@ public class KakaoOCRActivity extends AppCompatActivity {
             call = RetrofitHelper.getKaKaoOcr().create(RetrofitService_Server.class).sendKakaoOcr(fPart);
         } else {
             RequestBody body = RequestBody.create(MediaType.parse("image/*"), backImage);
-            MultipartBody.Part fPart = MultipartBody.Part.createFormData("image", "back.jpg", body);
-            call = RetrofitHelper.getKaKaoOcr().create(RetrofitService_Server.class).sendKakaoOcr(fPart);
+            MultipartBody.Part bPart = MultipartBody.Part.createFormData("image", "back.jpg", body);
+            call = RetrofitHelper.getKaKaoOcr().create(RetrofitService_Server.class).sendKakaoOcr(bPart);
+        }
 
+        call.enqueue(new Callback<KakaoDto>() {
+            @Override
+            public void onResponse(Call<KakaoDto> call, Response<KakaoDto> response) {
 
-            call.enqueue(new Callback<KakaoDto>() {
-                @Override
-                public void onResponse(Call<KakaoDto> call, Response<KakaoDto> response) {
-
-                    for (int i = 0; i < response.body().getResult().size(); i++) {
-                        KaKaoResult kaKaoResult = response.body().getResult().get(i);
-                        for (int j = 0; j < kaKaoResult.getRecognition_words().length; j++) {
-                            Log.d("OCR", kaKaoResult.getRecognition_words()[j]);
-                            ocr_result.append(kaKaoResult.getRecognition_words()[j]);
-                        }
-
+                for (int i = 0; i < response.body().getResult().size(); i++) {
+                    KaKaoResult kaKaoResult = response.body().getResult().get(i);
+                    for (int j = 0; j < kaKaoResult.getRecognition_words().length; j++) {
+                        Log.d("OCR", kaKaoResult.getRecognition_words()[j]);
+                        ocr_result.append(kaKaoResult.getRecognition_words()[j]);
                     }
 
-                    ocr_result.append("/");
-                    /*if (status) {
-                        sendKakaoOcr(frontImage, backImage, false);
-                    }*/
-
                 }
 
-                @Override
-                public void onFailure(Call<KakaoDto> call, Throwable t) {
-                    Log.d("실패카카오", t.toString());
-                }
-            });
-        }
-    }
+                //ocr_result.append("/");
+                if (status) {
+                    Log.d("TAG", "onResponse: "+status);
+                    frontEditText.setText(ocr_result.toString());
+                    ocr_result.setLength(0);
+                    sendKakaoOcr(frontImage, backImage, false);
 
-        private void sendFile (File frontfile, File backfile){ //구축서버에 이미지 파일 전송
-
-
-            ArrayList<MultipartBody.Part> list = new ArrayList<>();
-            RequestBody body = RequestBody.create(MediaType.parse("image/*"), frontfile);
-            RequestBody body2 = RequestBody.create(MediaType.parse("image/*"), backfile);
-            MultipartBody.Part fPart = MultipartBody.Part.createFormData("files", "front.jpg", body);
-            MultipartBody.Part bPart = MultipartBody.Part.createFormData("files", "back.jpg", body2);
-            list.add(fPart);
-            list.add(bPart);
-
-            Call<Message> call = RetrofitHelper.getRetrofitService_server().uploadImage(list);
-            call.enqueue(new Callback<Message>() {
-                @Override
-                public void onResponse(Call<Message> call, Response<Message> response) {
-                    Log.d("sendFile", "성공");
-                    Log.d("sendFile", response.toString());
+                }else
+                    backEditText.setText(ocr_result.toString());
+                Log.d("TAG", "onResponse: "+status);
+                Log.d("TAG", "result_result: "+ ocr_result.toString());
 
 
-                }
+                btn_confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(),CameraResultActivity.class);
+                        /**
+                         * 인식된 값들 intent로 넘겨야함 
+                         *
+                         * **/
+                        startActivity(intent);
+                    }
+                });
 
-                @Override
-                public void onFailure(Call<Message> call, Throwable t) {
-                    Log.d("sendFile T:", t.toString());
-                }
-            });
-        }
-        private void SaveBitmapToFileCache (Bitmap targetBitmap_front, String frontImgDate){
-
-            File fileCacheItem = new File(frontImgDate);
-
-            OutputStream out = null;
-
-            try {
-                fileCacheItem.createNewFile();
-                out = new FileOutputStream(fileCacheItem);
-                targetBitmap_front.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
 
+            @Override
+            public void onFailure(Call<KakaoDto> call, Throwable t) {
+                Log.d("실패카카오", t.toString());
+            }
+        });
 
-        }
-
-
-        public static Bitmap rotateImage (Bitmap source,float angle){
-            Matrix matrix = new Matrix();
-            matrix.postRotate(angle);
-            return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
-                    matrix, true);
-        }
     }
+    private void sendFile (File frontfile, File backfile){ //구축서버에 이미지 파일 전송
+
+
+        ArrayList<MultipartBody.Part> list = new ArrayList<>();
+        RequestBody body = RequestBody.create(MediaType.parse("image/*"), frontfile);
+        RequestBody body2 = RequestBody.create(MediaType.parse("image/*"), backfile);
+        MultipartBody.Part fPart = MultipartBody.Part.createFormData("files", "front.jpg", body);
+        MultipartBody.Part bPart = MultipartBody.Part.createFormData("files", "back.jpg", body2);
+        list.add(fPart);
+        list.add(bPart);
+
+        Call<Message> call = RetrofitHelper.getRetrofitService_server().uploadImage(list);
+        call.enqueue(new Callback<Message>() {
+            @Override
+            public void onResponse(Call<Message> call, Response<Message> response) {
+                Log.d("sendFile", "성공");
+                Log.d("sendFile", response.toString());
+
+
+            }
+
+            @Override
+            public void onFailure(Call<Message> call, Throwable t) {
+                Log.d("sendFile T:", t.toString());
+            }
+        });
+    }
+    private void SaveBitmapToFileCache (Bitmap targetBitmap_front, String frontImgDate){
+
+        File fileCacheItem = new File(frontImgDate);
+
+        OutputStream out = null;
+
+        try {
+            fileCacheItem.createNewFile();
+            out = new FileOutputStream(fileCacheItem);
+            targetBitmap_front.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
+
+    public static Bitmap rotateImage (Bitmap source,float angle){
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
+    private void init(){
+        frontEditText = findViewById(R.id.frontOcrEditText);
+        backEditText = findViewById(R.id.backOcrEditText);
+        shaEditText = findViewById(R.id.shapeEditText);
+        btn_confirm = findViewById(R.id.btn_confirm);
+    }
+}

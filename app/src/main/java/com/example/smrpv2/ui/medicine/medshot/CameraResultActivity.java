@@ -47,8 +47,10 @@ public class CameraResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_result);
-
-
+        initView();
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("분석중입니다.\n잠시만 기다려 주십시오.");
+        progressDialog.show();
         sendData();
         Btn_add.setOnClickListener(new View.OnClickListener() { //추가하기 버튼 누를시
             @Override

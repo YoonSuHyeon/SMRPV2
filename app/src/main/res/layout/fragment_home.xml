@@ -19,15 +19,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="8dp"
-                android:background="#989898"
+                android:backgroundTint="#00FFFFFF"
+                android:background="#00989898"
                 />
 
             <LinearLayout
 
-                android:id="@+id/date"
+                android:id="@+id/covid"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:background="#ECF1FF"
+                android:background="#5CE3E3E3"
                 android:orientation="horizontal">
                 <TableLayout
                     android:layout_width="match_parent"
@@ -158,10 +159,10 @@
      </RelativeLayout>-->
             </LinearLayout>
             <View
-                android:layout_below="@+id/date"
+                android:layout_below="@+id/covid"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#C7C7C7"
+                android:background="#00C7C7C7"
                 />
             <LinearLayout
                 android:layout_marginTop="16dp"
@@ -169,7 +170,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_below="@+id/date"
+                android:layout_below="@+id/covid"
                 android:background="#C7C7C7"
 
                 >

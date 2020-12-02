@@ -25,6 +25,7 @@
             android:layout_weight="0.5" />
 
         <EditText
+            android:id="@+id/frontOcrEditText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5" />
@@ -50,6 +51,7 @@
             android:layout_weight="0.5" />
 
         <EditText
+            android:id="@+id/backOcrEditText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5" />
@@ -97,6 +99,7 @@
             android:layout_weight="0.5" />
 
         <EditText
+            android:id="@+id/shapeEditText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5" />
@@ -150,6 +153,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/btn_confirm"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:text="확인"

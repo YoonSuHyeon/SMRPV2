@@ -58,8 +58,8 @@ public class OcrSpaceActivity extends AppCompatActivity {
        
 
 
-        im1 = findViewById(R.id.image_front);
-        im2 = findViewById(R.id.image_back);
+       // im1 = findViewById(R.id.image_front);
+        //im2 = findViewById(R.id.image_back);
         try {
             File frontfile = new File(frontImg);
             File backfile = new File(backImg);
