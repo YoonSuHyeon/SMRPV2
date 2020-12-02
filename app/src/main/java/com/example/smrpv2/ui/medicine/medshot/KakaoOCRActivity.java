@@ -58,7 +58,7 @@ import retrofit2.Response;
 public class KakaoOCRActivity extends AppCompatActivity {
     private Bitmap targetBitmap_front, targetBitmap_back;
     Context context;
-    TextView textView;
+
     Call<KakaoDto> call;
     StringBuilder ocr_result = new StringBuilder();
 
@@ -86,9 +86,7 @@ public class KakaoOCRActivity extends AppCompatActivity {
 
         Bitmap rotatedBitmap = null;
 
-        ImageView imageView = findViewById(R.id.image_front);
 
-        textView = findViewById(R.id.textView);
 
 
         try {
@@ -128,7 +126,7 @@ public class KakaoOCRActivity extends AppCompatActivity {
 
 
             targetBitmap_front = Bitmap.createBitmap(rotatedBitmap, rotatedBitmap.getWidth() / 2 - 112, rotatedBitmap.getHeight() / 2 - 112, 224, 224);
-            imageView.setImageBitmap(targetBitmap_front);
+
 
 
             if (backbitmap != null) {
@@ -262,7 +260,7 @@ public class KakaoOCRActivity extends AppCompatActivity {
             }
 
             String ttt = associatedAxisLabels.get(idxA) + tempA + associatedAxisLabels.get(idxB) + tempB + associatedAxisLabels.get(idxC) + tempC;
-            textView.setText(ttt);
+
 
 
             Log.d("gg:", associatedAxisLabels.get(idxA));
@@ -318,9 +316,9 @@ public class KakaoOCRActivity extends AppCompatActivity {
                     }
 
                     ocr_result.append("/");
-                    if (status) {
+                    /*if (status) {
                         sendKakaoOcr(frontImage, backImage, false);
-                    }
+                    }*/
 
                 }
 
