@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.smrpv2.R;
 
 import com.example.smrpv2.ml.ShapeModelVer11;
+import com.example.smrpv2.ml.SplitLine;
 import com.example.smrpv2.model.common.KaKaoResult;
 import com.example.smrpv2.model.common.KakaoDto;
 import com.example.smrpv2.model.Message;
@@ -66,7 +67,7 @@ public class KakaoOCRActivity extends AppCompatActivity {
 
     Call<KakaoDto> call;
     StringBuilder ocr_result = new StringBuilder();
-    private EditText frontEditText,backEditText,shaEditText;
+    private EditText frontEditText,backEditText,shaEditText,frontLineEditText,backLineEditText;
     Button btn_confirm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,12 +178,125 @@ public class KakaoOCRActivity extends AppCompatActivity {
 
             sendFile(frontfile, backfile);
             useModel(targetBitmap_front);
+            useDividingModel(targetBitmap_front,frontLineEditText);
+            useDividingModel(targetBitmap_back,backLineEditText);
         } catch (Exception err) {
             err.printStackTrace();
         }
 
 
         //  Uploading_bitmap_front(targetBitmap_front);
+
+    }
+
+    private void useDividingModel(Bitmap targetBitmap_front,EditText editText) {
+        try {
+            ImageProcessor imageProcessor =
+                    new ImageProcessor.Builder()
+                            .add(new ResizeOp(224, 224, ResizeOp.ResizeMethod.BILINEAR))
+                            .build();
+
+            SplitLine model = SplitLine.newInstance(this);
+
+
+            // Creates inputs for reference.
+
+            //Drawable drawable = getDrawable(R.drawable.image8);
+
+            // Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+
+            ByteBuffer buffer = ByteBuffer.allocate(targetBitmap_front.getByteCount()); //바이트 버퍼를 이미지 사이즈 만큼 선언
+
+            targetBitmap_front.copyPixelsToBuffer(buffer);//비트맵의 픽셀을 버퍼에 저장
+
+            //
+            TensorBuffer inputI = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
+
+
+            TensorImage tImage = new TensorImage(DataType.FLOAT32);
+
+
+            tImage.load(targetBitmap_front);
+            tImage = imageProcessor.process(tImage);
+
+
+            TensorProcessor probabilityProcessor =
+                    new TensorProcessor.Builder().add(new DequantizeOp(0, 1 / 255.0f)).build();
+
+
+            TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
+
+
+            inputFeature0.loadBuffer(tImage.getBuffer());
+            TensorBuffer dequantizedBuffer = probabilityProcessor.process(inputFeature0);
+
+
+            // Runs model inference and gets result.
+            SplitLine.Outputs outputs = model.process(dequantizedBuffer);
+            TensorBuffer probabilityBuffer =
+                    TensorBuffer.createFixedSize(new int[]{1, 20}, DataType.FLOAT32);
+            probabilityBuffer = outputs.getOutputFeature0AsTensorBuffer();
+
+            @NonNull float[] floatArray = probabilityBuffer.getFloatArray();
+
+            float tempA = 0;
+            int idxA = 0;
+
+            float tempB = 0;
+            int idxB = 0;
+
+            float tempC = 0;
+            int idxC = 0;
+            for (int i = 0; i < floatArray.length; i++) {
+                if (floatArray[i] > tempA) {
+                    tempA = floatArray[i];
+                    idxA = i;
+                } else if (floatArray[i] > tempB) {
+                    tempB = floatArray[i];
+                    idxB = i;
+                } else if (floatArray[i] > tempC) {
+                    tempC = floatArray[i];
+                    idxC = i;
+                }
+            }
+
+            Log.d("idx처음 :", idxA + "   " + tempA);
+            final String ASSOCIATED_AXIS_LABELS = "split.txt";
+            List<String> associatedAxisLabels = null;
+
+            try {
+                associatedAxisLabels = FileUtil.loadLabels(this, ASSOCIATED_AXIS_LABELS);
+            } catch (IOException e) {
+                Log.e("tfliteSupport", "Error reading label file", e);
+            }
+
+            String ttt = associatedAxisLabels.get(idxA) + tempA + associatedAxisLabels.get(idxB) + tempB + associatedAxisLabels.get(idxC) + tempC;
+
+
+
+            editText.setText(associatedAxisLabels.get(idxA));
+            Log.d("gg:", associatedAxisLabels.get(idxA));
+            // Releases model resources if no longer used.
+
+
+            TensorProcessor probabilityProcessor1 =
+                    new TensorProcessor.Builder().add(new NormalizeOp(0, 20)).build();
+
+            if (null != associatedAxisLabels) {
+                // Map of labels and their corresponding probability
+                TensorLabel labels = new TensorLabel(associatedAxisLabels,
+                        probabilityProcessor1.process(probabilityBuffer));
+
+                // Create a map to access the result based on label
+                Map<String, Float> floatMap = labels.getMapWithFloatValue();
+
+            }
+            model.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 
@@ -421,5 +535,7 @@ public class KakaoOCRActivity extends AppCompatActivity {
         backEditText = findViewById(R.id.backOcrEditText);
         shaEditText = findViewById(R.id.shapeEditText);
         btn_confirm = findViewById(R.id.btn_confirm);
+        frontLineEditText = findViewById(R.id.et_line_front_dividing);
+        backLineEditText = findViewById(R.id.et_line_back_dividing);
     }
 }

@@ -123,6 +123,7 @@
             android:layout_weight="0.5" />
 
         <EditText
+            android:id="@+id/et_line_front_dividing"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5" />
@@ -140,12 +141,13 @@
         app:layout_constraintTop_toBottomOf="@+id/line_front_dividing_line">
         <TextView
             android:gravity="center"
-            android:text="앞 분할선"
+            android:text="뒤 분할선"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5" />
 
         <EditText
+            android:id="@+id/et_line_back_dividing"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5" />
