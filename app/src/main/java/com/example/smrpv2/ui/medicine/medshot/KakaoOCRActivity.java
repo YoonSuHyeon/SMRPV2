@@ -533,9 +533,9 @@ public class KakaoOCRActivity extends AppCompatActivity {
     private void init(){
         frontEditText = findViewById(R.id.frontOcrEditText);
         backEditText = findViewById(R.id.backOcrEditText);
-        shaEditText = findViewById(R.id.shapeEditText);
+       // shaEditText = findViewById(R.id.shapeEditText);
         btn_confirm = findViewById(R.id.btn_confirm);
-        frontLineEditText = findViewById(R.id.et_line_front_dividing);
-        backLineEditText = findViewById(R.id.et_line_back_dividing);
+       // frontLineEditText = findViewById(R.id.et_line_front_dividing);
+       // backLineEditText = findViewById(R.id.et_line_back_dividing);
     }
 }
