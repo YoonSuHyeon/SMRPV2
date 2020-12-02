@@ -54,7 +54,7 @@ public class LocationValue {
             }
 
             Log.d("TAG", "latitude1: "+latitude);
-            Log.d("TAG", "1: "+longitude);
+            Log.d("TAG", "longitude1: "+longitude);
         }catch(SecurityException e){
             e.printStackTrace();
         }

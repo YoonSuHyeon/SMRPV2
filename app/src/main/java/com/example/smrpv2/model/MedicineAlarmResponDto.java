@@ -16,12 +16,12 @@ public class MedicineAlarmResponDto {
 
 
     private String alarmName; //약이름
-    private int dosingPeriod;
-    private String startAlarm;
-    private String finishAlarm;
-    private DoseTime doseTime;
-    private String doseType;
-    private List<AlarmListDto> alarmListList;
+    private int dosingPeriod; //약복용기간
+    private String startAlarm; // 알람 시작 시각
+    private String finishAlarm; //알람 종료 시각
+    private DoseTime doseTime;// 아침 점심 저녁 복용여부
+    private String doseType;// 식전/식후
+    private List<AlarmListDto> alarmListList; //알람들의 아이디,시간,작동여부
 
     public List<AlarmListDto> getAlarmListList() {
         return alarmListList;
