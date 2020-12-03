@@ -34,6 +34,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import com.example.smrpv2.model.pharmcy_model.Response_phy;
+import com.example.smrpv2.ui.common.ShareProgrees;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kakao.kakaonavi.KakaoNaviParams;
 import com.kakao.kakaonavi.KakaoNaviService;
@@ -45,30 +46,23 @@ import com.kakao.kakaonavi.options.VehicleType;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PharmacyFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class PharmacyFragment extends Fragment implements MapView.MapViewEventListener, MapView.POIItemEventListener, MapView.CurrentLocationEventListener {
 
     private static String TAG ="TAG";
 
-
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-
-    private String mParam1;
-    private String mParam2;
-
-
+    /**
+     * int 형 변수
+     * **/
     private int radiuse = 500;
     private int select_zoomLevel = 1;
     private int zoomLevel = 3;
     private int defalut_zoomLevel = 3;
     int count = 1;
 
+    /**
+     * Double형 변수
+     * **/
     private Double latitude = 0.0;
     private Double longitude = 0.0;
     private Double movelatititue = 0.0;
@@ -83,9 +77,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
 
 
     private FloatingActionButton locaton_Btn,reLocation_Btn;    // location_Btn: 내 위치 재 검색
-                                                                // reLocation_Btn: 지도에 표시된 곳 재 검색
-
-
+                                                                // reLocation_Btn: 지도에 표시된 곳 재 검
     private List<PharmacyItem> list;
     private ArrayList<PharmacyItem> list_inform;
 
@@ -104,42 +96,26 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     private RecyclerView recyclerView;
     private LinearLayoutManager mlinearLayoutManager;
     private PharmacyFragment pharmacyFragment;
+    private ShareProgrees progrees;
     public PharmacyFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PharmacyFragment.
-     */
 
-    public static PharmacyFragment newInstance(String param1, String param2) {
+
+    /*public static PharmacyFragment newInstance(String param1, String param2) {
         PharmacyFragment fragment = new PharmacyFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
+    }*/
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_pharmacy, container, false);
 
         /** FloationActionButton 객체 할당 **/
@@ -158,6 +134,9 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
         /** ReCyclerView 부분 (끝)**/
 
 
+        progrees = new ShareProgrees(getActivity(),"약국을 검색중입니다.\n잠시만 기다려 주세요.");
+        progrees.show();
+
         /** 데이터를 얻고자 하는 서버 주소값이 설정 되어있는 객체를 할당 **/
         parsing = RetrofitHelper.getPhy().create(RetrofitService_Server.class);
 
@@ -167,9 +146,9 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
 
 
         locationValue = new LocationValue(getActivity());
-        locationValue.startMoule(); // 모듈을 이용하여 자신의 위치값을 가져온다.
+        locationValue.startMoule(); // 모듈을 이용하여 자신의 위치값을 검색한다.
 
-        allocateLocation(locationValue); //위치변수에 값을 할당
+        allocateLocation(locationValue); //검색된 위치 값을 위치변수에 값을 할당
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -252,6 +231,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
                 if(movelatititue != 0.0 && movelongitude != 0.0){
                     mapView.removeAllCircles();
                     setMapView(movelatititue,movelongitude);
+                    progrees.show();
                     //parsingData(movelatititue,movelongitude,radiuse);
                 }else{
                     show("지도를 움직인 후 다시 클릭해 주세요.");
@@ -386,6 +366,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
                     count =1;
                     list_inform.clear();
                     adapter.notifyDataSetChanged();
+                    progrees.dismiss();
                     show("해당지역의 약국이 존재하지 않습니다.");
                 }
 
@@ -417,6 +398,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
             list_inform.add(list.get(i));
             adapter.notifyDataSetChanged();
         }
+        progrees.dismiss();
     }
 
     public void show(String s){
@@ -530,12 +512,14 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        try {
+       /* try {
 
             toast_state= false;
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
+
+        locationValue.offGpsModule(); //위치제공자 종료(배터리 소모)
     }
 }
