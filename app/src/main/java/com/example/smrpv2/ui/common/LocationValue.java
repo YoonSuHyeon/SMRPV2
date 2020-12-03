@@ -15,6 +15,7 @@ public class LocationValue {
     private double longitude =0.0;
     private Location gps_location = null;
     private Location network_location = null;
+    LocationManager lm_1, lm_2;
     private Activity activity;
 
     /**
@@ -25,8 +26,8 @@ public class LocationValue {
         this.activity = activity;
     }
     public void startMoule(){ //GPS와 네트워크 모듈을 이용하여 자표값을 얻는다/
-        LocationManager lm_1 = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE); //GPS 모듈을 이용함
-        LocationManager lm_2 = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE); //네트워크 모듈을 이용함
+        lm_1 = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE); //GPS 모듈을 이용함
+        lm_2 = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE); //네트워크 모듈을 이용함
 
 
         long minTime = 1000;//1000ms ---> 1초
@@ -46,12 +47,14 @@ public class LocationValue {
                 Log.d("TAG", "gps_location_latitude: "+latitude);
                 Log.d("TAG", "gps_location_longitude: "+longitude);
 
-            }else{
+            }else if(network_location != null){ //네트워크 모듈
                 latitude = network_location.getLatitude();// GPS 모듈 경도 값 ex) 37.30616958190577
                 longitude = network_location.getLongitude();//GPS 모듈 위도 값 ex) 127.92099856059595
                 Log.d("TAG", "network_location_latitude: "+latitude);
                 Log.d("TAG", "network_location_longitude: "+longitude);
             }
+            else
+                Log.d("gpsLoctionValue", "둘다없음. ");
 
             Log.d("TAG", "latitude1: "+latitude);
             Log.d("TAG", "longitude1: "+longitude);
@@ -66,7 +69,10 @@ public class LocationValue {
     public Double getLongitude(){
         return longitude;
     } //경도 값을 반환
-
+    public void offGpsModule(){
+        lm_1.removeUpdates(gpsListener);
+        lm_2.removeUpdates(gpsListener);
+    }
     private class GPSListener implements LocationListener {//위치리너스 클래스
 
         @Override

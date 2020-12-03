@@ -96,7 +96,7 @@ public class HomeFragment extends Fragment {
     private HomeFragment homeFragment;
     private View root;
     private String beforeeDate, todayDate;
-
+    private LocationValue locationValue;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -118,6 +118,9 @@ public class HomeFragment extends Fragment {
         // 첫 번째 배너 사이 간격 조정
         resizeBannerPadding();
 
+        // 미리 위치데이터를 받는다.
+        locationValue = new LocationValue(getActivity());
+        locationValue.startMoule();
         // 동적으로 배너 크기 바꾸기
         LinearLayout viewP = root.findViewById(R.id.viewP);
         LinearLayout viewP2 = root.findViewById(R.id.vP);

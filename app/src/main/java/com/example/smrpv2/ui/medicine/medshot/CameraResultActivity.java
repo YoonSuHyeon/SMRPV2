@@ -21,6 +21,7 @@ import com.example.smrpv2.model.prescription_model.RegMedicineList;
 import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
 import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.retrofit.RetrofitHelper;
+import com.example.smrpv2.ui.common.ShareProgrees;
 import com.example.smrpv2.ui.medicine.searchMed.PrescriptionAdapter;
 import com.example.smrpv2.ui.medicine.searchMed.Search_prescriptionActivity;
 
@@ -32,6 +33,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
+/**
+ * 약촬영 후 분석한 약모양, 약 문구를 사용자에게 보여주며
+ * 사용자는 data값을 수정하고 서버에 해당 data 관련 정보를 받기위한 acitivty
+ *
+ * */
 public class CameraResultActivity extends AppCompatActivity {
     private Button Btn_add;
     private ImageView iv_back;
@@ -41,15 +48,13 @@ public class CameraResultActivity extends AppCompatActivity {
     private PrescriptionAdapter prescriptionAdapter;
     private RecyclerView recyclerView;
     private boolean bool_end = false;
-    private ProgressDialog progressDialog;
+    private ShareProgrees progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_result);
         initView();
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("분석중입니다.\n잠시만 기다려 주십시오.");
         progressDialog.show();
         sendData();
         Btn_add.setOnClickListener(new View.OnClickListener() { //추가하기 버튼 누를시
@@ -179,6 +184,6 @@ public class CameraResultActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setAdapter(prescriptionAdapter);
-        progressDialog = new ProgressDialog(this);
+        progressDialog = new ShareProgrees(this,"분석중입니다.\n잠시만 기다려 주세요.");
     }
 }
