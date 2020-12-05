@@ -131,7 +131,7 @@ public interface RetrofitService_Server {
     Call<Message> addInquiry( //문의하기
                               @Body InquiryDto inquiry
     );
-    @POST("medicine/searchOCR")
+    @POST("medicine/searchOCR") //인식된 글자를 구축 서버에게 전송
     Call<ArrayList<MedicineInfoRsponDTO>> sendWords(
             @Body String[] s
     );
