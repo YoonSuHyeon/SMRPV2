@@ -29,26 +29,33 @@ public class MedicineResultRecyclerAdapter extends RecyclerView.Adapter<Recycler
     RecyclerView.ViewHolder holder1, holder2;
     int size;
     private int[] row_images;
-    int t1=0, t2=0;
+
     Context context;
+
+    View.OnClickListener click;
+
+
+
     public interface OnItemClickListener {
         void onItemClick(View v, int position, RecyclerView rList) ;
     }
 
     private OnItemClickListener mListener = null ;
-    MedicineResultRecyclerAdapter(ArrayList<MedicineItem> list, OnItemClickListener mListener, RecyclerView rList, int size, int[] images) {
-        Log.e("DD","111");
-        mData = list ;
+    MedicineResultRecyclerAdapter(ArrayList<MedicineItem> list, OnItemClickListener mListener, RecyclerView rList, int size, int[] images,int pos) {
+        Log.e("DD", "111");
+        mData = list;
         this.mListener = mListener;
         this.rList = rList;
         this.size = size;
-        mSelectedItems.put(0,true);
+        mSelectedItems.put(pos, true);
 
         row_images = images;
-        t1=1;
-        for(int i =1 ; i < size; i++) {
 
-            mSelectedItems.put(i,false);}
+        for (int i = 0; i < size; i++) {
+            if (pos != i) {
+                mSelectedItems.put(i, false);
+            }
+        }
     }
     MedicineResultRecyclerAdapter(ArrayList<MedicineItem> list, Context context){
         mData = list;
@@ -114,32 +121,44 @@ public class MedicineResultRecyclerAdapter extends RecyclerView.Adapter<Recycler
             icon = itemView.findViewById(R.id.Img_icon);
             name = itemView.findViewById(R.id.Txt_name);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+             click =new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int pos = getAdapterPosition() ;
                     mListener.onItemClick(v, getAdapterPosition(),rList);
-                    if (mSelectedItems.get(pos, false) ){
-                        mSelectedItems.put(pos, false);
-                        notifyItemChanged(pos);
 
-                    } else {
+                    modifyItem(pos, icon, name);
 
-                        for (int i = 0; i < mSelectedItems.size(); i++) {
-                            mSelectedItems.put(i, false);
-                            notifyItemChanged(i);
-                        }
-                        mSelectedItems.put(pos, true);
-                        icon.setImageResource(row_images[pos]);
-                        name.setTextColor(Color.rgb(0,119,63));
-
-                    }
                 }
-            });
+            };
 
-
+            itemView.setOnClickListener(click);
 
         }
+
+    }
+    public void modifyItem(int pos ,ImageView icon ,TextView name){
+        if (mSelectedItems.get(pos, false) ){
+            mSelectedItems.put(pos, false);
+            notifyItemChanged(pos);
+
+        } else {
+
+            for (int i = 0; i < mSelectedItems.size(); i++) {
+                mSelectedItems.put(i, false);
+                notifyItemChanged(i);
+            }
+            mSelectedItems.put(pos, true);
+            icon.setImageResource(row_images[pos]);
+            name.setTextColor(Color.rgb(0,119,63));
+
+        }
+    }
+
+
+    public OnItemClickListener getmListener() {
+
+        return mListener;
     }
 
     private boolean isItemSelected(int position) {

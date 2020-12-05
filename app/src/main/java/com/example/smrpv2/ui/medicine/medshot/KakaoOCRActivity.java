@@ -26,7 +26,8 @@ import android.widget.Toast;
 import com.example.smrpv2.R;
 
 import com.example.smrpv2.ml.ShapeModelVer11;
-import com.example.smrpv2.ml.SplitLine;
+
+import com.example.smrpv2.ml.Splitline;
 import com.example.smrpv2.model.MedicineItem;
 import com.example.smrpv2.model.common.KaKaoResult;
 import com.example.smrpv2.model.common.KakaoDto;
@@ -74,7 +75,7 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
 
     Call<KakaoDto> call;
     StringBuilder ocr_result = new StringBuilder();
-    private EditText frontEditText,backEditText,shaEditText,frontLineEditText,backLineEditText;
+    private EditText frontEditText,backEditText;
     Button btn_confirm;
     ImageView img_front, img_back;
 
@@ -237,9 +238,12 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
             sendFile(frontfile, backfile);
             img_front.setImageBitmap(targetBitmap_front);
             img_back.setImageBitmap(targetBitmap_back);
+
             useModel(targetBitmap_front);
-            useDividingModel(targetBitmap_front,frontLineEditText);
-            useDividingModel(targetBitmap_back,backLineEditText);
+
+
+            useDividingModel(targetBitmap_front,"앞");
+            useDividingModel(targetBitmap_back,"뒤");
         } catch (Exception err) {
             err.printStackTrace();
         }
@@ -255,14 +259,14 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
 
     }
 
-    private void useDividingModel(Bitmap targetBitmap_front,EditText editText) {
+    private void useDividingModel(Bitmap bitmap,String string) {
         try {
             ImageProcessor imageProcessor =
                     new ImageProcessor.Builder()
                             .add(new ResizeOp(224, 224, ResizeOp.ResizeMethod.BILINEAR))
                             .build();
 
-            SplitLine model = SplitLine.newInstance(this);
+           Splitline model = Splitline.newInstance(this);
 
 
             // Creates inputs for reference.
@@ -271,9 +275,9 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
 
             // Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
 
-            ByteBuffer buffer = ByteBuffer.allocate(targetBitmap_front.getByteCount()); //바이트 버퍼를 이미지 사이즈 만큼 선언
+            ByteBuffer buffer = ByteBuffer.allocate(bitmap.getByteCount()); //바이트 버퍼를 이미지 사이즈 만큼 선언
 
-            targetBitmap_front.copyPixelsToBuffer(buffer);//비트맵의 픽셀을 버퍼에 저장
+            bitmap.copyPixelsToBuffer(buffer);//비트맵의 픽셀을 버퍼에 저장
 
             //
             TensorBuffer inputI = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
@@ -282,7 +286,7 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
             TensorImage tImage = new TensorImage(DataType.FLOAT32);
 
 
-            tImage.load(targetBitmap_front);
+            tImage.load(bitmap);
             tImage = imageProcessor.process(tImage);
 
 
@@ -298,7 +302,7 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
 
 
             // Runs model inference and gets result.
-            SplitLine.Outputs outputs = model.process(dequantizedBuffer);
+            Splitline.Outputs outputs = model.process(dequantizedBuffer);
             TensorBuffer probabilityBuffer =
                     TensorBuffer.createFixedSize(new int[]{1, 20}, DataType.FLOAT32);
             probabilityBuffer = outputs.getOutputFeature0AsTensorBuffer();
@@ -339,10 +343,54 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
             String ttt = associatedAxisLabels.get(idxA) + tempA + associatedAxisLabels.get(idxB) + tempB + associatedAxisLabels.get(idxC) + tempC;
 
 
-
-            editText.setText(associatedAxisLabels.get(idxA));
+            String s = associatedAxisLabels.get(idxA);
+        //    editText.setText(s);
             Log.d("gg:", associatedAxisLabels.get(idxA));
             // Releases model resources if no longer used.
+
+
+
+
+
+            //분류작업
+            String dividing = associatedAxisLabels.get(idxA);
+
+            int i;
+
+            for(i=0; i < list_row3.size();i++){
+                if(list_row3.get(i).getText().contains(dividing))
+                    break;
+            }
+
+
+
+
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+
+
+
+
+
+
+            if(string.contains("앞")){
+                Log.d("ggg","앞"+i);
+                adapter_row3  = new MedicineResultRecyclerAdapter(list_row3,this, Lst_front_dividing_line,4,row_images3,i) ;
+                Lst_front_dividing_line.setLayoutManager(layoutManager) ;
+                Lst_front_dividing_line.setAdapter(adapter_row3);
+                Lst_front_dividing_line.getItemAnimator().setChangeDuration(0);
+                Lst_front_dividing_line.getAdapter().notifyDataSetChanged();
+
+            }else{
+                Log.d("kkk","뒤"+i);
+                adapter_row4  = new MedicineResultRecyclerAdapter(list_row4,this, Lst_back_dividing_line,4,row_images3,i) ;
+                Lst_back_dividing_line.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)) ;
+                Lst_back_dividing_line.setAdapter(adapter_row4);
+                Lst_back_dividing_line.getItemAnimator().setChangeDuration(0);
+                Lst_back_dividing_line.getAdapter().notifyDataSetChanged();
+            }
+
+
+
 
 
             TensorProcessor probabilityProcessor1 =
@@ -367,14 +415,14 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
     }
 
 
-    private void useModel(Bitmap targetBitmap_front) { // 이미지 모델추출
+    private void useModel(Bitmap bitmap) { // 이미지 모양 모델
         try {
             ImageProcessor imageProcessor =
                     new ImageProcessor.Builder()
                             .add(new ResizeOp(224, 224, ResizeOp.ResizeMethod.BILINEAR))
                             .build();
 
-            ShapeModelVer11 model = ShapeModelVer11.newInstance(this);
+            ShapeModelVer11 model = ShapeModelVer11.newInstance(context);
 
 
             // Creates inputs for reference.
@@ -383,9 +431,9 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
 
             // Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
 
-            ByteBuffer buffer = ByteBuffer.allocate(targetBitmap_front.getByteCount()); //바이트 버퍼를 이미지 사이즈 만큼 선언
+            ByteBuffer buffer = ByteBuffer.allocate(bitmap.getByteCount()); //바이트 버퍼를 이미지 사이즈 만큼 선언
 
-            targetBitmap_front.copyPixelsToBuffer(buffer);//비트맵의 픽셀을 버퍼에 저장
+            bitmap.copyPixelsToBuffer(buffer);//비트맵의 픽셀을 버퍼에 저장
 
             //
             TensorBuffer inputI = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
@@ -394,7 +442,7 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
             TensorImage tImage = new TensorImage(DataType.FLOAT32);
 
 
-            tImage.load(targetBitmap_front);
+            tImage.load(bitmap);
             tImage = imageProcessor.process(tImage);
 
 
@@ -452,18 +500,61 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
 
 
 
-            shaEditText.setText(associatedAxisLabels.get(idxA));
+           // shaEditText.setText(associatedAxisLabels.get(idxA));
             Log.d("gg:", associatedAxisLabels.get(idxA));
             // Releases model resources if no longer used.
 
+
+
+
+
+            //
             String str_shape = associatedAxisLabels.get(idxA);
             StringTokenizer st = new StringTokenizer(str_shape, "형",true);
             str_shape = st.nextToken();
+
+            Log.d("str_shape", str_shape);
             int i;
 
-            for(i=0; i < list_row1.size();i++)
-                if(list_row1.get(i).getText().equals(str_shape))
+            for(i=0; i < list_row1.size();i++){
+                Log.d("aaa", list_row1.get(i).getText());
+                if(list_row1.get(i).getText().contains(str_shape))
                     break;
+            }
+
+            if(i==list_row1.size()){
+                i=10;
+            }else{
+                Log.d("lst", list_row1.get(i).getText());
+
+                Log.d("lst", list_row1.get(i).getText());
+            }
+
+            //itemView.performClick()
+
+
+           // adapter_row1.setStatus(list_row1.get(i).getText());
+
+
+           /*adapter_row1.click.onClick(Lst_shape.getChildAt(i));*/
+
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            adapter_row1  = new MedicineResultRecyclerAdapter(list_row1,this, Lst_shape,11, row_images1,i) ;
+
+            Lst_shape .setLayoutManager(layoutManager ) ;
+            Lst_shape .setAdapter(adapter_row1);
+            Lst_shape.getItemAnimator().setChangeDuration(0);
+            Lst_shape.getAdapter().notifyDataSetChanged();
+           // adapter_row1.getmListener().onClick();
+
+
+
+
+
+
+
+
+
 
 
 
@@ -632,24 +723,17 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
-        adapter_row1  = new MedicineResultRecyclerAdapter(list_row1,this, Lst_shape,11, row_images1) ;
-        adapter_row2  = new MedicineResultRecyclerAdapter(list_row2,this, Lst_color,14,row_images2) ;
-        adapter_row3  = new MedicineResultRecyclerAdapter(list_row3,this, Lst_front_dividing_line,4,row_images3) ;
-        adapter_row4  = new MedicineResultRecyclerAdapter(list_row4,this, Lst_back_dividing_line,4,row_images3) ;
+
+        adapter_row2  = new MedicineResultRecyclerAdapter(list_row2,this, Lst_color,14,row_images2,0) ;
+
         addList();
 
 
-        Lst_shape .setLayoutManager(layoutManager ) ;
-        Lst_shape .setAdapter(adapter_row1);
 
         Lst_color .setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)) ;
         Lst_color .setAdapter(adapter_row2);
 
-        Lst_front_dividing_line.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)) ;
-        Lst_front_dividing_line.setAdapter(adapter_row3);
 
-        Lst_back_dividing_line.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)) ;
-        Lst_back_dividing_line.setAdapter(adapter_row4);
 
        // shaEditText = findViewById(R.id.shapeEditText);
        // frontLineEditText = findViewById(R.id.et_line_front_dividing);
@@ -672,7 +756,7 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
         switch(rList.getId()){
 
             case R.id.Lst_shape : {
-
+                Log.d("position", position+"");
                 item= list_row1.get(position) ;
                 checkSelectedItem(position,mSelectedItems1, item, shape1, list_row1);
                 break;
@@ -806,14 +890,12 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
         for(int i =1 ; i < 4; i++) mSelectedItems3.put(i,false);
         for(int i =1 ; i < 4; i++) mSelectedItems4.put(i,false);
 
-        Lst_shape.getItemAnimator().setChangeDuration(0);
+
         Lst_color.getItemAnimator().setChangeDuration(0);
-        Lst_front_dividing_line.getItemAnimator().setChangeDuration(0);
-        Lst_back_dividing_line.getItemAnimator().setChangeDuration(0);
-        adapter_row1.notifyDataSetChanged();
+
+
         adapter_row2.notifyDataSetChanged();
-        adapter_row3.notifyDataSetChanged();
-        adapter_row4.notifyDataSetChanged();
+
     }
     private boolean checkItem(){
         if(shape1.isEmpty()) {
