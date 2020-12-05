@@ -28,6 +28,7 @@ import com.example.smrpv2.model.searchMed_model.ConMedicineAskDto;
 import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_Server;
+import com.example.smrpv2.ui.common.ShareProgrees;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
     ArrayList<String> color1 = new ArrayList<String>();
     String color="color_all",shape="shape_all",formula="formula_all",line="line_all";
     Button Btn_search;
-
+    ShareProgrees progrees;
     RecyclerView Lst_shape= null ;
     RecyclerView Lst_color= null ;
     RecyclerView Lst_dosageForm= null ;
@@ -104,6 +105,7 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
         Btn_search = findViewById(R.id.Btn_search);
         iv_back = findViewById(R.id.iv_back);
         searchResultItem = new ArrayList<MedicineItem>();
+        progrees = new ShareProgrees(this,"검색중입니다.\n잠시만 기다려 주세요.");
         shape1.add("모양전체");
         color1.add("색상전체");
         formula1.add("제형전체");
@@ -143,6 +145,7 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
         Btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progrees.show();
                 imm.hideSoftInputFromWindow(et_findMedicine.getWindowToken(), 0);
 
                 if(checkItem()) // 약 아이템 정보 선택 안 한 거 있는지 검사
@@ -377,6 +380,7 @@ public class SearchActivity extends AppCompatActivity implements SearchRecyclerA
                 SearchRecyclerAdapter adapter = new SearchRecyclerAdapter(searchResultItem, getApplicationContext());
                 recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
+                progrees.dismiss();
             }
 
             @Override

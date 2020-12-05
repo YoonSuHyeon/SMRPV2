@@ -213,7 +213,7 @@ public class HomeFragment extends Fragment {
 
 
 
-    void show_Covid(){
+    void show_Covid(){ //코로나 확진자 데이터 가져오기
         RetrofitService_Server parsing = RetrofitHelper.getCovid().create(RetrofitService_Server.class);
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
