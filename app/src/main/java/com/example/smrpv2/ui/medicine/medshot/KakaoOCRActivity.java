@@ -144,7 +144,7 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
                 intent.putExtra("color", "");
                 intent.putExtra("shape", "null");
                 intent.putExtra("frontDividing", "null");
-                intent.putExtra("backDividied", " ");
+                intent.putExtra("backDividing"," ");
                 startActivity(intent);
             }
         });

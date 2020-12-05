@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -55,8 +56,21 @@ public class CameraResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_result);
         initView();
+
+        Intent intent = getIntent();
+        String frontText = intent.getStringExtra("frontText");
+        String backText = intent.getStringExtra("backText");
+        String color = intent.getStringExtra("color");
+        String shape = intent.getStringExtra("shape");
+        String frontDividing = intent.getStringExtra("frontDividing");
+        String backDividing = intent.getStringExtra("backDividing");
+
+
         progressDialog.show();
-        sendData();
+
+
+
+        sendData(frontText,backText,color,shape,frontDividing,backDividing);//서버에게 카메라를통해 얻응 정보를 보내서 약을 가져오는
         Btn_add.setOnClickListener(new View.OnClickListener() { //추가하기 버튼 누를시
             @Override
             public void onClick(View v) { //추가하기
@@ -120,7 +134,7 @@ public class CameraResultActivity extends AppCompatActivity {
 
         });
     }
-    private void sendData(){//약을 검색하기위한 정보를 서버와 교환
+    private void sendData(String frontText, String backText, String color, String shape, String frontDividing, String backDividing){//약을 검색하기위한 정보를 서버와 교환
         progressDialog.dismiss();
         //서버에서 구현한후
         /*Call<ArrayList<MedicineInfoRsponDTO>> call = RetrofitHelper.getRetrofitService_server().sendWords(array);
