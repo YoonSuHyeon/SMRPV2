@@ -55,6 +55,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -454,6 +455,19 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
             shaEditText.setText(associatedAxisLabels.get(idxA));
             Log.d("gg:", associatedAxisLabels.get(idxA));
             // Releases model resources if no longer used.
+
+            String str_shape = associatedAxisLabels.get(idxA);
+            StringTokenizer st = new StringTokenizer(str_shape, "형",true);
+            str_shape = st.nextToken();
+            int i;
+
+            for(i=0; i < list_row1.size();i++)
+                if(list_row1.get(i).getText().equals(str_shape))
+                    break;
+
+
+
+
 
 
             TensorProcessor probabilityProcessor1 =
