@@ -123,6 +123,9 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
         String frontImgDate = backImg.substring(0, frontImg.lastIndexOf("/")) + "/picF.jpg"; //앞면이미지
         String backImgDate = backImg.substring(0, backImg.lastIndexOf("/")) + "/picB.jpg"; //뒷면이미지
 
+
+        init();
+        context = this;
         Log.d("TAG", "frontImg: " + frontImgDate);
         Log.d("TAG", "backImg: " + backImgDate);
           /*  D/gggg: /storage/emulated/0/Android/data/com.example.smrpv2/files/picF.jpg
@@ -130,8 +133,23 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
             D/TAG: frontImg: /storage/emulated/0/Android/data/com.example.smrpv2/files/picF.jpg
             backImg: /storage/emulated/0/Android/data/com.example.smrpv2/files/picB.jpg*/
 
-        init();
-        context = this;
+
+        btn_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, CameraResultActivity.class);
+                intent.putExtra("frontText", "");
+                intent.putExtra("backText", "");
+                intent.putExtra("color", "");
+                intent.putExtra("shape", "null");
+                intent.putExtra("frontDividing", "null");
+                intent.putExtra("backDividied", " ");
+                startActivity(intent);
+            }
+        });
+
+
+
 
         Bitmap rotatedBitmap = null;
 
@@ -216,6 +234,8 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
 
 
             sendFile(frontfile, backfile);
+            img_front.setImageBitmap(targetBitmap_front);
+            img_back.setImageBitmap(targetBitmap_back);
             useModel(targetBitmap_front);
             useDividingModel(targetBitmap_front,frontLineEditText);
             useDividingModel(targetBitmap_back,backLineEditText);
