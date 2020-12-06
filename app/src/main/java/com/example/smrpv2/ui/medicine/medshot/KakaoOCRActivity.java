@@ -91,10 +91,10 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
     RecyclerView Lst_back_dividing_line = null ;
     ImageView iv_back;
 
-    MedicineResultRecyclerAdapter adapter_row1 = null ;
-    MedicineResultRecyclerAdapter adapter_row2  = null ;
-    MedicineResultRecyclerAdapter adapter_row3  = null ;
-    MedicineResultRecyclerAdapter adapter_row4 = null ;
+    MedicineResultRecyclerAdapter adapter_row1 = null ; //색 어댑터
+    MedicineResultRecyclerAdapter adapter_row2  = null ; // 모양 어댑터
+    MedicineResultRecyclerAdapter adapter_row3  = null ; // 앞 분할선 어댑터
+    MedicineResultRecyclerAdapter adapter_row4 = null ; //뒷 분할선 어댑터
 
     ArrayList<MedicineItem> list_row1 = new ArrayList<MedicineItem>();
     ArrayList<MedicineItem> list_row2= new ArrayList<MedicineItem>();
@@ -102,8 +102,8 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
     ArrayList<MedicineItem> list_row4 = new ArrayList<MedicineItem>();
 
 
-    private SparseBooleanArray mSelectedItems1 = new SparseBooleanArray(0);
-    private SparseBooleanArray mSelectedItems2 = new SparseBooleanArray(0);
+    private SparseBooleanArray mSelectedItems1 = new SparseBooleanArray(0); //모양
+    private SparseBooleanArray mSelectedItems2 = new SparseBooleanArray(0); //색상
     private SparseBooleanArray mSelectedItems3 = new SparseBooleanArray(0);
     private SparseBooleanArray mSelectedItems4 = new SparseBooleanArray(0);
 
@@ -139,22 +139,58 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, CameraResultActivity.class);
+                if(checkItem()){
+                    Intent intent = new Intent(context, CameraResultActivity.class);
 
-                String frontText = frontEditText.getText().toString();
-                String backText = backEditText.getText().toString();
-                String color = color1.get(0);
+                    String frontText = frontEditText.getText().toString();
+                    String backText = backEditText.getText().toString();
+                    String color = "";
+                    String shape="";
+                    String frontDividing="";
+                    String backDividing="";
+                    for(int i = 0; i<mSelectedItems1.size();i++){
+                        if(mSelectedItems1.get(i) == true){
+                            shape = list_row1.get(i).getText();
+                            Log.d("kakoActivity", "shape: "+shape);
+                            break;
+                        }
+                    }
+                    for(int i = 0; i<mSelectedItems2.size();i++){
+                        if(mSelectedItems2.get(i) == true){
+                            color = list_row2.get(i).getText();
+                            Log.d("kakoActivity", "color: "+color);
+                            break;
+                        }
+                    }
+                    for(int i = 0; i<mSelectedItems3.size();i++){
+                        if(mSelectedItems3.get(i) == true){
+                            frontDividing = list_row3.get(i).getText();
+                            Log.d("kakoActivity", "frontDividing: "+frontDividing);
+                            break;
+                        }
+                    }
+                    for(int i = 0; i<mSelectedItems4.size();i++){
+                        if(mSelectedItems4.get(i) == true){
+                            backDividing = list_row4.get(i).getText();
+                            Log.d("kakoActivity", "backDividing: "+backDividing);
+                            break;
+                        }
+                    }
+                /*String color = color1.get(0);
                 String shape = shape1.get(0);
                 String frontDividing = front_dividing_line1.get(0);
-                String backDividing = back_dividing_line1.get(0);
+                String backDividing = back_dividing_line1.get(0);*/
 
-                intent.putExtra("frontText", frontText);
-                intent.putExtra("backText", backText);
-                intent.putExtra("color", color);
-                intent.putExtra("shape", shape);
-                intent.putExtra("frontDividing", frontDividing);
-                intent.putExtra("backDividing",backDividing);
-                startActivity(intent);
+                    intent.putExtra("frontText", frontText);
+                    intent.putExtra("backText", backText);
+                    intent.putExtra("color", color);
+                    intent.putExtra("shape", shape);
+                    intent.putExtra("frontDividing", frontDividing);
+                    intent.putExtra("backDividing",backDividing);
+                    Log.d("TAG", "total: "+frontText+","+backText+","+color+","+shape+","+frontDividing+","+backDividing);
+                    startActivity(intent);
+                }
+
             }
         });
 
@@ -630,36 +666,7 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
                 Log.d("TAG", "result_result: "+ ocr_result.toString());
 
 
-                btn_confirm.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(),CameraResultActivity.class);
-                        if(checkItem()){
-                            String frontText = frontEditText.getText().toString();
-                            String backText = backEditText.getText().toString();
-                            String color = "노란색";
-                            String shape = "사각형";
-                            String frontDividing = "없음";
-                            String backDividing = "없음";
 
-                            intent.putExtra("frontText", frontText);
-                            intent.putExtra("backText", backText);
-                            intent.putExtra("color", color);
-                            intent.putExtra("shape", shape);
-                            intent.putExtra("frontDividing", frontDividing);
-                            intent.putExtra("backDividing", backDividing);
-
-                            startActivity(intent);
-                        }
-
-
-                        /**
-                         * 인식된 값들 intent로 넘겨야함 
-                         *
-                         * **/
-
-                    }
-                });
 
             }
 
@@ -765,10 +772,10 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
     }
     public void addItem(ArrayList<MedicineItem> list, Drawable icon, String n, int v, String t) {
         MedicineItem item = new MedicineItem();
-        item.setIcon(icon);
-        item.setName(n);
+        item.setIcon(icon); //아이콘
+        item.setName(n); //이름
         item.setViewType(v);
-        item.setText(t);
+        item.setText(t); //
         list.add(item);
         Log.e("DD","5555");
     }
@@ -804,18 +811,21 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
     }
 
     void checkSelectedItem(int position, SparseBooleanArray mSelectedItems, MedicineItem item, ArrayList<String> type, ArrayList<MedicineItem> list_row){
-
-        if (mSelectedItems.get(position, false) ){
-            mSelectedItems.put(position, false);
+        for (int i = 0; i < mSelectedItems.size(); i++) {
+            mSelectedItems.put(i, false);
+            Log.d("TAG", "reset: ");
         }
-        else {
+        if (!mSelectedItems.get(position, false) ){
+            Log.d("checkSelectedItem", "position: "+position);
+            mSelectedItems.put(position, true);
+        }
+        /*lse {
 
-            for (int i = 0; i < mSelectedItems.size(); i++)
-                mSelectedItems.put(i, false);
+
             mSelectedItems.put(position, true);
 
 
-        }
+        }*/
         for(int i=0; i <mSelectedItems.size(); i++){
             if(i==0)type.clear();
             item = list_row.get(i);
@@ -827,83 +837,51 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
     private void addList(){
 
         addItem(list_row1,getDrawable(R.drawable.ic_circle), "원형",5,"원형");
-        addItem(list_row1,getDrawable(R.drawable.ic_triangle),
-                "삼각형",5, "삼각형");
-        addItem(list_row1,getDrawable(R.drawable.ic_rectangle),
-                "사각형",5,"사각형");
-        addItem(list_row1,getDrawable(R.drawable.ic_rhombus),
-                "마름모",5,"마름모형");
-        addItem(list_row1,getDrawable(R.drawable.ic_oblong),
-                "장방형",5,"장방형");
-        addItem(list_row1,getDrawable(R.drawable.ic_oval),
-                "타원형",5,"타원형");
-        addItem(list_row1,getDrawable(R.drawable.ic_semicircle),
-                "반원형",5,"반원형");
+        addItem(list_row1,getDrawable(R.drawable.ic_triangle), "삼각형",5, "삼각형");
+        addItem(list_row1,getDrawable(R.drawable.ic_rectangle), "사각형",5,"사각형");
+        addItem(list_row1,getDrawable(R.drawable.ic_rhombus), "마름모",5,"마름모형");
+        addItem(list_row1,getDrawable(R.drawable.ic_oblong), "장방형",5,"장방형");
+        addItem(list_row1,getDrawable(R.drawable.ic_oval), "타원형",5,"타원형");
+        addItem(list_row1,getDrawable(R.drawable.ic_semicircle), "반원형",5,"반원형");
 
-        addItem(list_row1,getDrawable(R.drawable.ic_pentagon),
-                "오각형",5,"오각형");
+        addItem(list_row1,getDrawable(R.drawable.ic_pentagon), "오각형",5,"오각형");
 
-        addItem(list_row1,getDrawable(R.drawable.ic_hexagon),
-                "육각형",5,"육각형");
+        addItem(list_row1,getDrawable(R.drawable.ic_hexagon), "육각형",5,"육각형");
 
-        addItem(list_row1,getDrawable(R.drawable.ic_octagon),
-                "팔각형",5,"팔각형");
+        addItem(list_row1,getDrawable(R.drawable.ic_octagon), "팔각형",5,"팔각형");
 
 
-        addItem(list_row1,getDrawable(R.drawable.ic_etc),
-                "기타",5,"기타");
+        addItem(list_row1,getDrawable(R.drawable.ic_etc), "기타",5,"기타");
 
         //list_row2 - 색상
-        addItem(list_row2,getDrawable(R.drawable.ic_white),
-                "하양",5, "하양");
-        addItem(list_row2,getDrawable(R.drawable.ic_yellow),
-                "노랑",5,"노랑");
-        addItem(list_row2,getDrawable(R.drawable.ic_orange),
-                "주황",5,"주황");
-        addItem(list_row2,getDrawable(R.drawable.ic_pink),
-                "분홍",5,"분홍");
-        addItem(list_row2,getDrawable(R.drawable.ic_red),
-                "빨강",5,"빨강");
-        addItem(list_row2,getDrawable(R.drawable.ic_brown),
-                "갈색",5,"갈색");
-        addItem(list_row2,getDrawable(R.drawable.ic_yellowgreen),
-                "연두",5,"연두");
-        addItem(list_row2,getDrawable(R.drawable.ic_purple),
-                "보라",5,"보라");
-        addItem(list_row2,getDrawable(R.drawable.ic_bluegreen),
-                "청록",5,"청록");
-        addItem(list_row2,getDrawable(R.drawable.ic_blue),
-                "파랑",5,"파랑");
-        addItem(list_row2,getDrawable(R.drawable.ic_navy),
-                "남색",5,"남색");
-        addItem(list_row2,getDrawable(R.drawable.ic_redviolet),
-                "자주",5,"자주");
-        addItem(list_row2,getDrawable(R.drawable.ic_gray),
-                "회색",5,"회색");
-        addItem(list_row2,getDrawable(R.drawable.ic_black),
-                "검정",5,"검정");
+        addItem(list_row2,getDrawable(R.drawable.ic_white), "하양",5, "하양");
+        addItem(list_row2,getDrawable(R.drawable.ic_yellow), "노랑",5,"노랑");
+        addItem(list_row2,getDrawable(R.drawable.ic_orange), "주황",5,"주황");
+        addItem(list_row2,getDrawable(R.drawable.ic_pink), "분홍",5,"분홍");
+        addItem(list_row2,getDrawable(R.drawable.ic_red), "빨강",5,"빨강");
+        addItem(list_row2,getDrawable(R.drawable.ic_brown), "갈색",5,"갈색");
+        addItem(list_row2,getDrawable(R.drawable.ic_yellowgreen), "연두",5,"연두");
+        addItem(list_row2,getDrawable(R.drawable.ic_purple), "보라",5,"보라");
+        addItem(list_row2,getDrawable(R.drawable.ic_bluegreen), "청록",5,"청록");
+        addItem(list_row2,getDrawable(R.drawable.ic_blue), "파랑",5,"파랑");
+        addItem(list_row2,getDrawable(R.drawable.ic_navy), "남색",5,"남색");
+        addItem(list_row2,getDrawable(R.drawable.ic_redviolet), "자주",5,"자주");
+        addItem(list_row2,getDrawable(R.drawable.ic_gray), "회색",5,"회색");
+        addItem(list_row2,getDrawable(R.drawable.ic_black), "검정",5,"검정");
 
         //list_row3 - 앞 분할선
 
-        addItem(list_row3,getDrawable(R.drawable.ic_empty),
-                "민무늬",5,"민무늬");
-        addItem(list_row3,getDrawable(R.drawable.ic_minus),
-                "(-)형",5,"-");
-        addItem(list_row3,getDrawable(R.drawable.ic_line_plus),
-                "(+)형",5,"+");
-        addItem(list_row3,getDrawable(R.drawable.ic_line_etc),
-                "문구",5,"문구");
+        addItem(list_row3,getDrawable(R.drawable.ic_empty), "민무늬",5,"민무늬");
+        addItem(list_row3,getDrawable(R.drawable.ic_minus), "(-)형",5,"-");
+        addItem(list_row3,getDrawable(R.drawable.ic_line_plus), "(+)형",5,"+");
+        addItem(list_row3,getDrawable(R.drawable.ic_line_etc), "문구",5,"문구");
 
 
         //list_row4 - 뒷 분할선
-        addItem(list_row4,getDrawable(R.drawable.ic_empty),
-                "민무늬",5,"민무늬");
-        addItem(list_row4,getDrawable(R.drawable.ic_minus),
-                "(-)형",5,"-");
-        addItem(list_row4,getDrawable(R.drawable.ic_line_plus),
-                "(+)형",5,"+");
-        addItem(list_row4,getDrawable(R.drawable.ic_line_etc),
-                "문구",5,"문구");
+        addItem(list_row4,getDrawable(R.drawable.ic_empty), "민무늬",5,"민무늬");
+        addItem(list_row4,getDrawable(R.drawable.ic_minus), "(-)형",5,"-");
+        addItem(list_row4,getDrawable(R.drawable.ic_line_plus), "(+)형",5,"+");
+        addItem(list_row4,getDrawable(R.drawable.ic_line_etc), "문구",5,"문구");
 
         mSelectedItems1.put(0,true);
         mSelectedItems2.put(0,true);
