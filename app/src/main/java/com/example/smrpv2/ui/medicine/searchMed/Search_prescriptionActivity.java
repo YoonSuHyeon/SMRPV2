@@ -38,7 +38,8 @@ import com.example.smrpv2.model.searchMed_model.MedicineInfoRsponDTO;
 import com.example.smrpv2.model.user_model.UserInform;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_Server;
-
+import com.example.smrpv2.ui.common.ShareProgrees;
+import com.example.smrpv2.ui.common.SharedData;
 
 
 import java.io.File;
@@ -84,6 +85,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
 
     private boolean bool_end = false;
     private ProgressDialog progressDialog;
+    private ShareProgrees progrees;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,6 +167,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 672 && resultCode == RESULT_OK) {
+            progrees.show();
             Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath);
             ExifInterface exif = null;
 
@@ -308,9 +311,6 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
 
 
         Call<KakaoDto> call = RetrofitHelper.getKaKaoOcr().create(RetrofitService_Server.class).sendKakaoOcr(Part);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("분석중입니다.\n잠시만 기다려 주십시오.");
-        progressDialog.show();
         call.enqueue(new Callback<KakaoDto>() {
             @Override
             public void onResponse(Call<KakaoDto> call, Response<KakaoDto> response) {
@@ -325,7 +325,7 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
                         }
 
                     }
-                    SendOcrdata(word_array);
+                    SendOcrdata(word_array); //인식된 글자를 구축한 서버에 요청
                 }else{ //인식된 글자가 없을경우
                     Toast.makeText(getApplicationContext(),"인식된 문자가 없습니다. 이전 페이지로 이동합니다.",Toast.LENGTH_SHORT).show();
                     onBackPressed();
@@ -359,13 +359,14 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
                 LinearLayoutManager mlinearLayoutManager = new LinearLayoutManager(getApplicationContext());
                 DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), mlinearLayoutManager.getOrientation());//구분선을 넣기 위함
                 recyclerView.addItemDecoration(dividerItemDecoration);
-                progressDialog.dismiss();
+                progrees.dismiss();
             }
 
             @Override
             public void onFailure(Call<ArrayList<MedicineInfoRsponDTO>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(),"분석 결과가 없습니다. 이전 페이지로 이동합니다.",Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
+                progrees.dismiss();
+                finish();
             }
         });
     }
@@ -410,5 +411,6 @@ public class Search_prescriptionActivity extends AppCompatActivity implements Se
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setAdapter(prescriptionAdapter);
         progressDialog = new ProgressDialog(this);
+        progrees = new ShareProgrees(this,"분석중입니다.\n잠시만 기다려 주십시오.");
     }
 }

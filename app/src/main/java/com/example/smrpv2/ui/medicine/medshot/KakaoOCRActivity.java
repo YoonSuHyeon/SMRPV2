@@ -104,8 +104,8 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
 
     private SparseBooleanArray mSelectedItems1 = new SparseBooleanArray(0); //모양
     private SparseBooleanArray mSelectedItems2 = new SparseBooleanArray(0); //색상
-    private SparseBooleanArray mSelectedItems3 = new SparseBooleanArray(0);
-    private SparseBooleanArray mSelectedItems4 = new SparseBooleanArray(0);
+    private SparseBooleanArray mSelectedItems3 = new SparseBooleanArray(0); //앞면
+    private SparseBooleanArray mSelectedItems4 = new SparseBooleanArray(0); //뒷면
 
     private int[] row_images1 = {R.drawable.ic_circle_green,R.drawable.ic_triangle_green, R.drawable.ic_rectangle_green,R.drawable.ic_rhombus_green, R.drawable.ic_oblong_green,R.drawable.ic_oval_green,R.drawable.ic_semicircle_green,R.drawable.ic_pentagon_green,R.drawable.ic_hexagon_green,R.drawable.ic_octagon_green,R.drawable.ic_etc_green};
     private int[] row_images2 = {R.drawable.ic_white_green,R.drawable.ic_yellow_green,R.drawable.ic_orange_green,R.drawable.ic_pink_green,R.drawable.ic_red_green,R.drawable.ic_brown_green,R.drawable.ic_yellowgreen_green, R.drawable.ic_purple_green,R.drawable.ic_bluegreen_green,R.drawable.ic_blue_green,R.drawable.ic_navy_green,R.drawable.ic_redviolet_green,R.drawable.ic_gray_green,R.drawable.ic_black_green};
@@ -139,40 +139,40 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(checkItem()){
+                if (checkItem()) {
                     Intent intent = new Intent(context, CameraResultActivity.class);
 
                     String frontText = frontEditText.getText().toString();
                     String backText = backEditText.getText().toString();
                     String color = "";
-                    String shape="";
-                    String frontDividing="";
-                    String backDividing="";
-                    for(int i = 0; i<mSelectedItems1.size();i++){
-                        if(mSelectedItems1.get(i) == true){
+                    String shape = "";
+                    String frontDividing = "";
+                    String backDividing = "";
+                    for (int i = 0; i < mSelectedItems1.size(); i++) {
+                        if (mSelectedItems1.get(i) == true) {
                             shape = list_row1.get(i).getText();
-                            Log.d("kakoActivity", "shape: "+shape);
+                            Log.d("kakoActivity", "shape: " + shape);
                             break;
                         }
                     }
-                    for(int i = 0; i<mSelectedItems2.size();i++){
-                        if(mSelectedItems2.get(i) == true){
+                    for (int i = 0; i < mSelectedItems2.size(); i++) {
+                        if (mSelectedItems2.get(i) == true) {
                             color = list_row2.get(i).getText();
-                            Log.d("kakoActivity", "color: "+color);
+                            Log.d("kakoActivity", "color: " + color);
                             break;
                         }
                     }
-                    for(int i = 0; i<mSelectedItems3.size();i++){
-                        if(mSelectedItems3.get(i) == true){
+                    for (int i = 0; i < mSelectedItems3.size(); i++) {
+                        if (mSelectedItems3.get(i) == true) {
                             frontDividing = list_row3.get(i).getText();
-                            Log.d("kakoActivity", "frontDividing: "+frontDividing);
+                            Log.d("kakoActivity", "frontDividing: " + frontDividing);
                             break;
                         }
                     }
-                    for(int i = 0; i<mSelectedItems4.size();i++){
-                        if(mSelectedItems4.get(i) == true){
+                    for (int i = 0; i < mSelectedItems4.size(); i++) {
+                        if (mSelectedItems4.get(i) == true) {
                             backDividing = list_row4.get(i).getText();
-                            Log.d("kakoActivity", "backDividing: "+backDividing);
+                            Log.d("kakoActivity", "backDividing: " + backDividing);
                             break;
                         }
                     }
@@ -186,11 +186,10 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
                     intent.putExtra("color", color);
                     intent.putExtra("shape", shape);
                     intent.putExtra("frontDividing", frontDividing);
-                    intent.putExtra("backDividing",backDividing);
-                    Log.d("TAG", "total: "+frontText+","+backText+","+color+","+shape+","+frontDividing+","+backDividing);
+                    intent.putExtra("backDividing", backDividing);
+                    Log.d("total", "total: "+frontText+","+backText+","+color+","+shape+","+frontDividing+","+backDividing);
                     startActivity(intent);
                 }
-
             }
         });
 
@@ -797,12 +796,12 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
                 checkSelectedItem(position,mSelectedItems2, item, color1, list_row2);
                 break;
             }
-            case R.id.line_front_dividing_line: {
+            case R.id.Lst_front_dividing_line: {
                 item= list_row3.get(position) ;
                 checkSelectedItem(position,mSelectedItems3, item, front_dividing_line1, list_row3);
                 break;
             }
-            case R.id.line_back_dividing_line : {
+            case R.id.Lst_back_dividing_line : {
                 item= list_row4.get(position) ;
                 checkSelectedItem(position,mSelectedItems4, item, back_dividing_line1, list_row4);
                 break;
@@ -811,21 +810,21 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
     }
 
     void checkSelectedItem(int position, SparseBooleanArray mSelectedItems, MedicineItem item, ArrayList<String> type, ArrayList<MedicineItem> list_row){
-        for (int i = 0; i < mSelectedItems.size(); i++) {
-            mSelectedItems.put(i, false);
-            Log.d("TAG", "reset: ");
-        }
-        if (!mSelectedItems.get(position, false) ){
+
+
+        if (mSelectedItems.get(position, false) ){
             Log.d("checkSelectedItem", "position: "+position);
-            mSelectedItems.put(position, true);
+            mSelectedItems.put(position, false);
         }
-        /*lse {
-
-
+        else {
+            for (int i = 0; i < mSelectedItems.size(); i++) {
+                mSelectedItems.put(i, false);
+                Log.d("TAG", "reset: ");
+            }
             mSelectedItems.put(position, true);
 
 
-        }*/
+        }
         for(int i=0; i <mSelectedItems.size(); i++){
             if(i==0)type.clear();
             item = list_row.get(i);
@@ -878,10 +877,14 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
 
 
         //list_row4 - 뒷 분할선
-        addItem(list_row4,getDrawable(R.drawable.ic_empty), "민무늬",5,"민무늬");
-        addItem(list_row4,getDrawable(R.drawable.ic_minus), "(-)형",5,"-");
-        addItem(list_row4,getDrawable(R.drawable.ic_line_plus), "(+)형",5,"+");
-        addItem(list_row4,getDrawable(R.drawable.ic_line_etc), "문구",5,"문구");
+        addItem(list_row4,getDrawable(R.drawable.ic_empty),
+                "민무늬",5,"민무늬");
+        addItem(list_row4,getDrawable(R.drawable.ic_minus),
+                "(-)형",5,"-");
+        addItem(list_row4,getDrawable(R.drawable.ic_line_plus),
+                "(+)형",5,"+");
+        addItem(list_row4,getDrawable(R.drawable.ic_line_etc),
+                "문구",5,"문구");
 
         mSelectedItems1.put(0,true);
         mSelectedItems2.put(0,true);

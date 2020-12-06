@@ -382,7 +382,7 @@ public class HospitalFragment extends Fragment implements MapView.MapViewEventLi
     protected void DgsbjtCd(String select_dgsbjtCd) {
 
         dgsbjtCd = getDgsbjtCd(select_dgsbjtCd);
-
+        progrees.show();
         if (movelatititue == 0.0 && movelongitude == 0.0) { //지도를 움직이지 않았을때
             parsingData(latitude, longitude, radiuse, dgsbjtCd);
         } else { //지도를 움직였을때
