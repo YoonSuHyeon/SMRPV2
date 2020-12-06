@@ -140,12 +140,20 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, CameraResultActivity.class);
-                intent.putExtra("frontText", "");
-                intent.putExtra("backText", "");
-                intent.putExtra("color", "");
-                intent.putExtra("shape", "null");
-                intent.putExtra("frontDividing", "null");
-                intent.putExtra("backDividing"," ");
+
+                String frontText = frontEditText.getText().toString();
+                String backText = backEditText.getText().toString();
+                String color = color1.get(0);
+                String shape = shape1.get(0);
+                String frontDividing = front_dividing_line1.get(0);
+                String backDividing = back_dividing_line1.get(0);
+
+                intent.putExtra("frontText", frontText);
+                intent.putExtra("backText", backText);
+                intent.putExtra("color", color);
+                intent.putExtra("shape", shape);
+                intent.putExtra("frontDividing", frontDividing);
+                intent.putExtra("backDividing",backDividing);
                 startActivity(intent);
             }
         });
@@ -626,8 +634,24 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getApplicationContext(),CameraResultActivity.class);
-                        if(checkItem())
+                        if(checkItem()){
+                            String frontText = frontEditText.getText().toString();
+                            String backText = backEditText.getText().toString();
+                            String color = "노란색";
+                            String shape = "사각형";
+                            String frontDividing = "없음";
+                            String backDividing = "없음";
+
+                            intent.putExtra("frontText", frontText);
+                            intent.putExtra("backText", backText);
+                            intent.putExtra("color", color);
+                            intent.putExtra("shape", shape);
+                            intent.putExtra("frontDividing", frontDividing);
+                            intent.putExtra("backDividing", backDividing);
+
                             startActivity(intent);
+                        }
+
 
                         /**
                          * 인식된 값들 intent로 넘겨야함 

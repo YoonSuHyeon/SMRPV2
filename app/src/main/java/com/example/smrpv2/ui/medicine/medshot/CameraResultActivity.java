@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.smrpv2.R;
+import com.example.smrpv2.model.MedicineDeepModelAskDto;
 import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.medicine_model.Prescriptionitem;
 import com.example.smrpv2.model.prescription_model.RegMedicineList;
@@ -65,12 +66,20 @@ public class CameraResultActivity extends AppCompatActivity {
         String frontDividing = intent.getStringExtra("frontDividing");
         String backDividing = intent.getStringExtra("backDividing");
 
+        Log.d("frontText", frontText);
+        Log.d("backText", backText);
+        Log.d("color", color);
+        Log.d("shape", shape);
+        Log.d("frontDividing", frontText);
+        Log.d("backDividing", backDividing);
 
         progressDialog.show();
 
 
 
         sendData(frontText,backText,color,shape,frontDividing,backDividing);//서버에게 카메라를통해 얻응 정보를 보내서 약을 가져오는
+
+
         Btn_add.setOnClickListener(new View.OnClickListener() { //추가하기 버튼 누를시
             @Override
             public void onClick(View v) { //추가하기
@@ -136,6 +145,31 @@ public class CameraResultActivity extends AppCompatActivity {
     }
     private void sendData(String frontText, String backText, String color, String shape, String frontDividing, String backDividing){//약을 검색하기위한 정보를 서버와 교환
         progressDialog.dismiss();
+
+        MedicineDeepModelAskDto medicineDeepModelAskDto = new MedicineDeepModelAskDto(frontDividing, backDividing, color, frontText, backText, shape);
+
+        Call<ArrayList<MedicineInfoRsponDTO>> call = RetrofitHelper.getRetrofitService_server().searchDeepMedicine(medicineDeepModelAskDto);
+        call.enqueue(new Callback<ArrayList<MedicineInfoRsponDTO>>() {
+            @Override
+            public void onResponse(Call<ArrayList<MedicineInfoRsponDTO>> call, Response<ArrayList<MedicineInfoRsponDTO>> response) {
+                ArrayList<MedicineInfoRsponDTO> body = response.body();
+
+                Log.d("성고잉에요", "성공");
+                for (MedicineInfoRsponDTO info :
+                        body) {
+                    Log.d("Infi", info.getItemName());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<MedicineInfoRsponDTO>> call, Throwable t) {
+                Log.d("에러에요", t.toString());
+            }
+        });
+
+
+
         //서버에서 구현한후
         /*Call<ArrayList<MedicineInfoRsponDTO>> call = RetrofitHelper.getRetrofitService_server().sendWords(array);
         call.enqueue(new Callback<ArrayList<MedicineInfoRsponDTO>>() {

@@ -3,6 +3,7 @@ package com.example.smrpv2.retrofit;
 import com.example.smrpv2.model.InquiryDto;
 import com.example.smrpv2.model.MedicineAlarmAskDto;
 import com.example.smrpv2.model.MedicineAlarmResponDto;
+import com.example.smrpv2.model.MedicineDeepModelAskDto;
 import com.example.smrpv2.model.Message;
 import com.example.smrpv2.model.RegmedicineAsk;
 import com.example.smrpv2.model.SumMedInfo;
@@ -184,4 +185,9 @@ public interface RetrofitService_Server {
             @Query("endCreateDt") String endCreateDt
     );
 
+
+
+    //모델을 사용하여 약검색
+    @POST("/medicine/deep")
+    Call<ArrayList<MedicineInfoRsponDTO>> searchDeepMedicine(@Body MedicineDeepModelAskDto medicineDeepModelAskDto);
 }
