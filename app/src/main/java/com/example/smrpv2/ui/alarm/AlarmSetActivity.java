@@ -405,8 +405,8 @@ public class AlarmSetActivity extends AppCompatActivity {
                     Log.d("TAG", "setAlarm: "+hh_format.format(date));
                     Log.d("TAG", "setAlarm: "+Integer.parseInt(mm_format.format(date)));
                     Log.d("TAG", "setAlarm: "+ Integer.parseInt(mm_format.format(date))+5);
-                    temp.set(Calendar.HOUR_OF_DAY,22);
-                    temp.set(Calendar.MINUTE, 50);
+                    temp.set(Calendar.HOUR_OF_DAY,18);
+                    temp.set(Calendar.MINUTE, 40);
 
                    /* temp.set(Calendar.HOUR_OF_DAY,18);
                     temp.set(Calendar.MINUTE, 40);*/
@@ -425,6 +425,8 @@ public class AlarmSetActivity extends AppCompatActivity {
                 }
             }
         } else {//식후
+            //식전 7:30  12:00 18:40
+            //식후 8:00 13:00  19:40
             for (int i = 0; i < dosingPeriod; i++) {
                 GregorianCalendar temp = (GregorianCalendar)cal.clone() ;
                 temp.add(Calendar.DATE, i);
@@ -466,8 +468,8 @@ public class AlarmSetActivity extends AppCompatActivity {
 
                 }
                 if (doseTime.getDinner().equals("Y")) {
-                    temp.set(Calendar.HOUR_OF_DAY, 17);
-                    temp.set(Calendar.MINUTE, 19);
+                    temp.set(Calendar.HOUR_OF_DAY, 19);
+                    temp.set(Calendar.MINUTE, 40);
                     Log.d("time", cal.getTime().toString());
                     Log.d("time2", temp.getTime().toString());
 

@@ -1156,4 +1156,5 @@ public class CameraFrontFragment extends Fragment
         }
     }
 
+
 }

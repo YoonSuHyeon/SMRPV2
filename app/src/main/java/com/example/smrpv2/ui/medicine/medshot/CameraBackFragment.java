@@ -92,6 +92,7 @@ import java.util.concurrent.TimeUnit;
 public class CameraBackFragment extends Fragment
         implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
+
     /**
      * Conversion from screen rotation to JPEG orientation.
      */
@@ -101,6 +102,7 @@ public class CameraBackFragment extends Fragment
     int width ;
     int height;
     String frontImg;
+
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final String FRAGMENT_DIALOG = "dialog";
@@ -110,7 +112,10 @@ public class CameraBackFragment extends Fragment
         ORIENTATIONS.append(Surface.ROTATION_90, 0);
         ORIENTATIONS.append(Surface.ROTATION_180, 270);
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
+
     }
+
+
 
     /**
      * Tag for the {@link Log}.
@@ -1139,6 +1144,9 @@ public class CameraBackFragment extends Fragment
                             })
                     .create();
         }
+    }
+    public Fragment removeFrament() {
+        return this;
     }
 
 }
