@@ -1,6 +1,7 @@
 package com.example.smrpv2.ui.medicine.medshot;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -134,6 +135,9 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
             D/gggg: /storage/emulated/0/Android/data/com.example.smrpv2/files/picB.jpg
             D/TAG: frontImg: /storage/emulated/0/Android/data/com.example.smrpv2/files/picF.jpg
             backImg: /storage/emulated/0/Android/data/com.example.smrpv2/files/picB.jpg*/
+
+
+
 
 
         btn_confirm.setOnClickListener(new View.OnClickListener() {
