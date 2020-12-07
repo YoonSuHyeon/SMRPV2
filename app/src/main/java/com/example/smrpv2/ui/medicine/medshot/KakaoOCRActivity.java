@@ -929,4 +929,9 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        super.onBackPressed();
+    }
 }

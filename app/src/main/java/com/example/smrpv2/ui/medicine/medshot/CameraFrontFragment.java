@@ -108,6 +108,7 @@ public class CameraFrontFragment extends Fragment
     private static final String FRAGMENT_DIALOG = "dialog";
 
     static {
+
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
         ORIENTATIONS.append(Surface.ROTATION_90, 0);
         ORIENTATIONS.append(Surface.ROTATION_180, 270);
@@ -947,6 +948,7 @@ public class CameraFrontFragment extends Fragment
                     Intent intent = new Intent(getActivity(),CameraBackActivity.class);
                     intent.putExtra("uri",mFile.getAbsolutePath());//앞면사진
                     startActivity(intent);
+
                     //   imageView.setImageResource(R.drawable.tile);
                     //  imageView.setImageURI(Uri.parse(mFile.getAbsolutePath()));
                     unlockFocus();

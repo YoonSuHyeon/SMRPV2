@@ -36,8 +36,10 @@
             android:name=".ui.medicine.searchMed.ErrorMessageActivity"
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".ui.medicine.medshot.GoogleOCRActivity" />
-        <activity android:name=".ui.medicine.medshot.CameraBackActivity" />
-        <activity android:name=".ui.medicine.medshot.CameraFrontActivity" />
+        <activity android:name=".ui.medicine.medshot.CameraBackActivity"
+            android:noHistory="true"/>
+        <activity android:name=".ui.medicine.medshot.CameraFrontActivity"
+            android:noHistory="true"/>
         <activity android:name=".ui.medicine.MedicineDetailActivity" />
         <activity
             android:name=".ui.alarm.AlarmSetActivity"

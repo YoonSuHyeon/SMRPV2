@@ -938,7 +938,11 @@ public class CameraBackFragment extends Fragment
                     intent.putExtra("frontImg",frontImg);
                     intent.putExtra("backImg",mFile.getAbsolutePath());
 
+
+
                     startActivity(intent);
+
+
                     //   imageView.setImageResource(R.drawable.tile);
                     //  imageView.setImageURI(Uri.parse(mFile.getAbsolutePath()));
                     unlockFocus();
