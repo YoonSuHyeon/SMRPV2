@@ -337,7 +337,7 @@
                         android:layout_width="46dp"
                         android:layout_height="49dp"
                         android:layout_marginStart="28dp"
-                        android:src="@drawable/ic_dose_record" />
+                        android:src="@drawable/ic_inquiry" />
 
 
 
