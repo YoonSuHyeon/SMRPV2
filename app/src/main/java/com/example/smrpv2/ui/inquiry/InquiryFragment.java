@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +32,7 @@ import retrofit2.Response;
 public class InquiryFragment extends Fragment {
 
     private Button btn_send;
-    private TextView content;
+    private EditText content;
     private SharedPreferences login_inform;
     private String userid, message;
     private AlertDialog.Builder diaglog;
@@ -63,6 +64,7 @@ public class InquiryFragment extends Fragment {
                         public void onResponse(Call<Message> call, Response<Message> response) {
                             if(response.body().getResultCode().equals("OK")){
                                 Toast.makeText(getActivity().getApplicationContext(),"전송 완료",Toast.LENGTH_SHORT).show();
+                                content.setText("");
                             }
                         }
 

@@ -6,6 +6,6 @@
 
         android:id="@+id/logout_btn"
         android:title="로그아웃"
-        android:icon="@drawable/ic_baseline_exit_to_app_24"
+        android:icon="@drawable/app_bar_image"
         app:showAsAction="always"/>
 </menu>
