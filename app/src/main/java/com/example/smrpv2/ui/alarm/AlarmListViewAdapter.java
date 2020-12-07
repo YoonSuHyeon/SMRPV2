@@ -128,9 +128,15 @@ public class AlarmListViewAdapter extends BaseAdapter {
             int now_time=Integer.parseInt(nowTime);
             int finish_time = Integer.parseInt(finishTime);
 
-            if(now_time > finish_time){
+
+            Log.d("시간",now_time +" ||" + finish_time);
+            if(now_time > finish_time) {
+                Log.d("시간", now_time + " ||" + finish_time);
                 linearLayout.setBackgroundResource(R.drawable.drop_shadow2);
                 progressBar.setProgressDrawable(convertView.getResources().getDrawable(R.drawable.progressbar_custom2));
+            }else{
+                linearLayout.setBackgroundResource(R.drawable.box_shadow);
+                progressBar.setProgressDrawable(convertView.getResources().getDrawable(R.drawable.progressbas_custom));
             }
 
             try{
