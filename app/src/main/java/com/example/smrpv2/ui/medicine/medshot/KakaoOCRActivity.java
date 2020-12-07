@@ -119,6 +119,14 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
 
         String frontImg = getIntent().getStringExtra("frontImg");
         String backImg = getIntent().getStringExtra("backImg");
+
+        int recWidth = getIntent().getIntExtra("recWidth", 0);
+        int recHeight=getIntent().getIntExtra("recHeight", 0);
+        int width=getIntent().getIntExtra("width",0);
+        int height=getIntent().getIntExtra("height",0);
+
+
+
         assert frontImg != null;
         Log.d("gggg", frontImg);
         assert backImg != null;
@@ -240,8 +248,20 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
 
             }
 
+            int tempWidth;
+            int tempHeight;
+            tempWidth = rotatedBitmap.getWidth() * recWidth / width;
+            tempHeight = rotatedBitmap.getHeight() * recHeight / height;
 
-            targetBitmap_front = Bitmap.createBitmap(rotatedBitmap, rotatedBitmap.getWidth() / 2 - 112, rotatedBitmap.getHeight() / 2 - 112, 224, 224);
+            Log.d("KakaoOCRActivityre", (recWidth) + "");
+            Log.d("KakaoOCRActivityrec", (recHeight) + "");
+
+            Log.d("KakaoOCRActivitymm", rotatedBitmap.getWidth()+"");
+            Log.d("KakaoOCRActivitymh", rotatedBitmap.getHeight() + "");
+
+            Log.d("KakaoOCRActivitymm", rotatedBitmap.getWidth()/2-122+"");
+            Log.d("KakaoOCRActivitymh", rotatedBitmap.getHeight()/2-122 + "");
+            targetBitmap_front = Bitmap.createBitmap(rotatedBitmap,  tempWidth,tempHeight, 224, 224);
 
 
 
@@ -269,7 +289,7 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
                 }
 
             }
-            targetBitmap_back = Bitmap.createBitmap(rotatedBitmap, rotatedBitmap.getWidth() / 2 - 112, rotatedBitmap.getHeight() / 2 - 112, 224, 224);
+            targetBitmap_back = Bitmap.createBitmap(rotatedBitmap, tempWidth, tempHeight, 224, 224);
             Log.d("하기전", frontfile.toString());
             Log.d("하기전", backfile.toString());
             SaveBitmapToFileCache(targetBitmap_front, frontImgDate);

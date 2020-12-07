@@ -103,6 +103,8 @@ public class CameraFrontFragment extends Fragment
     SurfaceView surfaceView;
     int width ;
     int height;
+
+
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final String FRAGMENT_DIALOG = "dialog";
@@ -494,8 +496,16 @@ public class CameraFrontFragment extends Fragment
 
 
 
+
+
                     Paint paint = new Paint();
                     paint.setColor(Color.rgb(100, 20, 50));
+
+                    Log.d("FrontFragmentwidth", width + "");
+                    Log.d("FrontFragmentheight", height + "");
+                    Log.d("FrontFragment1", width/2-112 + "");
+                    Log.d("FrontFragment2", height/2-112 + "");
+
                     canvas.drawRect(width/2-112,height/2-112,width/2+112,height/2+112,paint);
 
                     paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));

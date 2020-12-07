@@ -103,6 +103,9 @@ public class CameraBackFragment extends Fragment
     int height;
     String frontImg;
 
+    int recWidth;
+    int recHeight;
+
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final String FRAGMENT_DIALOG = "dialog";
@@ -496,6 +499,9 @@ public class CameraBackFragment extends Fragment
                     height = size.y;
 
 
+
+                    recWidth=(width/2-112);
+                    recHeight=(height/2-112);
                     Paint paint = new Paint();
                     paint.setColor(Color.rgb(100, 20, 50));
                     canvas.drawRect(width/2-112,height/2-112,width/2+112,height/2+112,paint);
@@ -942,6 +948,11 @@ public class CameraBackFragment extends Fragment
                     Intent intent = new Intent(getActivity(), KakaoOCRActivity.class);
                     intent.putExtra("frontImg",frontImg);
                     intent.putExtra("backImg",mFile.getAbsolutePath());
+                    intent.putExtra("recWidth", recWidth);
+                    intent.putExtra("recHeight", recHeight);
+                    intent.putExtra("width", width);
+                    intent.putExtra("height", height);
+
 
 
 
