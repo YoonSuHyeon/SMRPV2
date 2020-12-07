@@ -309,7 +309,7 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
                             .add(new ResizeOp(224, 224, ResizeOp.ResizeMethod.BILINEAR))
                             .build();
 
-           Splitline model = Splitline.newInstance(this);
+            Splitline model = Splitline.newInstance(this);
 
 
             // Creates inputs for reference.
@@ -414,11 +414,19 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
 
 
 
+        int k;
+
 
             if(string.contains("앞")){
                 Log.d("ggg","앞"+i);
                 adapter_row3  = new MedicineResultRecyclerAdapter(list_row3,this, Lst_front_dividing_line,4,row_images3,i) ;
                 Lst_front_dividing_line.setLayoutManager(layoutManager) ;
+                mSelectedItems3.put(i,true); //앞 모양
+                for(k =0 ; k < 4; k++){
+                    if(i!=k)
+                        mSelectedItems3.put(k,false);
+                }
+
                 Lst_front_dividing_line.setAdapter(adapter_row3);
                 Lst_front_dividing_line.getItemAnimator().setChangeDuration(0);
                 Lst_front_dividing_line.getAdapter().notifyDataSetChanged();
@@ -427,6 +435,12 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
                 Log.d("kkk","뒤"+i);
                 adapter_row4  = new MedicineResultRecyclerAdapter(list_row4,this, Lst_back_dividing_line,4,row_images3,i) ;
                 Lst_back_dividing_line.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)) ;
+                mSelectedItems4.put(i,true); //뒷 모암
+                for(k =0 ; k < 4; k++){
+                    if(i!=k)
+                        mSelectedItems4.put(k,false);
+                }
+
                 Lst_back_dividing_line.setAdapter(adapter_row4);
                 Lst_back_dividing_line.getItemAnimator().setChangeDuration(0);
                 Lst_back_dividing_line.getAdapter().notifyDataSetChanged();
@@ -584,20 +598,19 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
             LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             adapter_row1  = new MedicineResultRecyclerAdapter(list_row1,this, Lst_shape,11, row_images1,i) ;
 
+            mSelectedItems1.put(i,true); //모양
+            for(int k =0 ; k < 14; k++) {
+                if(k!=i)
+                    mSelectedItems2.put(i,false);
+            }
+
+
+
             Lst_shape .setLayoutManager(layoutManager ) ;
             Lst_shape .setAdapter(adapter_row1);
             Lst_shape.getItemAnimator().setChangeDuration(0);
             Lst_shape.getAdapter().notifyDataSetChanged();
            // adapter_row1.getmListener().onClick();
-
-
-
-
-
-
-
-
-
 
 
 
@@ -817,10 +830,9 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
             mSelectedItems.put(position, false);
         }
         else {
-            for (int i = 0; i < mSelectedItems.size(); i++) {
+            for(int i = 0; i < mSelectedItems.size(); i++)
                 mSelectedItems.put(i, false);
-                Log.d("TAG", "reset: ");
-            }
+
             mSelectedItems.put(position, true);
 
 
@@ -877,23 +889,15 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
 
 
         //list_row4 - 뒷 분할선
-        addItem(list_row4,getDrawable(R.drawable.ic_empty),
-                "민무늬",5,"민무늬");
-        addItem(list_row4,getDrawable(R.drawable.ic_minus),
-                "(-)형",5,"-");
-        addItem(list_row4,getDrawable(R.drawable.ic_line_plus),
-                "(+)형",5,"+");
-        addItem(list_row4,getDrawable(R.drawable.ic_line_etc),
-                "문구",5,"문구");
+        addItem(list_row4,getDrawable(R.drawable.ic_empty), "민무늬",5,"민무늬");
+        addItem(list_row4,getDrawable(R.drawable.ic_minus), "(-)형",5,"-");
+        addItem(list_row4,getDrawable(R.drawable.ic_line_plus), "(+)형",5,"+");
+        addItem(list_row4,getDrawable(R.drawable.ic_line_etc), "문구",5,"문구");
 
-        mSelectedItems1.put(0,true);
-        mSelectedItems2.put(0,true);
-        mSelectedItems3.put(0,true);
-        mSelectedItems4.put(0,true);
+
+        mSelectedItems2.put(0,true); //색상
         for(int i =1 ; i < 11; i++) mSelectedItems1.put(i,false);
-        for(int i =1 ; i < 14; i++) mSelectedItems2.put(i,false);
-        for(int i =1 ; i < 4; i++) mSelectedItems3.put(i,false);
-        for(int i =1 ; i < 4; i++) mSelectedItems4.put(i,false);
+
 
 
         Lst_color.getItemAnimator().setChangeDuration(0);
@@ -902,6 +906,7 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
         adapter_row2.notifyDataSetChanged();
 
     }
+
     private boolean checkItem(){
         if(shape1.isEmpty()) {
             Toast.makeText(this,"모양을 선택해주세요.",Toast.LENGTH_SHORT).show();

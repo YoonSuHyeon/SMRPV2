@@ -66,6 +66,13 @@ public class CameraResultActivity extends AppCompatActivity {
         String frontDividing = intent.getStringExtra("frontDividing");
         String backDividing = intent.getStringExtra("backDividing");
 
+        if(frontDividing.contains("문구") || frontDividing.contains("민무늬"))
+            frontDividing = "";
+
+
+        if(backDividing.contains("문구") || backDividing.contains("민무늬"))
+            backDividing = "";
+
         Log.d("frontText", frontText);
         Log.d("backText", backText);
         Log.d("color", color);
@@ -155,10 +162,19 @@ public class CameraResultActivity extends AppCompatActivity {
                 ArrayList<MedicineInfoRsponDTO> body = response.body();
 
                 Log.d("성고잉에요", "성공");
-                for (MedicineInfoRsponDTO info :
-                        body) {
+               /* for (MedicineInfoRsponDTO info : body) {
                     Log.d("Infi", info.getItemName());
+                }*/
+                Log.d("사이즈", "dasda"+response.body().size());
+                for(int i = 0 ; i < response.body().size();i++){
+                    MedicineInfoRsponDTO dto = response.body().get(i);
+                    list.add(new Prescriptionitem(dto.getItemSeq(),dto.getItemImage(),dto.getItemName(),dto.getEntpName(),dto.getEtcOtcName()));//약 식별번호 / 약 이미지 / 약 이름 / 약 제조사 / 약 포장 /약 의약품정보(일반, 전문)
+                    prescriptionAdapter.notifyDataSetChanged();
                 }
+                LinearLayoutManager mlinearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), mlinearLayoutManager.getOrientation());//구분선을 넣기 위함
+                recyclerView.addItemDecoration(dividerItemDecoration);
+                progressDialog.dismiss();
 
             }
 
