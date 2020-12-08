@@ -29,6 +29,7 @@ import com.example.smrpv2.model.home_model.HomeMedItem;
 import com.example.smrpv2.retrofit.RetrofitHelper;
 import com.example.smrpv2.retrofit.RetrofitService_Server;
 import com.example.smrpv2.ui.common.LocationValue;
+import com.example.smrpv2.ui.medicine.searchMed.Search_prescriptionActivity;
 import com.example.smrpv2.ui.search.SearchActivity;
 import com.example.smrpv2.ui.start.AutoSlide;
 import com.example.smrpv2.ui.start.ViewPagerAdapter;
@@ -149,15 +150,15 @@ public class HomeFragment extends Fragment {
         ic_prescription_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(getContext(), Search_prescriptionActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(getContext(), Search_prescriptionActivity.class);
+                startActivity(intent);
             }
         });
         ic_envelope_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(getContext(), Search_prescriptionActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(getContext(), Search_prescriptionActivity.class);
+                startActivity(intent);
             }
         });
         ic_alarm_set.setOnClickListener(new View.OnClickListener() {
@@ -252,10 +253,6 @@ public class HomeFragment extends Fragment {
                 call.enqueue(new Callback<Covid19_response>() {
                     @Override
                     public void onResponse(Call<Covid19_response> call, Response<Covid19_response> response) { //리스트 0~n-1(오늘부터 과거순으로)
-                        Log.d("TAG", "onResponse: "+response.body().getBody().toString());
-                        Log.d("TAG", "onResponse: "+response.body().getBody().getItems().getItemsList().size());
-                        //Log.d("TAG", "onResponse: "+response.body().getBody().getItems().getItemsList().get(0).getCreateDt());//
-                        Log.d("TAG", "onResponse: "+response.body().getBody().getItems().getItemsList().get(1).getCreateDt());
                         int size = response.body().getBody().getItems().getItemsList().size();
 
                         if(size>=2){
