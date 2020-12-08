@@ -185,7 +185,7 @@ public class PharmacyFragment extends Fragment implements MapView.MapViewEventLi
             public void onCallClick(int position) {
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+list.get(position).getTelNo()));
                 //ACTION_DIAL: 전화 다이얼로그 Action_call:전화 연결
-                //startActivity(intent);
+                startActivity(intent);
                 show("통화 연결다이얼로그로 전환합니다.");
             }
 
