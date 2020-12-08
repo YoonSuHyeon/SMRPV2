@@ -46,6 +46,7 @@ public class PopupFragment extends DialogFragment {
             public void onClick(View v) { //-약촬영
                     Intent intent = new Intent(getActivity(), CameraFrontActivity.class);
                     startActivity(intent);
+                    dismiss();
             }
         });
         Img_envelope.setOnClickListener(new View.OnClickListener() {

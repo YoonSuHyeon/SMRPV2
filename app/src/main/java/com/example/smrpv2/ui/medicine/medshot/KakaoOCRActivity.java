@@ -201,6 +201,7 @@ public class KakaoOCRActivity extends AppCompatActivity implements MedicineResul
                     intent.putExtra("backDividing", backDividing);
                     Log.d("total", "total: "+frontText+","+backText+","+color+","+shape+","+frontDividing+","+backDividing);
                     startActivity(intent);
+                    finish();
                 }
             }
         });

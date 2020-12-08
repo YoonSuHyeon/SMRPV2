@@ -221,8 +221,8 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
                 medicineEntpName.setText(medicineInfoRsponDTO.getEntpName());
                 medicineClassName.setText(medicineInfoRsponDTO.getClassName());
                 medicineEtcOtcName.setText(medicineInfoRsponDTO.getEtcOtcName());
-                medicineEffect.setText(medicineInfoRsponDTO.getEffect());
-                medicineUsage.setText(medicineInfoRsponDTO.getUsage());
+                medicineEffect.setText(medicineInfoRsponDTO.getEffect().replaceAll("\n",""));
+                medicineUsage.setText(medicineInfoRsponDTO.getUsage().replaceAll("\n",""));
 
                 str_image = medicineInfoRsponDTO.getItemImage();
                 str_name = medicineInfoRsponDTO.getItemName();

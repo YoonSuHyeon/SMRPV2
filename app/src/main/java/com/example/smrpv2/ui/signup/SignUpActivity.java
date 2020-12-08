@@ -107,8 +107,6 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
 
-                Log.d("회원가입", response.toString());
-                Log.d("회원가입이이", response.body().toString());
                 show("회원가입 완료.");
                 //회원가입 완료시 Login Activity 이동
                 Intent intent = new Intent(context, LoginActivity.class);
@@ -118,7 +116,6 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
                 show("오류입니다.");
-                Log.d("Sign", t.toString());
             }
         });
 
