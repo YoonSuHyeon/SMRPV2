@@ -83,8 +83,8 @@ public class Fragment_id extends Fragment {
                 name = et_name.getText().toString(); //사용자 이름
                 email = et_email.getText().toString(); // 사용자 이메일
 
-                Log.d("TAG", "name: "+name);
-                Log.d("TAG", "email: "+email);
+                Log.d("TAG", "name:"+name);
+                Log.d("TAG", "email:"+email);
 
 
                 RetrofitService_Server networkService= RetrofitHelper.getRetrofitService_server();
@@ -147,6 +147,8 @@ public class Fragment_id extends Fragment {
                     @Override
                     public void onFailure(Call<Message> call, Throwable t) {
                         Log.d("TAG", "onFailureonFailureonFailure: ");
+                        //Log.d("TAG", "onFailureonFailureonFailure: "+t.getMessage());
+                        Log.d("TAG", "onFailureonFailureonFailure: "+t.toString());
                     }
                 });
             }
