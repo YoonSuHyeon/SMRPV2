@@ -346,7 +346,9 @@ public class AlarmEditActivity extends AppCompatActivity {
         int count = 0; //알람PK의 수를 세기위함
         if (doseType.equals("식전")) {//식전
             for (int i = 0; i < dosingPeriod; i++) {
-                GregorianCalendar temp = cal;
+
+                GregorianCalendar temp =  new GregorianCalendar(Locale.KOREA);
+                temp.setTime(currentTime);
                 temp.add(Calendar.DATE, i);
                 if (doseTime.getMorning().equals("Y")) {
                     Long id = alarmListList.get(count).getId();
@@ -362,8 +364,9 @@ public class AlarmEditActivity extends AppCompatActivity {
                                 temp.getTimeInMillis(),
                                 pendingIntent
                         );
+                        count++;
                     }
-                    count++;
+
                 }
                 if (doseTime.getLunch().equals("Y")) {
                     Long id = alarmListList.get(count).getId();
@@ -380,8 +383,9 @@ public class AlarmEditActivity extends AppCompatActivity {
                                 temp.getTimeInMillis(),
                                 pendingIntent
                         );
+                        count++;
                     }
-                    count++;
+
                 }
                 if (doseTime.getDinner().equals("Y")) {
                     Long id = alarmListList.get(count).getId();
@@ -399,8 +403,9 @@ public class AlarmEditActivity extends AppCompatActivity {
                                 temp.getTimeInMillis(),
                                 pendingIntent
                         );
+                        count++;
                     }
-                    count++;
+
                 }
             }
         } else {//식후

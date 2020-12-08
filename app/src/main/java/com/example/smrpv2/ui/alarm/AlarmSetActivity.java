@@ -356,7 +356,11 @@ public class AlarmSetActivity extends AppCompatActivity {
         int count = 0; //알람PK의 수를 세기위함
         if (doseType.equals("식전")) {//식전
             for (int i = 0; i < dosingPeriod; i++) {
-                GregorianCalendar temp = cal;
+
+
+                GregorianCalendar temp =  new GregorianCalendar(Locale.KOREA);
+                temp.setTime(currentTime);
+
                 temp.add(Calendar.DATE, i);
                 if (doseTime.getMorning().equals("Y")) {
                     Long id = alarmListList.get(count).getId();
@@ -373,8 +377,9 @@ public class AlarmSetActivity extends AppCompatActivity {
                                 temp.getTimeInMillis(),
                                 pendingIntent
                         );
+                        count++;
                     }
-                    count++;
+
                 }
                 if (doseTime.getLunch().equals("Y")) {
                     Long id = alarmListList.get(count).getId();
@@ -391,20 +396,14 @@ public class AlarmSetActivity extends AppCompatActivity {
                                 temp.getTimeInMillis(),
                                 pendingIntent
                         );
+                        count++;
                     }
-                    count++;
+
                 }
                 if (doseTime.getDinner().equals("Y")) {
                     Long id = alarmListList.get(count).getId();
 
                     PendingIntent pendingIntent = makePendingIntent(Long.valueOf(id).intValue(), content);
-                    long now = System.currentTimeMillis();
-                    Date date = new Date(now);
-                    SimpleDateFormat hh_format = new SimpleDateFormat("hh");
-                    SimpleDateFormat mm_format = new SimpleDateFormat("mm");
-                    Log.d("TAG", "setAlarm: "+hh_format.format(date));
-                    Log.d("TAG", "setAlarm: "+Integer.parseInt(mm_format.format(date)));
-                    Log.d("TAG", "setAlarm: "+ Integer.parseInt(mm_format.format(date))+5);
                     temp.set(Calendar.HOUR_OF_DAY,18);
                     temp.set(Calendar.MINUTE, 40);
 
@@ -420,8 +419,9 @@ public class AlarmSetActivity extends AppCompatActivity {
                                 temp.getTimeInMillis(),
                                 pendingIntent
                         );
+                        count++;
                     }
-                    count++;
+
                 }
             }
         } else {//식후
