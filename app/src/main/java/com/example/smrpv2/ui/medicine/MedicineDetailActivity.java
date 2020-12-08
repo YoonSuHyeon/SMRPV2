@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -180,16 +181,23 @@ public class MedicineDetailActivity extends AppCompatActivity implements Seriali
         });
 
 
-        title_usage.setOnClickListener(new View.OnClickListener() {
+        medicineEffect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("효능효과").setMessage(medicineEffect.getText().toString());
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
             }
         });
 
-        title_effect.setOnClickListener(new View.OnClickListener() {
+        medicineUsage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("용법용량").setMessage(medicineUsage.getText().toString());
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
 
             }
         });
